@@ -1,14 +1,23 @@
 MetaDBGWAS
 ==========
 
+* [Motivation](#motivation)
+* [Requirements](#requirements)
+* [Installation](#installation)
+* [Usage](#usage)
+* [Output](#output)
+* [License](#license)
+
 # Motivation
+
+This tool expands thee work of DBGWAS [(Jaillard et al, 2018)](https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1007758) and bring to the metagenomic scale.
 
 # Requirements
 
-* GCC >= 4.8
+* [GCC](https://gcc.gnu.org/) >= 4.8
 * CMAKE > 3.10.0
-* zlib
-* pthreads
+* [zlib](https://en.wikipedia.org/wiki/Zlib)
+* [pthreads](https://en.wikipedia.org/wiki/Pthreads)
 
 # Installation
 
@@ -21,7 +30,8 @@ MetaDBGWAS
 	cd MetaDBGWAS
 	sh install.sh
 	```
-# USage
+
+# Usage
 
 # Output
 
