@@ -5,6 +5,11 @@ MetaDBGWAS
 
 # Requirements
 
+* GCC >= 4.8
+* CMAKE > 3.10.0
+* zlib
+* pthreads
+
 # Installation
 
 1. Use the following command to download the repository :

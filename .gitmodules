@@ -7,3 +7,6 @@
 [submodule "Lighter"]
 	path = Lighter
 	url = https://github.com/mourisl/Lighter.git
+[submodule "REINDEER"]
+	path = REINDEER
+	url = https://github.com/kamimrcht/REINDEER.git
