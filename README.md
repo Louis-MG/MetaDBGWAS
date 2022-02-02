@@ -10,14 +10,16 @@ MetaDBGWAS
 
 # Motivation
 
-This tool expands thee work of DBGWAS [(Jaillard et al, 2018)](https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1007758) and bring to the metagenomic scale.
+This tool expands thee work of [DBGWAS](https://gitlab.com/leoisl/dbgwas) [(Jaillard et al, 2018)](https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1007758) and bring to the metagenomic scale.
 
 # Requirements
 
 * [GCC](https://gcc.gnu.org/) >= 4.8
-* CMAKE > 3.10.0
+* [CMAKE](https://cmake.org/) > 3.10.0
 * [zlib](https://en.wikipedia.org/wiki/Zlib)
 * [pthreads](https://en.wikipedia.org/wiki/Pthreads)
+* [blast](https://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs&DOC_TYPE=Download) The blast suite in your path
+* [R](https://www.r-project.org/) >= 3.2.0 
 
 # Installation
 
