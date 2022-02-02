@@ -7,14 +7,14 @@
 
 
 #General
-files=false
+files=
 output="./"
 threads=4
-verbose=1
+verbose=0
 
 #Lighter
-genome_size=false
-alpha=false
+genome_size=
+alpha=
 kmer_l=17
 
 #Reindeer
@@ -31,7 +31,7 @@ kmer=31
 
 
 #miscealenous
-version=0.1
+version="MetadDBGWAS 0.1"
 license=false
 license_text="Copyright (C) 2022 Louis-Maël Gueguen\n
 \n
@@ -62,21 +62,45 @@ help_text="To_be_written"
 while [ $# > 1 ]
 do
 	case $1 in
-	--files) file="$2";;
-	--output) output="$2";;
-	--threads) threads="$2";;
-	--K) kmer_l="$2" genome_size="$3";;			#should add a true/false variable to select the type of run for Lighter
-	--k) kmer_l="$2" genome_size="$3" alpha="$4";;
-	--kmer) kmer="#2";;
-	--version) echo $version; exit 1;;
-	--license) echo $license_text; exit 1;;
-	--verbose) verbose="$2";;
-	--help) echo $help_text; exit 1;;
+	-f | --files) files="$2"
+	shift 
+	shift;;
+	-o | --output) output="$2"
+	shift
+	shift ;;
+	-t | --threads) threads="$2"
+	shift
+	shift ;;
+	--K) kmer_l="$2" genome_size="$3"
+	shift
+	shift ;;			#should add a true/false variable to select the type of run for Lighter
+	--k) kmer_l="$2" genome_size="$3" alpha="$4"
+	shift
+	shift ;;
+	-k | --kmer) kmer="#2"
+	shift
+	shift ;;
+	--version) echo $version; exit 0
+	shift
+	shift ;;
+	--license) echo $license_text; exit 0
+	shift
+	shift ;;
+	-v | --verbose) verbose="$2"
+	shift
+	shift ;;
+	-h | --help) echo $help_text; exit 0
+	shift
+	shift ;;
+	-* | --*) echo "Unknown option"; exit 1
+	shift
+	shift ;;
 	*) break;
 	esac
-	shift
 done
 
+
+echo ${kmer_l} ${threads} ${genome_size} ${output} $files
 
 #if the file exists, then the runs for Lighter kmer correction are differentiated by alpha value
 
@@ -85,19 +109,20 @@ then
 	echo "Starting kmer corrections with Lighter ..."
 fi
 
-if [ -e files ]
+if [ -f $files ]
 then
-	if alpha=false
+	if [ -n $alpha ]
 	then
 		for i in $files
 		do
-			./Lighter/lighter -r ${i} -od $output -t $threads -discard -K $kmer_l $genome_size
+			echo "lighter petit k"
+			../Lighter/lighter -r ${i} -od $output -t $threads -discard -k $kmer_l $genome_size $alpha
 		done
 	else
 		for i in $files
 		do
-			./Lighter/lighter -r ${i} -od $output -t $threads -discard -k $kmer_l $genome_size $alpha
+			echo 'lighter K'
+			../Lighter/lighter -r ${i} -od $output -t $threads -discard -K $kmer_l $genome_size
 		done
 	fi
 fi
-
