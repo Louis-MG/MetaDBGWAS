@@ -15,11 +15,14 @@ verbose=1
 #Lighter
 genome_size=false
 alpha=false
-kmer=17
+kmer_l=17
 
 #Reindeer
 
 #dbgwas
+strain=''
+newick=''
+kmer=31
 
 #strains
 #k
@@ -62,12 +65,13 @@ do
 	--files) file="$2";;
 	--output) output="$2";;
 	--threads) threads="$2";;
-	--K) kmer="$2" genome_size="$3";;			#should add a true/false variable to select the type of run for Lighter
-	--k) kmer="$2" genome_size="$3" alpha="$4";;
-	--version) echo $version;;
-	--license) echo -e $license_text;;
+	--K) kmer_l="$2" genome_size="$3";;			#should add a true/false variable to select the type of run for Lighter
+	--k) kmer_l="$2" genome_size="$3" alpha="$4";;
+	--kmer) kmer="#2";;
+	--version) echo $version; exit 1;;
+	--license) echo $license_text; exit 1;;
 	--verbose) verbose="$2";;
-	--help) echo -e help_text;;
+	--help) echo $help_text; exit 1;;
 	*) break;
 	esac
 	shift
@@ -76,9 +80,9 @@ done
 
 #if the file exists, then the runs for Lighter kmer correction are differentiated by alpha value
 
-if verbose>=1
+if [ $verbose -ge 1 ]
 then
-	echo -e "Starting kmer corrections with Lighter ..."
+	echo "Starting kmer corrections with Lighter ..."
 fi
 
 if [ -e files ]
@@ -87,12 +91,12 @@ then
 	then
 		for i in $files
 		do
-			./Lighter/lighter -r ${i} -od $output -t $threads -discard -K $kmer $genome_size
+			./Lighter/lighter -r ${i} -od $output -t $threads -discard -K $kmer_l $genome_size
 		done
-	then
+	else
 		for i in $files
 		do
-			./Lighter/lighter -r ${i} -od $output -t $threads -discard -k $kmer $genome_size $alpha
+			./Lighter/lighter -r ${i} -od $output -t $threads -discard -k $kmer_l $genome_size $alpha
 		done
 	fi
 fi

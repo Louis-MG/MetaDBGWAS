@@ -35,6 +35,21 @@ This tool expands thee work of [DBGWAS](https://gitlab.com/leoisl/dbgwas) [(Jail
 
 # Usage
 
+```bash
+
+--files <path> path to files
+--output <path> path to the output folder, current directory by default
+--threads <int> number of threads to use
+--K <kmer length (int)> <genome size (base, int)> 
+	or
+--k <kmer length (int)> <genome size (in base, int)> <alpha (float)> 
+--strains A text file describing the strains containing 3 columns: 1) ID of the strain; 2) Phenotype (a real number or NA); 3) Path to a multi-fasta file containing the sequences of the strain. This file needs a header. Check the sample_example folder or https://gitlab.com/leoisl/dbgwas/raw/master/sample_example/strains for an example.
+--newick Optional path to a newick tree file. If (and only if) a newick tree file is provided, the lineage effect analysis is computed and PCs figures are generated.  [default '']
+--license prints the license text in standard output
+--verbose <int> level of verbosity. Default to 1, 1-3
+--help displays help
+```
+
 # Output
 
 # License
