@@ -7,14 +7,14 @@
 
 
 #General
-files=false
+files=
 output="./"
 threads=4
-verbose=1
+verbose=0
 
 #Lighter
-genome_size=false
-alpha=false
+genome_size=
+alpha=
 kmer_l=17
 
 #Reindeer
@@ -62,22 +62,45 @@ help_text="To_be_written"
 while [ $# > 1 ]
 do
 	case $1 in
-	-f | --files) files="$2";;
-	-o | --output) output="$2";;
-	-t | --threads) threads="$2";;
-	--K) kmer_l="$2" genome_size="$3";;			#should add a true/false variable to select the type of run for Lighter
-	--k) kmer_l="$2" genome_size="$3" alpha="$4";;
-	-k | --kmer) kmer="#2";;
-	--version) echo $version; exit 0;;
-	--license) echo $license_text; exit 0;;
-	-v | --verbose) verbose="$2";;
-	-h | --help) echo $help_text; exit 0;;
-	-* | --*) echo "Unknown option"; exit 1;;
+	-f | --files) files="$2"
+	shift 
+	shift;;
+	-o | --output) output="$2"
+	shift
+	shift ;;
+	-t | --threads) threads="$2"
+	shift
+	shift ;;
+	--K) kmer_l="$2" genome_size="$3"
+	shift
+	shift ;;			#should add a true/false variable to select the type of run for Lighter
+	--k) kmer_l="$2" genome_size="$3" alpha="$4"
+	shift
+	shift ;;
+	-k | --kmer) kmer="#2"
+	shift
+	shift ;;
+	--version) echo $version; exit 0
+	shift
+	shift ;;
+	--license) echo $license_text; exit 0
+	shift
+	shift ;;
+	-v | --verbose) verbose="$2"
+	shift
+	shift ;;
+	-h | --help) echo $help_text; exit 0
+	shift
+	shift ;;
+	-* | --*) echo "Unknown option"; exit 1
+	shift
+	shift ;;
 	*) break;
 	esac
-	shift
 done
 
+
+echo ${kmer_l} ${threads} ${genome_size} ${output} ${files}
 
 #if the file exists, then the runs for Lighter kmer correction are differentiated by alpha value
 
@@ -101,4 +124,3 @@ then
 		done
 	fi
 fi
-
