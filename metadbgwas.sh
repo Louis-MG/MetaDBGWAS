@@ -62,16 +62,17 @@ help_text="To_be_written"
 while [ $# > 1 ]
 do
 	case $1 in
-	--files) file="$2";;
-	--output) output="$2";;
-	--threads) threads="$2";;
+	-f | --files) files="$2";;
+	-o | --output) output="$2";;
+	-t | --threads) threads="$2";;
 	--K) kmer_l="$2" genome_size="$3";;			#should add a true/false variable to select the type of run for Lighter
 	--k) kmer_l="$2" genome_size="$3" alpha="$4";;
-	--kmer) kmer="#2";;
-	--version) echo $version; exit 1;;
-	--license) echo $license_text; exit 1;;
-	--verbose) verbose="$2";;
-	--help) echo $help_text; exit 1;;
+	-k | --kmer) kmer="#2";;
+	--version) echo $version; exit 0;;
+	--license) echo $license_text; exit 0;;
+	-v | --verbose) verbose="$2";;
+	-h | --help) echo $help_text; exit 0;;
+	-* | --*) echo "Unknown option"; exit 1;;
 	*) break;
 	esac
 	shift
@@ -87,7 +88,7 @@ fi
 
 if [ -e files ]
 then
-	if alpha=false
+	if [ $alpha==false ]
 	then
 		for i in $files
 		do
