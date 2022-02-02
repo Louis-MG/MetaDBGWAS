@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Louis-Mael Gueguen lm.gueguen@orange.fr
+
+
 #donner les valeurs par defaut aux parametres
 
 
@@ -7,15 +10,20 @@
 files=false
 output="./"
 threads=4
+verbose=1
 
 #Lighter
-genome_size=0
-alpha=0.1
+genome_size=false
+alpha=false
 kmer=17
 
 #Reindeer
 
 #dbgwas
+
+#strains
+#k
+#newick
 
 
 
@@ -42,6 +50,9 @@ freely, subject to the following restrictions:\n
 \n
 Louis-Maël Gueguen lm.gueguen@orange.fr\n"
 
+help=false
+help_text="To_be_written"
+
 #boucle while pour iterer sur les parametres donnes
 #case pour assignation
 
@@ -51,24 +62,38 @@ do
 	--files) file="$2";;
 	--output) output="$2";;
 	--threads) threads="$2";;
-	--K) kmer="$2" genome_size="$3";;
+	--K) kmer="$2" genome_size="$3";;			#should add a true/false variable to select the type of run for Lighter
 	--k) kmer="$2" genome_size="$3" alpha="$4";;
 	--version) echo $version;;
 	--license) echo -e $license_text;;
+	--verbose) verbose="$2";;
+	--help) echo -e help_text;;
 	*) break;
 	esac
 	shift
 done
 
+
+#if the file exists, then the runs for Lighter kmer correction are differentiated by alpha value
+
+if verbose>=1
+then
+	echo -e "Starting kmer corrections with Lighter ..."
+fi
+
 if [ -e files ]
 then
-	for i in $files
-	do
-		./Lighter/lighter -r ${i} -od $output -t $threads -discard -K $kmer $genome_size
-	done
-
-	for i in $files
-	do
-		./Lighter/lighter -r ${i} -od $output -t $threads -discard -k $kmer $genome_size $alpha
-	done
+	if alpha=false
+	then
+		for i in $files
+		do
+			./Lighter/lighter -r ${i} -od $output -t $threads -discard -K $kmer $genome_size
+		done
+	then
+		for i in $files
+		do
+			./Lighter/lighter -r ${i} -od $output -t $threads -discard -k $kmer $genome_size $alpha
+		done
+	fi
 fi
+
