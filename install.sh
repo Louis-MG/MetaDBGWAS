@@ -20,7 +20,4 @@ make
 
 cd ..
 
-R install.packages("ape")
-R install.packages("phangorn")
-R install.packages("https://raw.githubusercontent.com/sgearle/bugwas/master/build/bugwas_1.0.tar.gz", repos=NULL, type="source")
-
+R install.r
