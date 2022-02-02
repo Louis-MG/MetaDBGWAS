@@ -31,7 +31,7 @@ kmer=31
 
 
 #miscealenous
-version=0.1
+version="MetadDBGWAS 0.1"
 license=false
 license_text="Copyright (C) 2022 Louis-Maël Gueguen\n
 \n
@@ -100,7 +100,7 @@ do
 done
 
 
-echo ${kmer_l} ${threads} ${genome_size} ${output} ${files}
+echo ${kmer_l} ${threads} ${genome_size} ${output} $files
 
 #if the file exists, then the runs for Lighter kmer correction are differentiated by alpha value
 
@@ -109,18 +109,20 @@ then
 	echo "Starting kmer corrections with Lighter ..."
 fi
 
-if [ -e files ]
+if [ -f $files ]
 then
-	if [ $alpha==false ]
+	if [ -n $alpha ]
 	then
 		for i in $files
 		do
-			./Lighter/lighter -r ${i} -od $output -t $threads -discard -K $kmer_l $genome_size
+			echo "lighter petit k"
+			../Lighter/lighter -r ${i} -od $output -t $threads -discard -k $kmer_l $genome_size $alpha
 		done
 	else
 		for i in $files
 		do
-			./Lighter/lighter -r ${i} -od $output -t $threads -discard -k $kmer_l $genome_size $alpha
+			echo 'lighter K'
+			../Lighter/lighter -r ${i} -od $output -t $threads -discard -K $kmer_l $genome_size
 		done
 	fi
 fi
