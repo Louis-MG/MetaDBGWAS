@@ -14,7 +14,7 @@ verbose=0
 
 #Lighter
 genome_size=
-alpha=
+alpha=0
 kmer_l=17
 
 #Reindeer
@@ -63,38 +63,25 @@ while [ $# > 1 ]
 do
 	case $1 in
 	-f | --files) files="$2"
-	shift 
-	shift;;
+	shift 2;;
 	-o | --output) output="$2"
-	shift
-	shift ;;
+	shift 2;;
 	-t | --threads) threads="$2"
-	shift
-	shift ;;
+	shift 2;;
 	--K) kmer_l="$2" genome_size="$3"
-	shift
-	shift ;;			#should add a true/false variable to select the type of run for Lighter
+	shift 3;;			#should add a true/false variable to select the type of run for Lighter
 	--k) kmer_l="$2" genome_size="$3" alpha="$4"
-	shift
-	shift ;;
+	shift 4;;
 	-k | --kmer) kmer="#2"
-	shift
-	shift ;;
-	--version) echo $version; exit 0
-	shift
-	shift ;;
-	--license) echo $license_text; exit 0
-	shift
-	shift ;;
+	shift 2;;
+	--version) echo $version; exit 0;;
+	--license) echo $license_text; exit 0 ;;
 	-v | --verbose) verbose="$2"
-	shift
-	shift ;;
+	shift 2;;
 	-h | --help) echo $help_text; exit 0
-	shift
-	shift ;;
+	shift 2;;
 	-* | --*) echo "Unknown option"; exit 1
-	shift
-	shift ;;
+	shift 2;;
 	*) break;
 	esac
 done
@@ -111,7 +98,7 @@ fi
 
 if [ -f $files ]
 then
-	if [ -n $alpha ]
+	if [ $alpha -gt 0 ]
 	then
 		for i in $files
 		do
