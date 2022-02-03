@@ -20,7 +20,7 @@ make
 
 cd ..
 
-make DBGWAS
+mkdir DBGWAS
 cd DBGWAS
 curl  https://www.dropbox.com/s/s9oojqfl1kgi4l5/DBGWAS-0.5.4-Linux-precompiled.tar.gz?dl=1 -L --output dbgwas.Linux.precompiled.tar.gz
 tar -zxvf ../dbgwas.Linux.precompiled.tar.gz
