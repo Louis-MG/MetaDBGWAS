@@ -14,7 +14,7 @@ verbose=0
 
 #Lighter
 genome_size=
-alpha=
+alpha=0
 kmer_l=17
 
 #Reindeer
@@ -31,78 +31,103 @@ kmer=31
 
 
 #miscealenous
-version="MetadDBGWAS 0.1"
-license=false
-license_text="Copyright (C) 2022 Louis-Maël Gueguen\n
-\n
-This software is provided 'as-is', without any express or implied\n
-warranty.  In no event will the authors be held liable for any damages\n
-arising from the use of this software.\n
-\n
-Permission is granted to anyone to use this software for any purpose,\n
-including commercial applications, and to alter it and redistribute it\n
-freely, subject to the following restrictions:\n
-\n
-1. The origin of this software must not be misrepresented; you must not\n
-   claim that you wrote the original software. If you use this software\n
-   in a product, an acknowledgment in the product documentation would be\n
-   appreciated but is not required.\n
-2. Altered source versions must be plainly marked as such, and must not be\n
-   misrepresented as being the original software.\n
-3. This notice may not be removed or altered from any source distribution.\n
-\n
+
+Version()
+{
+	echo "\nMetadDBGWAS 0.1\n"
+}
+
+License()
+{
+	echo "Copyright (C) 2022 Louis-Maël Gueguen
+
+This software is provided 'as-is', without any express or implied
+warranty.  In no event will the authors be held liable for any damages
+arising from the use of this software.
+
+Permission is granted to anyone to use this software for any purpose,
+including commercial applications, and to alter it and redistribute it
+freely, subject to the following restrictions:
+
+1. The origin of this software must not be misrepresented; you must not
+   claim that you wrote the original software. If you use this software
+   in a product, an acknowledgment in the product documentation would be
+   appreciated but is not required.
+2. Altered source versions must be plainly marked as such, and must not be
+   misrepresented as being the original software.
+3. This notice may not be removed or altered from any source distribution.
+
 Louis-Maël Gueguen lm.gueguen@orange.fr\n"
+}
 
-help=false
-help_text="To_be_written"
+Help()
+{
+   # Display Help
+   echo "
+	* General
+--files <path> path to files
+--output <path> path to the output folder, current directory by default
+--threads <int> number of threads to use
+--verbose <int> level of verbosity. Default to 1, 1-3
 
-#boucle while pour iterer sur les parametres donnes
-#case pour assignation
+	* Lighter
+--K <kmer length (int)> <genome size (base, int)>
+	or
+--k <kmer length (int)> <genome size (in base, int)> <alpha (float)>
+
+	* DBGWAS
+--strains A text file describing the strains containing 3 columns: 1) ID of the strain; 2) Phenotype (a real number or NA); 3) Path to a multi-fasta file containing the sequences of the strain. This file needs a header. Check the sample_example folder or https://gitlab.com/leoisl/dbgwas/raw/master/sample_example/strains for an example.
+--newick Optional path to a newick tree file. If (and only if) a newick tree file is provided, the lineage effect analysis is computed and PCs figures are generated.  [default '']
+
+	* Miscellaneous
+--license prints the license text in standard output
+--help displays help\n"
+}
+
+#Parameters parsing
 
 while [ $# > 1 ]
 do
 	case $1 in
 	-f | --files) files="$2"
-	shift 
-	shift;;
+	shift 2;;
 	-o | --output) output="$2"
-	shift
-	shift ;;
+	shift 2;;
 	-t | --threads) threads="$2"
-	shift
-	shift ;;
+	shift 2;;
 	--K) kmer_l="$2" genome_size="$3"
-	shift
-	shift ;;			#should add a true/false variable to select the type of run for Lighter
+	shift 3;;
 	--k) kmer_l="$2" genome_size="$3" alpha="$4"
-	shift
-	shift ;;
+	shift 4;;
 	-k | --kmer) kmer="#2"
-	shift
-	shift ;;
-	--version) echo $version; exit 0
-	shift
-	shift ;;
-	--license) echo $license_text; exit 0
-	shift
-	shift ;;
+	shift 2;;
+	--version) Version; exit 0;;
+	--license) License; exit 0 ;;
 	-v | --verbose) verbose="$2"
-	shift
-	shift ;;
-	-h | --help) echo $help_text; exit 0
-	shift
-	shift ;;
-	-* | --*) echo "Unknown option"; exit 1
-	shift
-	shift ;;
+	shift 2;;
+	-h | --help) Help; exit 0;;
+	-* | --*) echo "Unknown option"; exit 1;;
 	*) break;
 	esac
 done
 
 
-echo ${kmer_l} ${threads} ${genome_size} ${output} $files
+#creates output dir if it doesnt exist yet
+
+if [ -d $output ]
+then
+	if [ "$(ls -A $output)" ]
+	then
+    		echo "$output is not Empty."
+		exit 0
+	fi
+else
+	mkdir $output
+fi
+
 
 #if the file exists, then the runs for Lighter kmer correction are differentiated by alpha value
+#else tells user that file is not found
 
 if [ $verbose -ge 1 ]
 then
@@ -111,18 +136,18 @@ fi
 
 if [ -f $files ]
 then
-	if [ -n $alpha ]
+	if [ $alpha -gt 0 ]
 	then
 		for i in $files
 		do
-			echo "lighter petit k"
 			../Lighter/lighter -r ${i} -od $output -t $threads -discard -k $kmer_l $genome_size $alpha
 		done
 	else
 		for i in $files
 		do
-			echo 'lighter K'
 			../Lighter/lighter -r ${i} -od $output -t $threads -discard -K $kmer_l $genome_size
 		done
 	fi
+else
+	echo "File not found, verify the path."
 fi
