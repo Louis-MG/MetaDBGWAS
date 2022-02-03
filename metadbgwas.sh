@@ -87,7 +87,19 @@ do
 done
 
 
-echo ${kmer_l} ${threads} ${genome_size} ${output} $files
+#creates output dir if it doesnt exist yet
+
+if [ -d $output ]
+then
+	if [ "$(ls -A $output)" ]
+	then
+    		echo "$output is not Empty"
+		exit 0
+	fi
+else
+	mkdir $output
+fi
+
 
 #if the file exists, then the runs for Lighter kmer correction are differentiated by alpha value
 
@@ -102,13 +114,11 @@ then
 	then
 		for i in $files
 		do
-			echo "lighter petit k"
 			../Lighter/lighter -r ${i} -od $output -t $threads -discard -k $kmer_l $genome_size $alpha
 		done
 	else
 		for i in $files
 		do
-			echo 'lighter K'
 			../Lighter/lighter -r ${i} -od $output -t $threads -discard -K $kmer_l $genome_size
 		done
 	fi
