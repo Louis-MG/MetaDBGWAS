@@ -37,11 +37,11 @@ This tool expands thee work of [DBGWAS](https://gitlab.com/leoisl/dbgwas) [(Jail
 
 ```
  * General
---files <path> path to files
---output <path> path to the output folder, current directory by default
---threads <int> number of threads to use
---verbose <int> level of verbosity. Default to 1, 1-3
---clean removes files from output directory if not empty
+--files <path> path to one file or a directory containing the files.
+--output <path> path to the output folder, current directory by default.
+--threads <int> number of threads to use.
+--verbose <int> level of verbosity. Default to 1, 1-3.
+--clean removes files from output directory if not empty.
 
         * Lighter
 --K <kmer length (int)> <genome size (base, int)>
@@ -53,11 +53,11 @@ This tool expands thee work of [DBGWAS](https://gitlab.com/leoisl/dbgwas) [(Jail
 
         * DBGWAS
 --strains A text file describing the strains containing 3 columns: 1) ID of the strain; 2) Phenotype (a real number or NA); 3) Path to a multi-fasta file containing the sequences of the strain. This fil>
---newick Optional path to a newick tree file. If (and only if) a newick tree file is provided, the lineage effect analysis is computed and PCs figures are generated.  [default '']
+--newick Optional path to a newick tree file. If (and only if) a newick tree file is provided, the lineage effect analysis is computed and PCs figures are generated.
 
         * Miscellaneous
---license prints the license text in standard output
---help displays help\n"
+--license prints the license text in standard output.
+--help displays help.\n"
 
 ```
 
