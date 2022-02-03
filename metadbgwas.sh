@@ -11,18 +11,22 @@ files=
 output="./"
 threads=4
 verbose=0
+clean=false
 
 #Lighter
 genome_size=
 alpha=0
 kmer_l=17
 
+#bcalm2
+
+kmer=31
+
 #Reindeer
 
 #dbgwas
 strain=''
 newick=''
-kmer=31
 
 #strains
 #k
@@ -65,10 +69,10 @@ Help()
    # Display Help
    echo "
 	* General
---files <path> path to files
---output <path> path to the output folder, current directory by default
---threads <int> number of threads to use
---verbose <int> level of verbosity. Default to 1, 1-3
+--files <path> path to files.
+--output <path> path to the output folder, current directory by default.
+--threads <int> number of threads to use. Default to 4.
+--verbose <int> level of verbosity. Default to 1, 1-3.
 
 	* Lighter
 --K <kmer length (int)> <genome size (base, int)>
@@ -77,11 +81,11 @@ Help()
 
 	* DBGWAS
 --strains A text file describing the strains containing 3 columns: 1) ID of the strain; 2) Phenotype (a real number or NA); 3) Path to a multi-fasta file containing the sequences of the strain. This file needs a header. Check the sample_example folder or https://gitlab.com/leoisl/dbgwas/raw/master/sample_example/strains for an example.
---newick Optional path to a newick tree file. If (and only if) a newick tree file is provided, the lineage effect analysis is computed and PCs figures are generated.  [default '']
+--newick Optional path to a newick tree file. If (and only if) a newick tree file is provided, the lineage effect analysis is computed and PCs figures are generated.
 
 	* Miscellaneous
---license prints the license text in standard output
---help displays help\n"
+--license prints the license text in standard output.
+--help displays help.\n"
 }
 
 #Parameters parsing
@@ -93,6 +97,8 @@ do
 	shift 2;;
 	-o | --output) output="$2"
 	shift 2;;
+	-c | --clean) clean=true
+	shift;;
 	-t | --threads) threads="$2"
 	shift 2;;
 	--K) kmer_l="$2" genome_size="$3"
@@ -101,12 +107,12 @@ do
 	shift 4;;
 	-k | --kmer) kmer="#2"
 	shift 2;;
-	--version) Version; exit 0;;
-	--license) License; exit 0 ;;
+	--version) Version; exit;;
+	--license) License; exit;;
 	-v | --verbose) verbose="$2"
 	shift 2;;
-	-h | --help) Help; exit 0;;
-	-* | --*) echo "Unknown option"; exit 1;;
+	-h | --help) Help; exit;;
+	-* | --*) echo "Unknown option"; exit;;
 	*) break;
 	esac
 done
@@ -116,17 +122,19 @@ done
 
 if [ -d $output ]
 then
-	if [ "$(ls -A $output)" ]
+	if [ "$(ls -A $output)" ] && [ $clean != true ]
 	then
     		echo "$output is not Empty."
 		exit 0
+	else
+		rm -r $output
 	fi
 else
 	mkdir $output
 fi
 
 
-#if the file exists, then the runs for Lighter kmer correction are differentiated by alpha value
+#Lighter
 #else tells user that file is not found
 
 if [ $verbose -ge 1 ]
@@ -136,18 +144,30 @@ fi
 
 if [ -f $files ]
 then
+	echo $files > list_files
 	if [ $alpha -gt 0 ]
 	then
 		for i in $files
 		do
-			../Lighter/lighter -r ${i} -od $output -t $threads -discard -k $kmer_l $genome_size $alpha
+			./Lighter/lighter -r ${i} -od $output -t $threads -discard -k $kmer_l $genome_size $alpha
 		done
 	else
 		for i in $files
 		do
-			../Lighter/lighter -r ${i} -od $output -t $threads -discard -K $kmer_l $genome_size
+			./Lighter/lighter -r ${i} -od $output -t $threads -discard -K $kmer_l $genome_size
 		done
 	fi
+elif [ -d $files  ]
+then
+	find $files -type f > list_files
+	for i in $files/*
+	do
+		./Lighter/lighter -r ${i} -od $output -t $threads -discard -k $kmer_l $genome_size $alpha
+	done
 else
 	echo "File not found, verify the path."
 fi
+
+#Bcalm 2
+
+./bcalm/build/bcalm -in ./list_files -kmer-size $kmer -nb-cores $threads -out-dir $output
