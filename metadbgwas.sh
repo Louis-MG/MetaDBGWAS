@@ -32,29 +32,53 @@ kmer=31
 
 #miscealenous
 version="MetadDBGWAS 0.1"
-license=false
-license_text="Copyright (C) 2022 Louis-Maël Gueguen\n
-\n
-This software is provided 'as-is', without any express or implied\n
-warranty.  In no event will the authors be held liable for any damages\n
-arising from the use of this software.\n
-\n
-Permission is granted to anyone to use this software for any purpose,\n
-including commercial applications, and to alter it and redistribute it\n
-freely, subject to the following restrictions:\n
-\n
-1. The origin of this software must not be misrepresented; you must not\n
-   claim that you wrote the original software. If you use this software\n
-   in a product, an acknowledgment in the product documentation would be\n
-   appreciated but is not required.\n
-2. Altered source versions must be plainly marked as such, and must not be\n
-   misrepresented as being the original software.\n
-3. This notice may not be removed or altered from any source distribution.\n
-\n
-Louis-Maël Gueguen lm.gueguen@orange.fr\n"
 
-help=false
-help_text="To_be_written"
+License()
+{
+	echo "Copyright (C) 2022 Louis-Maël Gueguen
+
+This software is provided 'as-is', without any express or implied
+warranty.  In no event will the authors be held liable for any damages
+arising from the use of this software.
+
+Permission is granted to anyone to use this software for any purpose,
+including commercial applications, and to alter it and redistribute it
+freely, subject to the following restrictions:
+
+1. The origin of this software must not be misrepresented; you must not
+   claim that you wrote the original software. If you use this software
+   in a product, an acknowledgment in the product documentation would be
+   appreciated but is not required.
+2. Altered source versions must be plainly marked as such, and must not be
+   misrepresented as being the original software.
+3. This notice may not be removed or altered from any source distribution.
+
+Louis-Maël Gueguen lm.gueguen@orange.fr\n"
+}
+
+Help()
+{
+   # Display Help
+   echo "
+	* General
+--files <path> path to files
+--output <path> path to the output folder, current directory by default
+--threads <int> number of threads to use
+--verbose <int> level of verbosity. Default to 1, 1-3
+
+	* Lighter
+--K <kmer length (int)> <genome size (base, int)>
+	or
+--k <kmer length (int)> <genome size (in base, int)> <alpha (float)>
+
+	* DBGWAS
+--strains A text file describing the strains containing 3 columns: 1) ID of the strain; 2) Phenotype (a real number or NA); 3) Path to a multi-fasta file containing the sequences of the strain. This file needs a header. Check the sample_example folder or https://gitlab.com/leoisl/dbgwas/raw/master/sample_example/strains for an example.
+--newick Optional path to a newick tree file. If (and only if) a newick tree file is provided, the lineage effect analysis is computed and PCs figures are generated.  [default '']
+
+	* Miscellaneous
+--license prints the license text in standard output
+--help displays help\n"
+}
 
 #boucle while pour iterer sur les parametres donnes
 #case pour assignation
@@ -75,13 +99,11 @@ do
 	-k | --kmer) kmer="#2"
 	shift 2;;
 	--version) echo $version; exit 0;;
-	--license) echo $license_text; exit 0 ;;
+	--license) License; exit 0 ;;
 	-v | --verbose) verbose="$2"
 	shift 2;;
-	-h | --help) echo $help_text; exit 0
-	shift 2;;
-	-* | --*) echo "Unknown option"; exit 1
-	shift 2;;
+	-h | --help) Help; exit 0;;
+	-* | --*) echo "Unknown option"; exit 1;;
 	*) break;
 	esac
 done
