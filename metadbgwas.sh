@@ -31,7 +31,11 @@ kmer=31
 
 
 #miscealenous
-version="MetadDBGWAS 0.1"
+
+Version()
+{
+	echo "\nMetadDBGWAS 0.1\n"
+}
 
 License()
 {
@@ -80,8 +84,7 @@ Help()
 --help displays help\n"
 }
 
-#boucle while pour iterer sur les parametres donnes
-#case pour assignation
+#Parameters parsing
 
 while [ $# > 1 ]
 do
@@ -93,12 +96,12 @@ do
 	-t | --threads) threads="$2"
 	shift 2;;
 	--K) kmer_l="$2" genome_size="$3"
-	shift 3;;			#should add a true/false variable to select the type of run for Lighter
+	shift 3;;
 	--k) kmer_l="$2" genome_size="$3" alpha="$4"
 	shift 4;;
 	-k | --kmer) kmer="#2"
 	shift 2;;
-	--version) echo $version; exit 0;;
+	--version) Version; exit 0;;
 	--license) License; exit 0 ;;
 	-v | --verbose) verbose="$2"
 	shift 2;;
@@ -115,7 +118,7 @@ if [ -d $output ]
 then
 	if [ "$(ls -A $output)" ]
 	then
-    		echo "$output is not Empty"
+    		echo "$output is not Empty."
 		exit 0
 	fi
 else
@@ -124,6 +127,7 @@ fi
 
 
 #if the file exists, then the runs for Lighter kmer correction are differentiated by alpha value
+#else tells user that file is not found
 
 if [ $verbose -ge 1 ]
 then
@@ -144,4 +148,6 @@ then
 			../Lighter/lighter -r ${i} -od $output -t $threads -discard -K $kmer_l $genome_size
 		done
 	fi
+else
+	echo "File not found, verify the path."
 fi
