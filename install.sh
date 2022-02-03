@@ -20,4 +20,4 @@ make
 
 cd ..
 
-R install.r
+Rscript install.R
