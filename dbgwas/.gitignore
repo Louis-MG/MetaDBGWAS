@@ -1,0 +1,4 @@
+.idea
+build
+tools/DBGWAS/src/version.h
+cmake-build-debug/

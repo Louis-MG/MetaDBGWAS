@@ -1,0 +1,303 @@
+﻿---------------------------------------------------------------------------------------------------------------------------------------------
+TODO list
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+TODO next version:
+2/ Automated labelling prediction (December) - After 12nd December
+    -Deadline: ???
+    -Doubts:
+        -Everything is done, just merge and we are set?
+
+
+
+
+
+3/ Continuous Genotype (frequencies) - December - Up to 12nd december:
+    -Deadline: ???
+    -Doubts:
+        -Transform to the enconding where 0 is the major allele and 1 is the minor one
+            -How to do this with continuous genotype?
+                -How to complement 0 (or other values) with continuous phenotype?
+            -I think bugwas can process this, so there is no need to do this anymore?
+            -What about the weight correction?
+            -Do we keep exactly as before if it is binary phenotype?
+                -Don't complement!
+            -don't remove the complement for binary for now
+                -create a fake weight correction for continuous
+
+        -MAF filter
+            -Think about it
+            -How to remove very present unitigs?
+
+        -How to compress different patterns with continuous phenotype:
+            -Unitig U1 with the count pattern: [0, 5, 10, 10, 0] has the same count pattern as unitig U2: [0, 5, 10, 9, 0]?
+            -Care that we might not be compressing almost anything...
+                -For now we compress everything, and after we might compress similar patterns
+
+        -Step 2 works with continuous genotype right out of the box?
+    -TODO:
+        -CHECK THE TODO [CONTINUOUS GENOTYPE]
+    -Step1:
+        -Parameter that is binary or continuous (frequency) genotype
+    -Step3:
+        -Keep the binary version
+        -Allele frequency
+
+
+
+
+
+------------------------------------------------------------------------------------------------------------------------
+
+4/ Custom Step2:
+    -parameter: only run step1
+    -customized step2 (script to run is a parameter, and we give all files to the scripts)
+    -pyseer Step2
+    -Other types of analysis
+        -no analysis, fixed effect
+        -bugwas bug
+
+
+
+
+5/ Receive as input reads instead of contigs
+    -BCALM2 + BTRIM
+        -Filter on unitig count (check the parameter) and on kmer count  (-ab-min 2/3)
+        -5 iterations of trimming
+
+
+
+
+
+6/ Show the strain presence for each node
+    -1st - just tabular export
+    -Search for JS libraries or use iTol
+
+
+
+7/ Step1:
+    -Maf filter
+    -Remove nodes with a given AF
+    -Put in the docs that we count from genome assembly
+    -Remove the filter that removes the genomes with missing phenotypes
+    -Store patterns file as binary and/or sparse matrix format (many rows with many zeros)
+        - if stores 0/1 values : would requireb Nstrain x Npatterns bits  
+
+
+
+
+9/ Step3:
+    -Layout with alongated nodes like Bandage
+
+
+
+10/ Double-check SFF filter
+    -When the 100th q-value is really not significant (like ~1), there is no meaning to generate a subgraph with the related unitigs.
+    The double check would be: take the top 100 q-values below a threshold (like the usual 0.05). Do you think we could try this ?
+    This would certainly lead to 2 different SFF parameters, which are somewhere correlated...
+
+
+
+
+
+
+
+Integration with prokka
+    @see https://gitlab.com/leoisl/dbgwas/issues/8
+
+
+
+
+
+
+Priority:
+    1) Work on the javascript performance
+        In very large graphs, selecting all nodes, unselecting, etc is very slow
+
+    2) Change filter in the annotation list in the summary page (add option for the user to use text or to type something)
+        In index pages with a lot of annotation, it is way too hard to use a drop-down list
+
+    5) Add to DBGWAS parameter -runOnlyStep1 Freq/Bin
+        -It will just produces the variant matrices and stop
+        -Freq = use frequences
+        -Bin = use presence/absence pattern
+
+
+    7) When launching only step3, there should be no need to specify a strain file
+
+    8) Receive as input reads instead of contigs
+        -@see https://mail.google.com/mail/u/0/#inbox/15ffcd92a248a692
+
+    9) Treat NA phenotypes better
+        -We just removed from the input for now
+
+    10) "make" should copy the DBGWAS_lib folder to the tools/ folder
+
+    11) Improve the explanation of lineage figures in the interface
+
+
+
+
+
+Known bugs:
+    -Large kmer size bug:
+        -Even if we set in CMakeLists.txt:
+            set (KSIZE_LIST "32   64   96  128  160  192  224  256")
+        -We still can't run the tool with a large kmer size due to:
+            leandro@ngs-provisoire:/data2/leandro/GWAS/DBGWAS-0.4.8-Linux-precompiled/bin$ ./DBGWAS -strains pseudomonas_aeruginosa_full_dataset/strains -newick pseudomonas_aeruginosa_full_dataset/strains.newick -nc_db Resistance_DB_for_DBGWAS.fasta -pt_db uniprot_sprot_bacteria_for_DBGWAS.with_extra_tags.fasta -nb-cores 4 -k 165 -output output_test_k_165
+            Step 1. Building DBG and mapping strains on the DBG...
+            [WARNING] Skipping strain WH-SGI-V-07286 because its phenotype is NA
+            [WARNING] Skipping strain WH-SGI-V-07290 because its phenotype is NA
+            [DSK: nb solid kmers found : 140764976   ]  100  %   elapsed:  12 min 3  sec   remaining:   0 min 0  sec   cpu: 153.4 %   mem: [ 924, 4598, 4598] MB
+            [Building BooPHF]  99.8 %   elapsed:   0 min 57 sec   remaining:   0 min 0  sec
+            [MPHF: populate                          ]  100  %   elapsed:   1 min 22 sec   remaining:   0 min 0  sec   cpu:  99.9 %   mem: [ 924,  924, 4598] MB
+            EXCEPTION: kmer size 165 too big for cascading bloom filters
+        -The maximum k-mer size we can use is 127
+        -I am setting in CMakeLists.txt back to:
+            set (KSIZE_LIST "32   64   96  128")
+
+    -Fix copy and paste of cells containing annotation;
+        -Asked on stack overflow
+
+    -Bug with maf 0.5 => wrong node color (issue in step3)
+        -@see https://mail.google.com/mail/u/0/#inbox/1600315d1c1fe7bc
+
+
+
+
+
+
+Low priority TODO:
+    -Select nodes using the newick tree
+        -This is used to select nodes belonging to a strain
+        -The newick tree should have only the strains that contains an unitig in the component
+        -It should also show the strain path in the graph
+    -Show the newick tree and the unitigs (genotypes) @see: https://mail.google.com/mail/u/0/#sent/15f1663316ff5dec
+    -Transparency switch
+        Non-significant nodes lose transparency
+    -Show the original genomes as paths in the graph?
+    -If no annotation was provided, remove the line “Annotations on significant nodes: No annotations found.” from the tables in the summary page
+    -Fix qvalue default min and max to min and max of the components
+
+
+
+
+
+
+
+
+
+
+
+TODO LIST FROM continuous_phenotype branch (to clean afterwards...):
+>>>>>>> continuous_phenotype
+-Release v0.5.2:
+    1. Continuous phenotypes:
+           - Still read the phenotype as a string, to deal with NAs.
+           - If not NA, convert to float, and store as a float in the strain object.
+           - Replace the part where we test whether both "0" and "1" phenotypes are present by a test that the empirical variance of the phenotypes is above some threshold (or simply that they are not all identical).
+           - Optionally build the pheno0Count and pheno1Count counters (which we use for visualization) using a user specified threshold: eg, users can say that positive phenotypes are class1 and non-negative ones are class 0. We provide a default threshold (eg >0 vs <=0, which works seamlessly for the current binary phenotypes) and an option to just desactivate the count columns in the visualization.
+           Regarding the figures:
+               - The barplot and manhattan plot for PCs can be done with non-binary phenotypes.
+               - The "indiv vs first PCs" and tree plot would need to be adapted eg by replacing the 2 colors by a gradient of shades. I can try and do it (or we can just skip these plots for non-binary phenotypes for the moment).
+           -phenotype count in step3:
+               -Parametre -phenotypeBreakpoint pB (pB=0 by default or do not show Pheno0 and Pheno1 count in step3 if not passed?)
+                   - count 0 -> count [-inf, pB]
+                   - count 1 -> count (pB, +inf]
+    2. Step1 only
+        -Count mode is way too hard than we imagined, we are skipping it in v0.5.2.
+        -Possibility to launch only step1:
+            -Add to DBGWAS parameter -runOnlyStep1
+            - Thus, user can specify their own processing on the X matrix of unitigs + Possibility to write a count matrix at step1, as we get this count value during step1.3.  (Work on unitig counts rather than presence/absence)
+                - Required: do the filtering of patterns with maf < maf.filter in C++ (for now done in R)
+                    -#0s / #samples >= 1-maf -> filter out
+                - Parameter --removeNAs (remove NAs phenotypes from the processing)
+
+    3. Two SFF filters (top-N + q-value). The one leading to the lowest number of patterns is used.
+        -Double-check SFF filter
+                -When the 100th q-value is really not significant (like ~1), there is no meaning to generate a subgraph with the related unitigs.
+                The double check would be: take the top 100 q-values below a threshold (like the usual 0.05). Do you think we could try this ?
+                This would certainly lead to 2 different SFF parameters, which are somewhere correlated...
+                    -q-value: default 0.05
+                    -top-n: default 100
+
+
+
+Core GWAS  functionalities (HIGH PRIORITY):
+    -Assemble the heaviest path of the DBG and blast it (or the path going through the largest number of significant unitigs) /// Multiple alignment on the node sequences that are selected?
+        -That’s more or less what we are trying to do in automatic_labelling branch...
+
+    -Work on raw reads instead of assembled contigs (@see https://mail.google.com/mail/u/0/#inbox/15ffcd92a248a692)
+
+    -Add covariates (e.g. patient metadata) in the association model
+
+    -Count mode
+        -Should we demand:
+            -Only raw reads?
+                -Should we make an assembly?
+                    -Assembly simplifies the DBG and the output, and everything else, but we might lose some variations that are removed by the assembly step and parameters
+                    -This would also mean that DBGWAS would need to make a bacterial assembly (not sure if this is a good idea, it is a hard task, we won't be better than the current assemblers)
+                -Should we get raw reads and use the unitigs as assembly?
+                    -This would make the DBG larger, output more complicated to read, and everything else will take more time, will be more complicated
+                    -But we won't lose any variation in the dataset - assembly might remove a SNP that is associated with resistance, for example
+            -Contigs + raw reads?
+                -Here we build the DBG from the contigs and we get the count from the raw reads
+                    -We don't want to assemble the sequences ourselves
+                    -We might lose some variations (we are sensible to what is contained in the contigs)
+            -The main is a biological question:
+                -Use unitigs and keep all variants
+                -Use contigs and lose some variants, but simplify everything else?
+
+        - Count matrix does not make sense if the input are contigs (we need raw reads to have contig/unitig quantification)
+            -We should also normalize the counts per strain (strains can be sequenced at different coverage, and a normalization is required)
+            -We can get the coverage of a strain sequencing by two methods:
+                1) # total bases in the reads of a strain / estimated genome size
+                    -estimated genome size can be given as input by the user or we can compute it
+                        -Given as input by the user is not nice, because the user must know the estimated genome size and it won't work for plastic genomes
+                        -We can compute it ourselves by summing up all the bases of the contigs
+                2) Use median kmer-counts for doing the normalization
+                    -It does not really mean it is the coverage, but it is just to do the normalization
+                    -Normalized count of an unitig : unitig count / median kmer-counts (or median unitig count?)
+                3) see:  Evaluation of statistical methods for normalization and differential expression in mRNA-Seq experiments  :upper-quartile normalisation or full-quantile normalisation
+            -Magali will choose which method to implement
+
+       -  Add to DBGWAS parameter -runOnlyStep1 Freq/Bin
+             -It will just produces the variant matrices and stop
+             -Freq = use frequences
+             -Bin = use presence/absence pattern
+
+
+
+Performances (and I/O features):
+    === HIGH PRIORITY ===
+    -Navigation in the web pages:
+        -Work on the javascript performance:   In very large graphs, selecting all nodes, unselecting, etc is very slow
+        -In index pages with a lot of annotation, it is way too hard to use a drop-down list: Change filter in the annotation list in the summary page (add option for the user to use text or to type something)
+    -Do a text output of DBGWAS so users can use other tools to post-process its output
+    -Make step 3 multithreaded
+    -"make" should copy the DBGWAS_lib folder to the tools/ folder
+
+    === LOW PRIORITY ===
+    -When launching only step3, there should be no need to specify a strain file
+    -Treat NA phenotypes better:  we just removed from the input for now
+    -Memory optimization:
+        -Change UnitigIdStrandPos simply to unitigId (We just use the unitig id...)
+    -Use a portable version of R to remove all dependencies?
+    -Allow the user to provide an already built database, instead of calling makeblastdb always
+    -Adding metadata to features (like what each genome mean, species, etc)
+        -This would be a field in the input file with a column with whatever the user would like to put
+
+
+   -commandStep2
+        -allow the user to launch a custom processing for step 2
+        -Input: <x_matrix> <pattern_matrix> <pattern2unitigs>
+        -Output: <significative_patterns.txt>
+
+
+
+
+
+Web navigation functionalities (LOW PRIORITY)
+    -Possibility to export graph view as bitmap…
+    -Possibility to export linear paths as patterns of sequences
+    -Possibility to map a particular sequence on the output subgraphs (highlight its path). This is a little bit different from the mapping of a complete input individual sequence. Here, the idea would be to “visualize” on the graph a particular gene variant. Indeed, a lot of resistance genes are gene family containing well described and well annotated variant. For instance, when we see than 44 nodes got the “TEM-11” annotation, the idea would be to draw the (real exact) path of TEM-11 sequence on the graph…
