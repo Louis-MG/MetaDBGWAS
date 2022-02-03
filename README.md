@@ -35,7 +35,7 @@ This tool expands thee work of [DBGWAS](https://gitlab.com/leoisl/dbgwas) [(Jail
 
 # Usage
 
-```bash
+```
 
 --files <path> path to files
 --output <path> path to the output folder, current directory by default
