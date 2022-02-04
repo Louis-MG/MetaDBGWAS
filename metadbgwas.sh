@@ -10,7 +10,7 @@
 files=
 output="./"
 threads=4
-verbose=0
+verbose=1
 clean=false
 
 #Lighter
@@ -117,7 +117,6 @@ do
 	esac
 done
 
-
 #creates output dir if it doesnt exist yet
 
 if [ -d $output ]
@@ -131,6 +130,12 @@ then
 	fi
 else
 	mkdir $output
+fi
+
+# if verbose is set to 0 : silenceing of the commands (equivaluent to --quiet)
+if [ $verbose -eq 0 ]
+then
+	exec 1>&1 &>/dev/null
 fi
 
 
@@ -147,27 +152,35 @@ then
 	echo $files > list_files
 	if [ $alpha -gt 0 ]
 	then
-		for i in $files
-		do
-			./Lighter/lighter -r ${i} -od $output -t $threads -discard -k $kmer_l $genome_size $alpha
-		done
+		./Lighter/lighter -r $files -od $output -t $threads -discard -k $kmer_l $genome_size $alpha
 	else
-		for i in $files
-		do
-			./Lighter/lighter -r ${i} -od $output -t $threads -discard -K $kmer_l $genome_size
-		done
+		./Lighter/lighter -r $files -od $output -t $threads -discard -K $kmer_l $genome_size
 	fi
 elif [ -d $files  ]
 then
 	find $files -type f > list_files
-	for i in $files/*
-	do
-		./Lighter/lighter -r ${i} -od $output -t $threads -discard -k $kmer_l $genome_size $alpha
-	done
+	if [ $alpha -gt 0 ]
+	then
+		for i in $files/*.f*
+		do
+			./Lighter/lighter -r ${i} -od $output -t $threads -discard -k $kmer_l $genome_size $alpha $verbosity_level
+		done
+	else
+		for i in $files/*.f*
+		do
+			./Lighter/lighter -r ${i} -od $output -t $threads -discard -K $kmer_l $genome_size $verbosity_level
+		done
+	fi
 else
 	echo "File not found, verify the path."
 fi
 
 #Bcalm 2
+if [ $verbose -ge 1 ] #loop to silence the command if --verbose is at 0
+then
+	verbosity_level='-verbose $verbose'
+else
+	verbosity_level='> test.txt'
+fi
 
-./bcalm/build/bcalm -in ./list_files -kmer-size $kmer -nb-cores $threads -out-dir $output
+./bcalm/build/bcalm -in ./list_files -kmer-size $kmer -nb-cores $threads -out-dir $output $verbosity_level
