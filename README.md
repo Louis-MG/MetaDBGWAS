@@ -10,7 +10,7 @@ MetaDBGWAS
 
 # Motivation
 
-This tool expands thee work of [DBGWAS](https://gitlab.com/leoisl/dbgwas) [(Jaillard et al, 2018)](https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1007758) and bring to the metagenomic scale.
+This tool expands the work of [DBGWAS](https://gitlab.com/leoisl/dbgwas) [(Jaillard et al, 2018)](https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1007758) and brings it to the metagenomic scale.
 
 # Requirements
 
@@ -24,11 +24,11 @@ This tool expands thee work of [DBGWAS](https://gitlab.com/leoisl/dbgwas) [(Jail
 # Installation
 
 1. Use the following command to download the repository :
-	```bash
+	```shell
 	git clone --recursive https://github.com/Louis-MG/MetaDBGWAS.git
 	```
 2. Complete the installation :
-	```bash
+	```shell
 	cd MetaDBGWAS
 	sh install.sh
 	```
@@ -36,32 +36,44 @@ This tool expands thee work of [DBGWAS](https://gitlab.com/leoisl/dbgwas) [(Jail
 # Usage
 
 ```
- * General
---files <path> path to files
---output <path> path to the output folder, current directory by default
---threads <int> number of threads to use
---verbose <int> level of verbosity. Default to 1, 1-3
---clean removes files from output directory if not empty
+	* General
+--files <path> path to one file or a directory containing the files.
+--output <path> path to the output folder. Default set to ./ .
+--threads <int> number of threads to use. DEfault set to 4.
+--verbose <int> level of verbosity. Default to 1, 0-1. 0 is equivalent to --quiet.
+--clean removes files from output directory if not empty.
 
         * Lighter
---K <kmer length (int)> <genome size (base, int)>
+--K <int> <int> kmer length and genome size (in base). Recommenmded is 17 X.
         or
---k <kmer length (int)> <genome size (in base, int)> <alpha (float)>
+--k <int> <int> <float> kmer length and genome size (in base), alpha (probability of sampling a kmer). Recommended is 17 X X.
 
 	* bcalm
---kmer <kmer length (int)> kmer length used for unitigs build.
+--kmer <kmer length (int)> kmer length used for unitigs build. Default to 31.
+
+	* Reindeer
+Reindeer uses kmer, threads, and output parameters. No others need to be specified.
 
         * DBGWAS
 --strains A text file describing the strains containing 3 columns: 1) ID of the strain; 2) Phenotype (a real number or NA); 3) Path to a multi-fasta file containing the sequences of the strain. This fil>
---newick Optional path to a newick tree file. If (and only if) a newick tree file is provided, the lineage effect analysis is computed and PCs figures are generated.  [default '']
+--newick Optional path to a newick tree file. If (and only if) a newick tree file is provided, the lineage effect analysis is computed and PCs figures are generated.
 
         * Miscellaneous
---license prints the license text in standard output
---help displays help\n"
+--license prints the license text in standard output.
+--help displays help.\n"
 
+	* Exemple
+bash metadbgwas.sh --files /test/ --output ./output --threads 4 --verbose 1 --K 17 6000000
 ```
 
 # Output
+
+User can find in the output folder :
+- the corrected fasta files.
+- unitigs folder with output from bcalm (intermediate .h5 file of gatb and the unitigs.fa)
+- matrix folder with the matrix of absence/presence of kmers in the unitigs. Ouptut from Reindeer.
+- fof.txt : file of files for input of bcalm
+- fof_unitigs.txt : file of file for input of Reindeer.
 
 # License
 

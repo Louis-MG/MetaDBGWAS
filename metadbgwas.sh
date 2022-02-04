@@ -10,7 +10,7 @@
 files=
 output="./"
 threads=4
-verbose=0
+verbose=1
 clean=false
 
 #Lighter
@@ -68,24 +68,35 @@ Help()
 {
    # Display Help
    echo "
-	* General
---files <path> path to files.
---output <path> path to the output folder, current directory by default.
---threads <int> number of threads to use. Default to 4.
---verbose <int> level of verbosity. Default to 1, 1-3.
+        * General
+--files <path> path to one file or a directory containing the files.
+--output <path> path to the output folder. Default set to ./ .
+--threads <int> number of threads to use. DEfault set to 4.
+--verbose <int> level of verbosity. Default to 1, 0-1. 0 is equivalent to --quiet.
+--clean removes files from output directory if not empty.
 
-	* Lighter
---K <kmer length (int)> <genome size (base, int)>
-	or
---k <kmer length (int)> <genome size (in base, int)> <alpha (float)>
+        * Lighter
+--K <int> <int> kmer length and genome size (in base). Recommenmded is 17 X.
+        or
+--k <int> <int> <float> kmer length and genome size (in base), alpha (probability of sampling a kmer). Recommended is 17 X X.
 
-	* DBGWAS
---strains A text file describing the strains containing 3 columns: 1) ID of the strain; 2) Phenotype (a real number or NA); 3) Path to a multi-fasta file containing the sequences of the strain. This file needs a header. Check the sample_example folder or https://gitlab.com/leoisl/dbgwas/raw/master/sample_example/strains for an example.
+        * bcalm
+--kmer <kmer length (int)> kmer length used for unitigs build. Default to 31.
+
+        * Reindeer
+Reindeer uses kmer, threads, and output parameters. No others need to be specified. 
+
+        * DBGWAS
+--strains A text file describing the strains containing 3 columns: 1) ID of the strain; 2) Phenotype (a real number or NA); 3) Path to a multi-fasta file containing the sequences of the strain. This fil>
 --newick Optional path to a newick tree file. If (and only if) a newick tree file is provided, the lineage effect analysis is computed and PCs figures are generated.
 
-	* Miscellaneous
+        * Miscellaneous
 --license prints the license text in standard output.
---help displays help.\n"
+--help displays help.
+
+        * Exemple
+bash metadbgwas.sh --files /test/ --output ./output --threads 4 --verbose 1 --K 17 6000000\n
+	"
 }
 
 #Parameters parsing
@@ -117,7 +128,6 @@ do
 	esac
 done
 
-
 #creates output dir if it doesnt exist yet
 
 if [ -d $output ]
@@ -133,6 +143,12 @@ else
 	mkdir $output
 fi
 
+# if verbose is set to 0 : silenceing of the commands (equivaluent to --quiet)
+if [ $verbose -eq 0 ]
+then
+	exec 1>&1 &>/dev/null
+fi
+
 
 #Lighter
 #else tells user that file is not found
@@ -144,30 +160,48 @@ fi
 
 if [ -f $files ]
 then
-	echo $files > list_files
 	if [ $alpha -gt 0 ]
 	then
-		for i in $files
+		./Lighter/lighter -r $files -od $output -t $threads -discard -k $kmer_l $genome_size $alpha
+	else
+		./Lighter/lighter -r $files -od $output -t $threads -discard -K $kmer_l $genome_size
+	fi
+elif [ -d $files  ]
+then
+	if [ $alpha -gt 0 ]
+	then
+		for i in $files/*.f*
 		do
 			./Lighter/lighter -r ${i} -od $output -t $threads -discard -k $kmer_l $genome_size $alpha
 		done
 	else
-		for i in $files
+		for i in $files/*.f*
 		do
 			./Lighter/lighter -r ${i} -od $output -t $threads -discard -K $kmer_l $genome_size
 		done
 	fi
-elif [ -d $files  ]
-then
-	find $files -type f > list_files
-	for i in $files/*
-	do
-		./Lighter/lighter -r ${i} -od $output -t $threads -discard -k $kmer_l $genome_size $alpha
-	done
 else
-	echo "File not found, verify the path."
+	echo "File/folder not found, verify the path."
 fi
 
 #Bcalm 2
 
-./bcalm/build/bcalm -in ./list_files -kmer-size $kmer -nb-cores $threads -out-dir $output
+find $output/*.fq* -type f > fof.txt
+mv fof.txt $output
+if [ $verbose -ge 1 ] #loop to silence the command if --verbose is at 0
+then
+	echo 'Starting bcalm2 ...'
+	verbosity_level='-verbose $verbose'
+else
+	verbosity_level=''
+fi
+
+mkdir $output/unitigs
+./bcalm/build/bcalm -in $output/fof.txt -kmer-size $kmer -nb-cores $threads -out-dir $output/unitigs $verbosity_level
+mv ./fof.unitigs.fa $output/unitigs
+echo "$output/unitigs/fof.unitigs.fa" > $output/fof_unitigs.txt #creates the file of file for reindeer with unitigs
+
+
+# Reindeer
+mkdir $output/matrix
+./REINDEER/Reindeer -o $output/matrix -t $threads --nocount -k $kmer --index -f $output/fof_unitigs.txt
