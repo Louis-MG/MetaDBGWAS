@@ -92,11 +92,11 @@ Reindeer uses kmer, threads, and output parameters. No others need to be specifi
 
         * Miscellaneous
 --license prints the license text in standard output.
---help displays help.\n"
+--help displays help.
 
         * Exemple
 bash metadbgwas.sh --files /test/ --output ./output --threads 4 --verbose 1 --K 17 6000000\n
-"
+	"
 }
 
 #Parameters parsing
@@ -160,7 +160,6 @@ fi
 
 if [ -f $files ]
 then
-	echo $files > list_files
 	if [ $alpha -gt 0 ]
 	then
 		./Lighter/lighter -r $files -od $output -t $threads -discard -k $kmer_l $genome_size $alpha
@@ -169,7 +168,6 @@ then
 	fi
 elif [ -d $files  ]
 then
-	find $files -type f > list_files
 	if [ $alpha -gt 0 ]
 	then
 		for i in $files/*.f*
@@ -183,22 +181,27 @@ then
 		done
 	fi
 else
-	echo "File not found, verify the path."
+	echo "File/folder not found, verify the path."
 fi
 
 #Bcalm 2
+
+find $output/*.fq* -type f > fof.txt
+mv fof.txt $output
 if [ $verbose -ge 1 ] #loop to silence the command if --verbose is at 0
 then
+	echo 'Starting bcalm2 ...'
 	verbosity_level='-verbose $verbose'
 else
 	verbosity_level=''
 fi
-mkdir $output/unitigs
-./bcalm/build/bcalm -in ./list_files -kmer-size $kmer -nb-cores $threads -out-dir $output/unitigs $verbosity_level
 
-find $output/unitigs -type f > fof.txt
+mkdir $output/unitigs
+./bcalm/build/bcalm -in $output/fof.txt -kmer-size $kmer -nb-cores $threads -out-dir $output/unitigs $verbosity_level
+mv ./fof.unitigs.fa $output/unitigs
+echo "$output/unitigs/fof.unitigs.fa" > $output/fof_unitigs.txt #creates the file of file for reindeer with unitigs
+
 
 # Reindeer
-
 mkdir $output/matrix
-./REINDEER/Reindeer -o $output/matrix -t $threads --nocount -k $kmer --index -f fof.txt
+./REINDEER/Reindeer -o $output/matrix -t $threads --nocount -k $kmer --index -f $output/fof_unitigs.txt
