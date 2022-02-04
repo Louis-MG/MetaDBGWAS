@@ -10,7 +10,7 @@ MetaDBGWAS
 
 # Motivation
 
-This tool expands thee work of [DBGWAS](https://gitlab.com/leoisl/dbgwas) [(Jaillard et al, 2018)](https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1007758) and bring to the metagenomic scale.
+This tool expands the work of [DBGWAS](https://gitlab.com/leoisl/dbgwas) [(Jaillard et al, 2018)](https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1007758) and brings it to the metagenomic scale.
 
 # Requirements
 
@@ -24,11 +24,11 @@ This tool expands thee work of [DBGWAS](https://gitlab.com/leoisl/dbgwas) [(Jail
 # Installation
 
 1. Use the following command to download the repository :
-	```bash
+	```shell
 	git clone --recursive https://github.com/Louis-MG/MetaDBGWAS.git
 	```
 2. Complete the installation :
-	```bash
+	```shell
 	cd MetaDBGWAS
 	sh install.sh
 	```
@@ -40,13 +40,13 @@ This tool expands thee work of [DBGWAS](https://gitlab.com/leoisl/dbgwas) [(Jail
 --files <path> path to one file or a directory containing the files.
 --output <path> path to the output folder, current directory by default.
 --threads <int> number of threads to use.
---verbose <int> level of verbosity. Default to 1, 1-3.
+--verbose <int> level of verbosity. Default to 1, 0-1. 0 is equivalent to --quiet.
 --clean removes files from output directory if not empty.
 
         * Lighter
---K <kmer length (int)> <genome size (base, int)>
+--K <int> <int> kmer length and genome size (in base)
         or
---k <kmer length (int)> <genome size (in base, int)> <alpha (float)>
+--k <int> <int> <float> kmer length and genome size (in base), alpha (probability of sampling a kmer)
 
 	* bcalm
 --kmer <kmer length (int)> kmer length used for unitigs build.
