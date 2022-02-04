@@ -68,24 +68,35 @@ Help()
 {
    # Display Help
    echo "
-	* General
---files <path> path to files.
---output <path> path to the output folder, current directory by default.
---threads <int> number of threads to use. Default to 4.
---verbose <int> level of verbosity. Default to 1, 1-3.
+        * General
+--files <path> path to one file or a directory containing the files.
+--output <path> path to the output folder. Default set to ./ .
+--threads <int> number of threads to use. DEfault set to 4.
+--verbose <int> level of verbosity. Default to 1, 0-1. 0 is equivalent to --quiet.
+--clean removes files from output directory if not empty.
 
-	* Lighter
---K <kmer length (int)> <genome size (base, int)>
-	or
---k <kmer length (int)> <genome size (in base, int)> <alpha (float)>
+        * Lighter
+--K <int> <int> kmer length and genome size (in base). Recommenmded is 17 X.
+        or
+--k <int> <int> <float> kmer length and genome size (in base), alpha (probability of sampling a kmer). Recommended is 17 X X.
 
-	* DBGWAS
---strains A text file describing the strains containing 3 columns: 1) ID of the strain; 2) Phenotype (a real number or NA); 3) Path to a multi-fasta file containing the sequences of the strain. This file needs a header. Check the sample_example folder or https://gitlab.com/leoisl/dbgwas/raw/master/sample_example/strains for an example.
+        * bcalm
+--kmer <kmer length (int)> kmer length used for unitigs build. Default to 31.
+
+        * Reindeer
+Reindeer uses kmer, threads, and output parameters. No others need to be specified. 
+
+        * DBGWAS
+--strains A text file describing the strains containing 3 columns: 1) ID of the strain; 2) Phenotype (a real number or NA); 3) Path to a multi-fasta file containing the sequences of the strain. This fil>
 --newick Optional path to a newick tree file. If (and only if) a newick tree file is provided, the lineage effect analysis is computed and PCs figures are generated.
 
-	* Miscellaneous
+        * Miscellaneous
 --license prints the license text in standard output.
 --help displays help.\n"
+
+        * Exemple
+bash metadbgwas.sh --files /test/ --output ./output --threads 4 --verbose 1 --K 17 6000000\n
+"
 }
 
 #Parameters parsing
@@ -182,5 +193,12 @@ then
 else
 	verbosity_level=''
 fi
+mkdir $output/unitigs
+./bcalm/build/bcalm -in ./list_files -kmer-size $kmer -nb-cores $threads -out-dir $output/unitigs $verbosity_level
 
-./bcalm/build/bcalm -in ./list_files -kmer-size $kmer -nb-cores $threads -out-dir $output $verbosity_level
+find $output/unitigs -type f > fof.txt
+
+# Reindeer
+
+mkdir $output/matrix
+./REINDEER/Reindeer -o $output/matrix -t $threads --nocount -k $kmer --index -f fof.txt
