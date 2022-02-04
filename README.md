@@ -68,6 +68,13 @@ bash metadbgwas.sh --files /test/ --output ./output --threads 4 --verbose 1 --K 
 
 # Output
 
+User can find in the output folder :
+- the corrected fasta files.
+- unitigs folder with output from bcalm (intermediate .h5 file of gatb and the unitigs.fa)
+- matrix folder with the matrix of absence/presence of kmers in the unitigs. Ouptut from Reindeer.
+- fof.txt : file of files for input of bcalm
+- fof_unitigs.txt : file of file for input of Reindeer.
+
 # License
 
 The work is available under the zlib license.
