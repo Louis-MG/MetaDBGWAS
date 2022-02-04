@@ -163,12 +163,12 @@ then
 	then
 		for i in $files/*.f*
 		do
-			./Lighter/lighter -r ${i} -od $output -t $threads -discard -k $kmer_l $genome_size $alpha $verbosity_level
+			./Lighter/lighter -r ${i} -od $output -t $threads -discard -k $kmer_l $genome_size $alpha
 		done
 	else
 		for i in $files/*.f*
 		do
-			./Lighter/lighter -r ${i} -od $output -t $threads -discard -K $kmer_l $genome_size $verbosity_level
+			./Lighter/lighter -r ${i} -od $output -t $threads -discard -K $kmer_l $genome_size
 		done
 	fi
 else
@@ -180,7 +180,7 @@ if [ $verbose -ge 1 ] #loop to silence the command if --verbose is at 0
 then
 	verbosity_level='-verbose $verbose'
 else
-	verbosity_level='> test.txt'
+	verbosity_level=''
 fi
 
 ./bcalm/build/bcalm -in ./list_files -kmer-size $kmer -nb-cores $threads -out-dir $output $verbosity_level
