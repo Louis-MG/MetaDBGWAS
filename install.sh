@@ -27,4 +27,4 @@ tar -zxvf dbgwas.Linux.precompiled.tar.gz
 rm dbgwas.Linux.precompiled.tar.gz
 cd ..
 
-Rscript install.R
+echo "Installation complete ! Do not forget to install the R libraries."
