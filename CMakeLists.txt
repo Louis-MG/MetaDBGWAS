@@ -3,4 +3,4 @@ project(MetaDBGWAS)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(MetaDBGWAS main.cpp)
+add_executable(MetaDBGWAS build_dbg.cpp)
