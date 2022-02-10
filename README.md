@@ -32,6 +32,11 @@ This tool expands the work of [DBGWAS](https://gitlab.com/leoisl/dbgwas) [(Jaill
 	cd MetaDBGWAS
 	sh install.sh
 	```
+3. Add the R libraries :
+	```R
+	install.packages(c('ape', 'phangorn'))
+	install.packages("https://raw.githubusercontent.com/sgearle/bugwas/master/build/bugwas_1.0.tar.gz", repos=NULL, type="source")
+	```
 
 # Usage
 
