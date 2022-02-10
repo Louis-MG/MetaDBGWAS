@@ -26,10 +26,12 @@
 ## Authors (alphabetically): Jacob L., Jaillard M., Lima L.
 */
 
-#ifndef KSGATB_GLOBAL_H
+#ifndef KSGATB_GLOBAL_H //not a typo, True if not definec
 #define KSGATB_GLOBAL_H
-#include <gatb/gatb_core.hpp>
+#include "thirdparty/gatb-core/gatb-core/src/gatb/gatb_core.hpp"
 #include "Utils.h"
+
+using namespace std;
 
 #define UNIQUE_SYMBOL_MARKER "#@#-322"
 
@@ -57,9 +59,8 @@ extern const char* STR_NO_PREVIEW;
 extern const char* STR_PHENOTYPE_THRESHOLD;
 extern const char* STR_KEEP_NA;
 
-//TODO: seeveral questions are still unclear if we use the Freq count mode (how to run bugwas, the coloring, etc...). For now I am disabling this option
+//TODO: several questions are still unclear if we use the Freq count mode (how to run bugwas, the coloring, etc...). For now I am disabling this option
 //extern const char* STR_COUNT_MODE;
-//TODO: seeveral questions are still unclear if we use the Freq count mode (how to run bugwas, the coloring, etc...). For now I am disabling this option
 extern string DBGWAS_lib;
 extern bool skip1;
 extern bool skip2;

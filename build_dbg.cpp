@@ -2,7 +2,7 @@
 #include "build_dbg.hpp"
 #include "global.h"
 #include "GraphOutput.h"
-#include "version.h"
+// file not found #include "version.h"
 
 using namespace std;
 
@@ -19,7 +19,7 @@ using namespace std;
 build_dbg::build_dbg ()  : Tool ("build_dbg") //give a name to our tool
 {
     setVersion([](void* whatever) {
-        cout << "DBGWAS v" << VERSION << endl;
+        cout << "DBGWAS v" << VERSION << endl; //not sure I should keep this
     });
     populateParser(this);
 }
@@ -270,10 +270,4 @@ void build_dbg::execute ()
     cout << "Number of kmers: " << graph->getInfo()["kmers_nb_solid"]->getInt() << endl;
     cout << "Number of unitigs: " << getNbLinesInFile(outputFolder+string("/graph.nodes")) << endl;
     cout << "################################################################################" << endl;
-}
-
-
-int main() {
-    std::cout << "Hello, World!" << std::endl;
-    return 0;
 }

@@ -30,7 +30,8 @@
 #define _TOOL_build_dbg_HPP_
 #include <cstdlib>
 /********************************************************************************/
-#include <gatb/gatb_core.hpp>
+//#include <gatb/gatb_core.hpp>
+#include "thirdparty/gatb-core/gatb-core/src/gatb/gatb_core.hpp"
 /********************************************************************************/
 
 

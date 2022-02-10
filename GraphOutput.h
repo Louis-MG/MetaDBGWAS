@@ -36,10 +36,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <boost/regex.hpp>
+#include <boost/regex.hpp> //TODO:changer ca
 #include <assert.h> 
-#include <gatb/gatb_core.hpp>
-
+//#include <gatb/gatb_core.hpp> //replace with
+#include "thirdparty/gatb-core/gatb-core/src/gatb/gatb_core.hpp"
 
 #ifndef _GRAPHOUTPUT_H
 #define _GRAPHOUTPUT_H
