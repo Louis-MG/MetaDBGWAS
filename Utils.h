@@ -45,8 +45,8 @@
 #define BOOST_NO_CXX11_SCOPED_ENUMS
 #include <boost/filesystem.hpp>
 #undef BOOST_NO_CXX11_SCOPED_ENUMS
-#include <pstream.h>
-#include <whereami.h>
+#include <pstreams/pstream.h>
+#include "whereami.h"
 #include "PhenoCounter.h"
 #include <boost/archive/text_oarchive.hpp>
 

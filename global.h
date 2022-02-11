@@ -28,7 +28,7 @@
 
 #ifndef KSGATB_GLOBAL_H //not a typo, True if not definec
 #define KSGATB_GLOBAL_H
-#include "thirdparty/gatb-core/gatb-core/src/gatb/gatb_core.hpp"
+#include <gatb/gatb_core.hpp>
 #include "Utils.h"
 
 using namespace std;
