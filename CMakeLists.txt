@@ -1,7 +1,7 @@
-cmake_minimum_required(VERSION 3.21) #verison minimum de cmake demandee, en genral la plus basse qui marche et par automatisme celle qui est utilisee
+cmake_minimum_required(VERSION 3.16) #verison minimum de cmake demandee, en genral la plus basse qui marche et par automatisme celle qui est utilisee
 project(MetaDBGWAS) #nom du projet a utiliser pour le reste du script
 
-set(CMAKE_CXX_STANDARD 14) # version C++
+set(CMAKE_CXX_STANDARD 11) # version C++
 
 find_package(Boost REQUIRED COMPONENTS filesystem)
 

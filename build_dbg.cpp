@@ -20,9 +20,6 @@ using namespace std;
 // This name appears when one gets help in the command line or in the final output
 build_dbg::build_dbg ()  : Tool ("build_dbg") //give a name to our tool
 {
-    setVersion([](void* whatever) {
-        cout << "DBGWAS v" << VERSION << endl; //not sure if I should keep this
-    });
     populateParser(this);
 }
 
@@ -233,7 +230,6 @@ void build_dbg::execute ()
 
     //create the reads file
     string readsFile(tmpFolder+string("/readsFile"));
-    Strain::createReadsFile(readsFile, strains);
 
     //Builds the DBG using GATB
     //TODO: by using create() and assigning to a Graph object, the copy constructor does a shallow or deep copy??
