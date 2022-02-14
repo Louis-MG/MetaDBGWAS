@@ -28,6 +28,7 @@
 
 #ifndef KISSPLICE_UTILS_H
 #define KISSPLICE_UTILS_H
+#endif
 
 #include <gatb/gatb_core.hpp>
 #include <string>

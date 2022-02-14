@@ -28,8 +28,10 @@
 
 #ifndef KSGATB_GLOBAL_H //not a typo, True if not defined
 #define KSGATB_GLOBAL_H
+#endif
 #include <gatb/gatb_core.hpp>
 #include "Utils.h"
+
 
 using namespace std;
 
@@ -37,31 +39,12 @@ using namespace std;
 
 //global vars
 extern Graph* graph;
-/*
-extern vector< UnitigIdStrandPos >* nodeIdToUnitigId;
-extern vector< Strain >* strains;
-extern const char* STR_STRAINS_FILE;
- */
+
 extern const char* STR_KSKMER_SIZE;
 extern const char* STR_OUTPUT;
 extern const char* STR_NBCORES;
 extern const char* STR_MAX_NEIGHBOURHOOD;
-/* shouldnt be useful
-extern const char* STR_SKIP1;
-extern const char* STR_SKIP2;
-extern const char* STR_NEWICK_PATH;
-extern const char* STR_SFF;
-extern const char* STR_NUCLEOTIDE_DB;
-extern const char* STR_PROTEIN_DB;
-extern const char* STR_MAF_FILTER;
-extern const char* STR_GEMMA_PATH;
-extern const char* STR_BLAST_PATH;
-extern const char* STR_PHANTOMJS_PATH;
-extern const char* STR_RSCRIPT_PATH;
-extern const char* STR_NO_PREVIEW;
-extern const char* STR_PHENOTYPE_THRESHOLD;
-extern const char* STR_KEEP_NA;
-*/
+
 
 //TODO: several questions are still unclear if we use the Freq count mode (how to run bugwas, the coloring, etc...). For now I am disabling this option
 //extern const char* STR_COUNT_MODE;
@@ -75,18 +58,3 @@ extern string nucleotideDBPath;
 extern bool thereIsProteinDB;
 extern string proteinDBPath;
 extern boost::variant< int, double > SFF;
-/* CODE BELOW IS USED FOR STATISTICS, NOT USED FOR GRAPH FILES
-extern string gemmaPath;
-extern string blastPath;
-extern string phantomjsPath;
-extern string RscriptPath;
-extern bool noPreview;
-extern bool keepNA;
-extern double phenotypeThreshold;
-extern char qOrPValue;
-
-void populateParser (Tool *tool);
-
-#endif //KSGATB_GLOBAL_H
-
- */
