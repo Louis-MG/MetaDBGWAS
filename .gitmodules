@@ -1,6 +1,3 @@
-[submodule "dbgwas"]
-	path = dbgwas
-	url = https://gitlab.com/leoisl/dbgwas.git
 [submodule "bcalm"]
 	path = bcalm
 	url = https://github.com/GATB/bcalm.git

@@ -37,6 +37,11 @@ This tool expands the work of [DBGWAS](https://gitlab.com/leoisl/dbgwas) [(Jaill
 	install.packages(c('ape', 'phangorn'))
 	install.packages("https://raw.githubusercontent.com/sgearle/bugwas/master/build/bugwas_1.0.tar.gz", repos=NULL, type="source")
 	```
+4. Add the C++ libraries :
+	```shell
+	sudo apt install libgatbcore-dev libhdf5-dev libboost-dev libpstreams-dev
+	```
+
 
 # Usage
 
