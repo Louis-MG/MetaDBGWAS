@@ -36,9 +36,9 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include <boost/regex.hpp> //TODO:changer ca
+#include <boost/regex.hpp>
 #include <cassert>
-#include <gatb/gatb_core.hpp> //replace with
+#include <gatb/gatb_core.hpp>
 #ifndef _GRAPHOUTPUT_H
 #define _GRAPHOUTPUT_H
 

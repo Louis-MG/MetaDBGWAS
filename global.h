@@ -26,7 +26,7 @@
 ## Authors (alphabetically): Jacob L., Jaillard M., Lima L.
 */
 
-#ifndef KSGATB_GLOBAL_H //not a typo, True if not definec
+#ifndef KSGATB_GLOBAL_H //not a typo, True if not defined
 #define KSGATB_GLOBAL_H
 #include <gatb/gatb_core.hpp>
 #include "Utils.h"
@@ -37,13 +37,16 @@ using namespace std;
 
 //global vars
 extern Graph* graph;
+/*
 extern vector< UnitigIdStrandPos >* nodeIdToUnitigId;
 extern vector< Strain >* strains;
 extern const char* STR_STRAINS_FILE;
+ */
 extern const char* STR_KSKMER_SIZE;
 extern const char* STR_OUTPUT;
 extern const char* STR_NBCORES;
 extern const char* STR_MAX_NEIGHBOURHOOD;
+/* shouldnt be useful
 extern const char* STR_SKIP1;
 extern const char* STR_SKIP2;
 extern const char* STR_NEWICK_PATH;
@@ -58,6 +61,7 @@ extern const char* STR_RSCRIPT_PATH;
 extern const char* STR_NO_PREVIEW;
 extern const char* STR_PHENOTYPE_THRESHOLD;
 extern const char* STR_KEEP_NA;
+*/
 
 //TODO: several questions are still unclear if we use the Freq count mode (how to run bugwas, the coloring, etc...). For now I am disabling this option
 //extern const char* STR_COUNT_MODE;
@@ -71,6 +75,7 @@ extern string nucleotideDBPath;
 extern bool thereIsProteinDB;
 extern string proteinDBPath;
 extern boost::variant< int, double > SFF;
+/* CODE BELOW IS USED FOR STATISTICS, NOT USED FOR GRAPH FILES
 extern string gemmaPath;
 extern string blastPath;
 extern string phantomjsPath;
@@ -83,3 +88,5 @@ extern char qOrPValue;
 void populateParser (Tool *tool);
 
 #endif //KSGATB_GLOBAL_H
+
+ */

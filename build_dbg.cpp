@@ -98,7 +98,7 @@ void construct_linear_seqs (const gatb::core::debruijn::impl::Graph& graph, cons
     u_int64_t nbContigs=0;
     BankFasta::setDataLineSize(0);
 
-    //We loop through the nodes and build the unitigs
+    //We loop through the nodes and build the unitigs //TODO replace with dbgwas part and just load the hdf5
     ProgressGraphIterator<Node, ProgressTimerAndSystem> it (graph.iterator(), "Graph: building unitigs");
     for (it.first(); !it.isDone(); it.next()) {
         auto &startingNode = it.item();
