@@ -86,3 +86,39 @@ string getDirWhereDBGWASIsInstalled();
 //the first value indicates if s was successfully parsed into a double
 //the second value indicates the double (it is only valid if the first is true)
 tuple<bool, double> is_number(const std::string& s);
+
+
+//global vars used by all programs
+class UnitigIdStrandPos {
+public:
+    int unitigId;
+    char strand; //TODO: change for bool
+    int pos;
+    int unitigSize;
+    int kmerSize; //the size of the kmer (just for the reverseStrand() function) //TODO: static global var, sth like that
+
+    UnitigIdStrandPos(int unitigId=0, char strand='?',int pos=0, int unitigSize=0, int kmerSize=0):
+            unitigId(unitigId), strand(strand), pos(pos), unitigSize(unitigSize), kmerSize(kmerSize){}
+    int getUnitigId () const {checkValidity(); return unitigId; }
+    char getStrand () const {checkValidity(); return strand; }
+    int getPos() const {checkValidity(); return pos; }
+    string toString() const {
+        stringstream ss;
+        try {
+            ss << getUnitigId() << " " << getStrand() << " " << getPos();
+        }catch (const runtime_error &e) {
+            ss << "-1 ? -1";
+        }
+        return ss.str();
+    }
+    void reverseStrand () {
+        strand = (strand=='F' ? 'R' : 'F');
+        pos = unitigSize-pos-kmerSize;
+    }
+
+    //check if the unitig is valid or not
+    void checkValidity() const {
+        if (strand=='?')
+            throw runtime_error("Invalid unitig.");
+    }
+};

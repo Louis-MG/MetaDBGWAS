@@ -239,7 +239,7 @@ void build_dbg::execute ()
 
     // Finding the unitigs
     //nodeIdToUnitigId translates the nodes that are stored in the GATB graph to the id of the unitigs together with the unitig strand
-    nodeIdToUnitigId = new vector< UnitigIdStrandPos >((size_t)graph->getInfo()["kmers_nb_solid"]->getInt()); //map nodeMPFHIndex() to unitigIds and strand
+    nodeIdToUnitigId = new vector< UnitigIdStrandPos >((size_t)graph->getInfo()["kmers_nb_solid"]->getInt()); //map nodeMPFHIndex() to unitigIds and strand // UnitigIdStrandPos might be from map_reads.cpp
     string linear_seqs_name = outputFolder+"/graph.unitigs";
     construct_linear_seqs (*graph, linear_seqs_name, *nodeIdToUnitigId);
 

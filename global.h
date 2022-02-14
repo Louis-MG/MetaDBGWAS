@@ -39,7 +39,7 @@ using namespace std;
 
 //global vars
 extern Graph* graph;
-
+extern vector< UnitigIdStrandPos >* nodeIdToUnitigId;
 extern const char* STR_KSKMER_SIZE;
 extern const char* STR_OUTPUT;
 extern const char* STR_NBCORES;
