@@ -28,6 +28,7 @@
 
 #ifndef KISSPLICE_UTILS_H
 #define KISSPLICE_UTILS_H
+#endif
 
 #include <gatb/gatb_core.hpp>
 #include <string>
@@ -47,7 +48,6 @@
 #undef BOOST_NO_CXX11_SCOPED_ENUMS
 #include <pstreams/pstream.h>
 #include "whereami.h"
-#include "PhenoCounter.h"
 #include <boost/archive/text_oarchive.hpp>
 
 
@@ -88,7 +88,6 @@ string getDirWhereDBGWASIsInstalled();
 tuple<bool, double> is_number(const std::string& s);
 
 
-
 //global vars used by all programs
 class UnitigIdStrandPos {
 public:
@@ -99,152 +98,27 @@ public:
     int kmerSize; //the size of the kmer (just for the reverseStrand() function) //TODO: static global var, sth like that
 
     UnitigIdStrandPos(int unitigId=0, char strand='?',int pos=0, int unitigSize=0, int kmerSize=0):
-        unitigId(unitigId), strand(strand), pos(pos), unitigSize(unitigSize), kmerSize(kmerSize){}
+            unitigId(unitigId), strand(strand), pos(pos), unitigSize(unitigSize), kmerSize(kmerSize){}
     int getUnitigId () const {checkValidity(); return unitigId; }
     char getStrand () const {checkValidity(); return strand; }
     int getPos() const {checkValidity(); return pos; }
     string toString() const {
-      stringstream ss;
-      try {
-        ss << getUnitigId() << " " << getStrand() << " " << getPos();
-      }catch (const runtime_error &e) {
-        ss << "-1 ? -1";
-      }
-      return ss.str();
+        stringstream ss;
+        try {
+            ss << getUnitigId() << " " << getStrand() << " " << getPos();
+        }catch (const runtime_error &e) {
+            ss << "-1 ? -1";
+        }
+        return ss.str();
     }
     void reverseStrand () {
-      strand = (strand=='F' ? 'R' : 'F');
-      pos = unitigSize-pos-kmerSize;
+        strand = (strand=='F' ? 'R' : 'F');
+        pos = unitigSize-pos-kmerSize;
     }
 
     //check if the unitig is valid or not
     void checkValidity() const {
-      if (strand=='?')
-        throw runtime_error("Invalid unitig.");
+        if (strand=='?')
+            throw runtime_error("Invalid unitig.");
     }
 };
-
-struct Strain {
-    string id, phenotype, path;
-
-    Strain(const string &id, const string &phenotype, const string &path) : id(id), phenotype(phenotype) {
-      //transfor to canonical path
-      boost::filesystem::path boostPath(boost::filesystem::canonical(path));
-      this->path = boostPath.string();
-    }
-
-    static void createReadsFile(const string &readsFile, vector< Strain >* strains) {
-      ofstream fout;
-      openFileForWriting(readsFile, fout);
-
-      for (const auto &strain : (*strains))
-        fout << strain.path << endl;
-
-      fout.close();
-    }
-
-    static void createIdPhenoFile(const string &filePath, vector< Strain >* strains) {
-      ofstream fout;
-      openFileForWriting(filePath, fout);
-      fout << "ID\tpheno" << endl;
-
-      for (const auto &strain : (*strains))
-        fout << strain.id << "\t" << strain.phenotype << endl;
-
-      fout.close();
-    }
-
-    //save a phenoCounter representing all phenotypes to step1/phenoCounter file
-    static void createPhenotypeCounter(const string &filePath, vector< Strain >* strains);
-};
-
-
-
-
-struct PatternFromStats {
-    int pattern;
-    long double pValue;
-    long double qValue;
-    long double weight;
-    long double normalizedWeight;
-    string waldStatistic;
-
-    static vector<PatternFromStats> readFile(const string &filename, bool header=false) {
-      vector<PatternFromStats> patterns;
-
-      //read
-      {
-        ifstream patternStream;
-        openFileForReading(filename, patternStream);
-        patternStream >> setprecision(std::numeric_limits<long double>::digits10 + 1);
-        PatternFromStats pattern;
-
-        //remove header
-        if (header) {
-          string tmp;
-          getline(patternStream, tmp);
-        }
-        while (patternStream >> pattern.pattern >> pattern.pValue >> pattern.qValue >> pattern.weight >> pattern.waldStatistic)
-          patterns.push_back(pattern);
-        patternStream.close();
-      }
-
-      //normalize
-      vector<long double>  normalizedWeights;
-      for (const auto &pattern : patterns)
-        normalizedWeights.push_back(pattern.weight);
-
-      //remove the minimum weight of everyone
-      long double minWeight = *min_element(normalizedWeights.begin(), normalizedWeights.end());
-      transform(normalizedWeights.begin(), normalizedWeights.end(), normalizedWeights.begin(), [&](long double weight) {
-          return weight-minWeight;
-      });
-
-      //transform to [0,1]
-      long double maxWeight = *max_element(normalizedWeights.begin(), normalizedWeights.end());
-      transform(normalizedWeights.begin(), normalizedWeights.end(), normalizedWeights.begin(), [&](long double weight) {
-          return weight/maxWeight;
-      });
-
-      //write back
-      auto normalizedWeightsIt = normalizedWeights.begin();
-      for (auto &pattern : patterns) {
-        pattern.normalizedWeight = *normalizedWeightsIt;
-        ++normalizedWeightsIt;
-      }
-
-      return patterns;
-    }
-
-    static void writeFile(const string &filename, const vector<PatternFromStats> &patterns) {
-      ofstream patternSortedStream;
-      openFileForWriting(filename, patternSortedStream);
-      patternSortedStream << setprecision(std::numeric_limits<long double>::digits10 + 1);
-      patternSortedStream << "pattern p-value q-value weight wald_statistic" << endl;
-      for (const auto &pattern : patterns)
-        patternSortedStream << pattern.pattern << " " << pattern.pValue  << " " << pattern.qValue << " " << pattern.weight << " " << pattern.waldStatistic << endl;
-      patternSortedStream.close();
-    }
-};
-
-
-
-
-
-//get the significant patterns according to SFF
-class GetSignificantPatterns
-    : public boost::static_visitor<>
-{
-private:
-    const vector<PatternFromStats> &patterns;
-    vector<PatternFromStats> &significantPatterns;
-public:
-    GetSignificantPatterns(const vector<PatternFromStats> &patterns, vector<PatternFromStats> &significantPatterns) :
-        patterns(patterns), significantPatterns(significantPatterns){}
-
-    void operator()(int &n) const;
-
-    void operator()(double &qOrPValueThreshold) const;
-
-};
-#endif //KISSPLICE_UTILS_H

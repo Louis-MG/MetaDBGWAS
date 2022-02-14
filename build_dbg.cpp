@@ -20,9 +20,6 @@ using namespace std;
 // This name appears when one gets help in the command line or in the final output
 build_dbg::build_dbg ()  : Tool ("build_dbg") //give a name to our tool
 {
-    setVersion([](void* whatever) {
-        cout << "DBGWAS v" << VERSION << endl; //not sure if I should keep this
-    });
     populateParser(this);
 }
 
@@ -98,7 +95,7 @@ void construct_linear_seqs (const gatb::core::debruijn::impl::Graph& graph, cons
     u_int64_t nbContigs=0;
     BankFasta::setDataLineSize(0);
 
-    //We loop through the nodes and build the unitigs
+    //We loop through the nodes and build the unitigs //TODO replace with dbgwas part and just load the hdf5
     ProgressGraphIterator<Node, ProgressTimerAndSystem> it (graph.iterator(), "Graph: building unitigs");
     for (it.first(); !it.isDone(); it.next()) {
         auto &startingNode = it.item();
@@ -233,7 +230,6 @@ void build_dbg::execute ()
 
     //create the reads file
     string readsFile(tmpFolder+string("/readsFile"));
-    Strain::createReadsFile(readsFile, strains);
 
     //Builds the DBG using GATB
     //TODO: by using create() and assigning to a Graph object, the copy constructor does a shallow or deep copy??
@@ -243,7 +239,7 @@ void build_dbg::execute ()
 
     // Finding the unitigs
     //nodeIdToUnitigId translates the nodes that are stored in the GATB graph to the id of the unitigs together with the unitig strand
-    nodeIdToUnitigId = new vector< UnitigIdStrandPos >((size_t)graph->getInfo()["kmers_nb_solid"]->getInt()); //map nodeMPFHIndex() to unitigIds and strand
+    nodeIdToUnitigId = new vector< UnitigIdStrandPos >((size_t)graph->getInfo()["kmers_nb_solid"]->getInt()); //map nodeMPFHIndex() to unitigIds and strand // UnitigIdStrandPos might be from map_reads.cpp
     string linear_seqs_name = outputFolder+"/graph.unitigs";
     construct_linear_seqs (*graph, linear_seqs_name, *nodeIdToUnitigId);
 
