@@ -45,9 +45,6 @@ const char* STR_KEEP_NA = "-keepNA";
 //variables controlling where the executable is
 string DBGWAS_lib = ""; //set on first command in main.cpp
 
-bool presenceAbsenceCountMode = false;
-boost::variant< int, double > SFF;
-bool keepNA = false;
 
 //global vars used by both programs
 Graph* graph;

@@ -1,8 +1,8 @@
 #include <iostream>
 #include "build_dbg.hpp" // chemin local quand c'est interne au projet et chevrons qd interface externe (lib tierce, si locale comnplexe donner au compil les instructions necessaires pour pas changer tous les chemins)
-#include "global.h"
+#include "global.cpp"
 #include "GraphOutput.h"
-// file not found #include "version.h"
+
 
 // TODO checker ce que je peux enlever deja, comme PhenoCounter et ce qui en decoule/depend
 
@@ -211,9 +211,8 @@ public:
 *********************************************************************/
 void build_dbg::execute ()
 {
-    cerr << "Step 1. Building DBG and mapping strains on the DBG..." << endl;
+    cerr << "Building DBG ..." << endl;
     checkParametersBuildDBG(this);
-    if (skip1) return;
 
     //get the parameters
     int kmerSize = getInput()->getInt(STR_KSKMER_SIZE);
@@ -232,7 +231,7 @@ void build_dbg::execute ()
     string readsFile(tmpFolder+string("/readsFile"));
 
     //Builds the DBG using GATB
-    //TODO: by using create() and assigning to a Graph object, the copy constructor does a shallow or deep copy??
+    //TODO: by using create() and assigning to a Graph object, the copy constructor does a shallow or deep copy?? This line sure causes compilation problems
     graph = gatb::core::debruijn::impl::Graph::createAsPointer("-in %s -kmer-size %d -abundance-min 0 -out %s/graph -nb-cores %d",
                                                                readsFile.c_str(), kmerSize, outputFolder.c_str(), nbCores);
 

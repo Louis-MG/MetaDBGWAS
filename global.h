@@ -35,26 +35,9 @@
 
 using namespace std;
 
-#define UNIQUE_SYMBOL_MARKER "#@#-322"
-
 //global vars
 extern Graph* graph;
 extern vector< UnitigIdStrandPos >* nodeIdToUnitigId;
 extern const char* STR_KSKMER_SIZE;
 extern const char* STR_OUTPUT;
 extern const char* STR_NBCORES;
-extern const char* STR_MAX_NEIGHBOURHOOD;
-
-
-//TODO: several questions are still unclear if we use the Freq count mode (how to run bugwas, the coloring, etc...). For now I am disabling this option
-//extern const char* STR_COUNT_MODE;
-extern string DBGWAS_lib;
-extern bool skip1;
-extern bool skip2;
-extern bool hasNewickFile;
-extern bool presenceAbsenceCountMode;
-extern bool thereIsNucleotideDB;
-extern string nucleotideDBPath;
-extern bool thereIsProteinDB;
-extern string proteinDBPath;
-extern boost::variant< int, double > SFF;

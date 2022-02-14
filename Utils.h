@@ -54,33 +54,21 @@
 using namespace std;
 namespace fs = boost::filesystem;
 
-char complement(char b);
 string reverse_complement(const string &seq);
 //Read all strings in the readsFile file and return them as a vector of strings
-vector<string> getVectorStringFromFile(const string &readsFile);
 
 //this function also populates strains if needed
-void checkStrainsFile(const string &strainsFile);
 
-string readFileAsString(const char* fileName);
 
 //strips all last "/" if exists in the parameter
 string stripLastSlashIfExists (string path);
 
-void copyDirectoryRecursively(const fs::path& sourceDir, const fs::path& destinationDir);
 
 int getNbLinesInFile(const string &filename);
 
 void checkParametersBuildDBG(Tool *tool);
-void checkParametersGenerateOutput(Tool *tool);
-void checkParametersStatisticalTest(Tool *tool);
-void fatalError (const string &message);
-void executeCommand(const string &command, bool verbose=true, const string &messageIfItFails="");
-void openFileForReading(const string &filePath, ifstream &stream);
-void openFileForWriting(const string &filePath, ofstream &stream);
 void createFolder(const string &path);
-void removeOldAndCreateFolder(const string &path, const string &reason="No details given");
-string getDirWhereDBGWASIsInstalled();
+
 
 //tries to parse s, and returns a pair<bool, double>
 //the first value indicates if s was successfully parsed into a double
@@ -110,10 +98,6 @@ public:
             ss << "-1 ? -1";
         }
         return ss.str();
-    }
-    void reverseStrand () {
-        strand = (strand=='F' ? 'R' : 'F');
-        pos = unitigSize-pos-kmerSize;
     }
 
     //check if the unitig is valid or not
