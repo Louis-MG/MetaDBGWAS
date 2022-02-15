@@ -1,6 +1,6 @@
 #include <iostream>
 #include "build_dbg.hpp" // chemin local quand c'est interne au projet et chevrons qd interface externe (lib tierce, si locale comnplexe donner au compil les instructions necessaires pour pas changer tous les chemins)
-#include "global.cpp"
+#include "global.h"
 #include "GraphOutput.h"
 
 
@@ -231,9 +231,10 @@ void build_dbg::execute ()
     string readsFile(tmpFolder+string("/readsFile"));
 
     //Builds the DBG using GATB
-    //TODO: by using create() and assigning to a Graph object, the copy constructor does a shallow or deep copy?? This line sure causes compilation problems
-    graph = gatb::core::debruijn::impl::Graph::createAsPointer("-in %s -kmer-size %d -abundance-min 0 -out %s/graph -nb-cores %d",
-                                                               readsFile.c_str(), kmerSize, outputFolder.c_str(), nbCores);
+    //TODO: by using create() and assigning to a Graph object, the copy constructor does a shallow or deep copy?? This line sure causes compilation problemsF
+
+    auto *graph = new Graph ; gatb::core::debruijn::impl::Graph::create("-in %s -kmer-size %d -abundance-min 0 -out %s/graph -nb-cores %d",
+                                                             readsFile.c_str(), kmerSize, outputFolder.c_str(), nbCores);
 
 
     // Finding the unitigs

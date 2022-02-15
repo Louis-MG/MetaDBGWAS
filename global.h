@@ -28,10 +28,8 @@
 
 #ifndef KSGATB_GLOBAL_H //not a typo, True if not defined
 #define KSGATB_GLOBAL_H
-#endif
 #include <gatb/gatb_core.hpp>
-#include "Utils.h"
-
+#include "global.cpp"
 
 using namespace std;
 
@@ -41,3 +39,5 @@ extern vector< UnitigIdStrandPos >* nodeIdToUnitigId;
 extern const char* STR_KSKMER_SIZE;
 extern const char* STR_OUTPUT;
 extern const char* STR_NBCORES;
+
+#endif

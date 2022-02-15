@@ -28,8 +28,6 @@
 
 #ifndef KISSPLICE_UTILS_H
 #define KISSPLICE_UTILS_H
-#endif
-
 #include <gatb/gatb_core.hpp>
 #include <string>
 #include <vector>
@@ -106,3 +104,5 @@ public:
             throw runtime_error("Invalid unitig.");
     }
 };
+
+#endif

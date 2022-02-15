@@ -26,8 +26,8 @@
 ## Authors (alphabetically): Jacob L., Jaillard M., Lima L.
 */
 
-#include "global.h"
 #include <string>
+#include "Utils.h"
 
 using namespace std;
 
@@ -38,9 +38,9 @@ const char* STR_OUTPUT = "-output";
 const char* STR_NBCORES = "-nb-cores";
 const char* STR_KEEP_NA = "-keepNA";
 
-//TODO: seeveral questions are still unclear if we use the Freq count mode (how to run bugwas, the coloring, etc...). For now I am disabling this option
+//TODO: several questions are still unclear if we use the Freq count mode (how to run bugwas, the coloring, etc...). For now I am disabling this option
 //const char* STR_COUNT_MODE = "-count";
-//TODO: seeveral questions are still unclear if we use the Freq count mode (how to run bugwas, the coloring, etc...). For now I am disabling this option
+//TODO: several questions are still unclear if we use the Freq count mode (how to run bugwas, the coloring, etc...). For now I am disabling this option
 
 //variables controlling where the executable is
 string DBGWAS_lib = ""; //set on first command in main.cpp
