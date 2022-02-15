@@ -26,12 +26,10 @@
 ## Authors (alphabetically): Jacob L., Jaillard M., Lima L.
 */
 
-#ifndef KSGATB_GLOBAL_H //not a typo, True if not defined
+#ifndef KSGATB_GLOBAL_H
 #define KSGATB_GLOBAL_H
 #include <gatb/gatb_core.hpp>
-#include "global.cpp"
-
-using namespace std;
+#include "Utils.h"
 
 //global vars
 extern Graph* graph;
@@ -39,5 +37,12 @@ extern vector< UnitigIdStrandPos >* nodeIdToUnitigId;
 extern const char* STR_KSKMER_SIZE;
 extern const char* STR_OUTPUT;
 extern const char* STR_NBCORES;
+extern const char* STR_MAX_NEIGHBOURHOOD;
+extern const char* STR_KEEP_NA;
 
-#endif
+extern string DBGWAS_lib;
+extern bool keepNA;
+
+void populateParser (Tool *tool);
+
+#endif //KSGATB_GLOBAL_H

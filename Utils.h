@@ -28,6 +28,7 @@
 
 #ifndef KISSPLICE_UTILS_H
 #define KISSPLICE_UTILS_H
+
 #include <gatb/gatb_core.hpp>
 #include <string>
 #include <vector>
@@ -52,26 +53,37 @@
 using namespace std;
 namespace fs = boost::filesystem;
 
+char complement(char b);
 string reverse_complement(const string &seq);
 //Read all strings in the readsFile file and return them as a vector of strings
+vector<string> getVectorStringFromFile(const string &readsFile);
 
-//this function also populates strains if needed
 
+
+string readFileAsString(const char* fileName);
 
 //strips all last "/" if exists in the parameter
 string stripLastSlashIfExists (string path);
 
+void copyDirectoryRecursively(const fs::path& sourceDir, const fs::path& destinationDir);
 
 int getNbLinesInFile(const string &filename);
 
 void checkParametersBuildDBG(Tool *tool);
-void createFolder(const string &path);
 
+void fatalError (const string &message);
+void executeCommand(const string &command, bool verbose=true, const string &messageIfItFails="");
+void openFileForReading(const string &filePath, ifstream &stream);
+void openFileForWriting(const string &filePath, ofstream &stream);
+void createFolder(const string &path);
+void removeOldAndCreateFolder(const string &path, const string &reason="No details given");
+string getDirWhereDBGWASIsInstalled();
 
 //tries to parse s, and returns a pair<bool, double>
 //the first value indicates if s was successfully parsed into a double
 //the second value indicates the double (it is only valid if the first is true)
 tuple<bool, double> is_number(const std::string& s);
+
 
 
 //global vars used by all programs
@@ -84,25 +96,29 @@ public:
     int kmerSize; //the size of the kmer (just for the reverseStrand() function) //TODO: static global var, sth like that
 
     UnitigIdStrandPos(int unitigId=0, char strand='?',int pos=0, int unitigSize=0, int kmerSize=0):
-            unitigId(unitigId), strand(strand), pos(pos), unitigSize(unitigSize), kmerSize(kmerSize){}
+        unitigId(unitigId), strand(strand), pos(pos), unitigSize(unitigSize), kmerSize(kmerSize){}
     int getUnitigId () const {checkValidity(); return unitigId; }
     char getStrand () const {checkValidity(); return strand; }
     int getPos() const {checkValidity(); return pos; }
     string toString() const {
-        stringstream ss;
-        try {
-            ss << getUnitigId() << " " << getStrand() << " " << getPos();
-        }catch (const runtime_error &e) {
-            ss << "-1 ? -1";
-        }
-        return ss.str();
+      stringstream ss;
+      try {
+        ss << getUnitigId() << " " << getStrand() << " " << getPos();
+      }catch (const runtime_error &e) {
+        ss << "-1 ? -1";
+      }
+      return ss.str();
+    }
+    void reverseStrand () {
+      strand = (strand=='F' ? 'R' : 'F');
+      pos = unitigSize-pos-kmerSize;
     }
 
     //check if the unitig is valid or not
     void checkValidity() const {
-        if (strand=='?')
-            throw runtime_error("Invalid unitig.");
+      if (strand=='?')
+        throw runtime_error("Invalid unitig.");
     }
 };
 
-#endif
+#endif //KISSPLICE_UTILS_H

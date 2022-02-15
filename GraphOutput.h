@@ -30,15 +30,17 @@
 #include <functional>
 
 #include <set>
-#include <cstdlib> // for exit() // this and the following c*lib were modified because the previous ones were depreciated
+#include <stdlib.h> // for exit()
 #include <iostream>
 #include <fstream>
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <boost/regex.hpp>
-#include <cassert>
+#include <assert.h> 
 #include <gatb/gatb_core.hpp>
+
+
 #ifndef _GRAPHOUTPUT_H
 #define _GRAPHOUTPUT_H
 

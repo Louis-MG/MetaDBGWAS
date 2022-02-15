@@ -1,10 +1,34 @@
-#include <iostream>
-#include "build_dbg.hpp" // chemin local quand c'est interne au projet et chevrons qd interface externe (lib tierce, si locale comnplexe donner au compil les instructions necessaires pour pas changer tous les chemins)
+/*
+## Copyright (C) <2017>  <bioMerieux, Universite Claude Bernard Lyon 1,
+## Centre National de la Recherche Scientifique>
+
+## 1. This program is free software: you can redistribute it and/or modify
+## it under the terms of the GNU Affero General Public License as published
+## by the Free Software Foundation version 3 of the  License and under the
+## terms of article 2 below.
+## 2. This program is distributed in the hope that it will be useful, but
+## WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+## or FITNESS FOR A PARTICULAR PURPOSE. See below the GNU Affero General
+## Public License for more details.
+## You should have received a copy of the GNU Affero General Public License
+## along with this program.  If not, see <http://www.gnu.org/licenses/>.
+## 3. Communication to the public by any means, in particular in the form of
+## a scientific paper, a poster, a slideshow, an internet page, or a patent,
+## of a result obtained directly or indirectly by running this program must
+## cite the following paper :
+##  Magali Jaillard, Maud Tournoud, Leandro Lima, Vincent Lacroix,
+##  Jean-Baptiste Veyrieras and Laurent Jacob, "Representing Genetic
+##  Determinants in Bacterial GWAS with Compacted De Bruijn Graphs", 2017,
+##  Cold Spring Harbor Labs Journals, doi:10.1101/113563.
+##  (url: http://www.biorxiv.org/content/early/2017/03/03/113563)
+## -------------------------------------------------------------------------
+
+## Authors (alphabetically): Jacob L., Jaillard M., Lima L.
+*/
+
+#include "build_dbg.hpp"
 #include "global.h"
 #include "GraphOutput.h"
-
-
-// TODO checker ce que je peux enlever deja, comme PhenoCounter et ce qui en decoule/depend
 
 using namespace std;
 
@@ -95,7 +119,7 @@ void construct_linear_seqs (const gatb::core::debruijn::impl::Graph& graph, cons
     u_int64_t nbContigs=0;
     BankFasta::setDataLineSize(0);
 
-    //We loop through the nodes and build the unitigs //TODO replace with dbgwas part and just load the hdf5
+    //We loop through the nodes and build the unitigs
     ProgressGraphIterator<Node, ProgressTimerAndSystem> it (graph.iterator(), "Graph: building unitigs");
     for (it.first(); !it.isDone(); it.next()) {
         auto &startingNode = it.item();
@@ -211,9 +235,8 @@ public:
 *********************************************************************/
 void build_dbg::execute ()
 {
-    cerr << "Building DBG ..." << endl;
+    cerr << "Step 1. Building DBG and mapping strains on the DBG..." << endl;
     checkParametersBuildDBG(this);
-
     //get the parameters
     int kmerSize = getInput()->getInt(STR_KSKMER_SIZE);
 
@@ -221,34 +244,29 @@ void build_dbg::execute ()
     string outputFolder = stripLastSlashIfExists(getInput()->getStr(STR_OUTPUT))+string("/step1");
     createFolder(outputFolder);
 
-    //create the tmp folder of step1
-    string tmpFolder = outputFolder+string("/tmp");
-    createFolder(tmpFolder);
-
     int nbCores = getInput()->getInt(STR_NBCORES);
 
     //create the reads file
-    string readsFile(tmpFolder+string("/readsFile"));
+    string readsFile(string("/readsFile")); //TODO: change tmpFolder and the read file below to the output file of bcalm
 
     //Builds the DBG using GATB
-    //TODO: by using create() and assigning to a Graph object, the copy constructor does a shallow or deep copy?? This line sure causes compilation problemsF
-
+    //TODO:
     auto *graph = new Graph ; gatb::core::debruijn::impl::Graph::create("-in %s -kmer-size %d -abundance-min 0 -out %s/graph -nb-cores %d",
-                                                             readsFile.c_str(), kmerSize, outputFolder.c_str(), nbCores);
+                                                                        readsFile.c_str(), kmerSize, outputFolder.c_str(), nbCores);
 
 
     // Finding the unitigs
     //nodeIdToUnitigId translates the nodes that are stored in the GATB graph to the id of the unitigs together with the unitig strand
-    nodeIdToUnitigId = new vector< UnitigIdStrandPos >((size_t)graph->getInfo()["kmers_nb_solid"]->getInt()); //map nodeMPFHIndex() to unitigIds and strand // UnitigIdStrandPos might be from map_reads.cpp
+    nodeIdToUnitigId = new vector< UnitigIdStrandPos >((size_t)graph->getInfo()["kmers_nb_solid"]->getInt()); //map nodeMPFHIndex() to unitigIds and strand
     string linear_seqs_name = outputFolder+"/graph.unitigs";
     construct_linear_seqs (*graph, linear_seqs_name, *nodeIdToUnitigId);
 
     //builds and outputs .nodes and .edges.dbg files
     typedef boost::variant <
-    GraphOutput<KMER_SPAN(0)>,
-    GraphOutput<KMER_SPAN(1)>,
-    GraphOutput<KMER_SPAN(2)>,
-    GraphOutput<KMER_SPAN(3)>
+        GraphOutput<KMER_SPAN(0)>,
+        GraphOutput<KMER_SPAN(1)>,
+        GraphOutput<KMER_SPAN(2)>,
+        GraphOutput<KMER_SPAN(3)>
     >  GraphOutputVariant;
 
     GraphOutputVariant graphOutput;
