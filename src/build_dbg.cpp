@@ -94,6 +94,7 @@ char getUnitigStrandTheForwardNodeMapsTo(const gatb::core::debruijn::impl::Graph
         throw new runtime_error("Fatal bug on build_dbg.cpp::getUnitigStrandTheForwardNodeMapsTo()");
 }
 
+//TODO:supp this part because bcalm constructs the unitigs already
 void construct_linear_seqs (const gatb::core::debruijn::impl::Graph& graph, const string& linear_seqs_name,
                             vector< UnitigIdStrandPos >& nodeIdToUnitigId)
 {
@@ -244,13 +245,16 @@ void build_dbg::execute ()
     string outputFolder = stripLastSlashIfExists(getInput()->getStr(STR_OUTPUT))+string("/step1");
     createFolder(outputFolder);
 
+    //creats variable where the unitig(s) file is (are)
+    string fastaFolder = getInput()->getStr(STR_PATH_TO_FASTA_FILES)
+
+    //gets the number of cores to use
     int nbCores = getInput()->getInt(STR_NBCORES);
 
     //create the reads file
-    string readsFile(string("/readsFile")); //TODO: change tmpFolder and the read file below to the output file of bcalm
+    string readsFile(string("/readsFile")); //TODO: change the read file below to the output file of bcalm
 
     //Builds the DBG using GATB
-    //TODO:
     auto *graph = new Graph ; gatb::core::debruijn::impl::Graph::create("-in %s -kmer-size %d -abundance-min 0 -out %s/graph -nb-cores %d",
                                                                         readsFile.c_str(), kmerSize, outputFolder.c_str(), nbCores);
 
