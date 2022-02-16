@@ -75,7 +75,21 @@ build cmake_object_order_depends_target_MetaDBGWAS: phony || CMakeFiles/MetaDBGW
 build CMakeFiles/MetaDBGWAS.dir/build_dbg.cpp.o: CXX_COMPILER__MetaDBGWAS_Debug /home/lmgueguen/MetaDBGWAS/build_dbg.cpp || cmake_object_order_depends_target_MetaDBGWAS
   DEFINES = -DBOOST_ALL_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK
   DEP_FILE = CMakeFiles/MetaDBGWAS.dir/build_dbg.cpp.o.d
-  FLAGS = -g -std=gnu++14
+  FLAGS = -g -std=gnu++11
+  OBJECT_DIR = CMakeFiles/MetaDBGWAS.dir
+  OBJECT_FILE_DIR = CMakeFiles/MetaDBGWAS.dir
+
+build CMakeFiles/MetaDBGWAS.dir/global.cpp.o: CXX_COMPILER__MetaDBGWAS_Debug /home/lmgueguen/MetaDBGWAS/global.cpp || cmake_object_order_depends_target_MetaDBGWAS
+  DEFINES = -DBOOST_ALL_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK
+  DEP_FILE = CMakeFiles/MetaDBGWAS.dir/global.cpp.o.d
+  FLAGS = -g -std=gnu++11
+  OBJECT_DIR = CMakeFiles/MetaDBGWAS.dir
+  OBJECT_FILE_DIR = CMakeFiles/MetaDBGWAS.dir
+
+build CMakeFiles/MetaDBGWAS.dir/Utils.cpp.o: CXX_COMPILER__MetaDBGWAS_Debug /home/lmgueguen/MetaDBGWAS/Utils.cpp || cmake_object_order_depends_target_MetaDBGWAS
+  DEFINES = -DBOOST_ALL_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK
+  DEP_FILE = CMakeFiles/MetaDBGWAS.dir/Utils.cpp.o.d
+  FLAGS = -g -std=gnu++11
   OBJECT_DIR = CMakeFiles/MetaDBGWAS.dir
   OBJECT_FILE_DIR = CMakeFiles/MetaDBGWAS.dir
 
@@ -87,9 +101,9 @@ build CMakeFiles/MetaDBGWAS.dir/build_dbg.cpp.o: CXX_COMPILER__MetaDBGWAS_Debug 
 #############################################
 # Link the executable MetaDBGWAS
 
-build MetaDBGWAS: CXX_EXECUTABLE_LINKER__MetaDBGWAS_Debug CMakeFiles/MetaDBGWAS.dir/build_dbg.cpp.o | /usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.71.0
+build MetaDBGWAS: CXX_EXECUTABLE_LINKER__MetaDBGWAS_Debug CMakeFiles/MetaDBGWAS.dir/build_dbg.cpp.o CMakeFiles/MetaDBGWAS.dir/global.cpp.o CMakeFiles/MetaDBGWAS.dir/Utils.cpp.o | /usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.71.0
   FLAGS = -g
-  LINK_LIBRARIES = /usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.71.0
+  LINK_LIBRARIES = /usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.71.0  -lgatb
   OBJECT_DIR = CMakeFiles/MetaDBGWAS.dir
   POST_BUILD = :
   PRE_LINK = :

@@ -26,20 +26,36 @@
 ## Authors (alphabetically): Jacob L., Jaillard M., Lima L.
 */
 
-#ifndef KSGATB_GLOBAL_H
-#define KSGATB_GLOBAL_H
-#include <gatb/gatb_core.hpp>
-#include "Utils.h"
+// We include the header file for the tool
+#include "build_dbg.hpp"
+#include <cstdlib>
+#include <time.h>
+#define BOOST_NO_CXX11_SCOPED_ENUMS
+#include <boost/filesystem.hpp>
+#undef BOOST_NO_CXX11_SCOPED_ENUMS
 
-//global vars
-extern Graph* graph;
-extern vector< UnitigIdStrandPos >* nodeIdToUnitigId;
-extern const char* STR_KSKMER_SIZE;
-extern const char* STR_OUTPUT;
-extern const char* STR_NBCORES;
-extern const char* STR_KEEP_NA;
+using namespace std;
+/********************************************************************************/
 
+int main (int argc, char* argv[])
+{
+    // initialize random seed, in case we want to use rand(), we are already set
+    srand (time(NULL));
 
-void populateParser (Tool *tool);
+    //get the path to the dir were the executable is
 
-#endif //KSGATB_GLOBAL_H
+    try
+    {
+        //Build DBG
+        build_dbg().run(argc, argv); //this call will set up graph and nodeIdToUnitigId
+        cerr << "Done!" << endl;
+    }
+    catch (Exception& e)
+    {
+        std::cerr << "EXCEPTION: " << e.getMessage() << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    return EXIT_SUCCESS;
+}
+

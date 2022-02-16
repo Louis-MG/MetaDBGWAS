@@ -217,6 +217,15 @@ CMAKE_STRIP:FILEPATH=/usr/bin/strip
 // Studio IDE projects all commands are done without /nologo.
 CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 
+//Path to a library.
+GATB_LIBRARY:FILEPATH=/usr/lib/x86_64-linux-gnu/libgatbcore.so
+
+//Path to a library.
+GTAB_LIBRARY:FILEPATH=/usr/lib/x86_64-linux-gnu/libgatbcore.so
+
+//The directory containing a CMake configuration file for GatbCore.
+GatbCore_DIR:PATH=GatbCore_DIR-NOTFOUND
+
 //Value Computed by CMake
 MetaDBGWAS_BINARY_DIR:STATIC=/home/lmgueguen/MetaDBGWAS/cmake-build-debug
 
@@ -226,11 +235,26 @@ MetaDBGWAS_IS_TOP_LEVEL:STATIC=ON
 //Value Computed by CMake
 MetaDBGWAS_SOURCE_DIR:STATIC=/home/lmgueguen/MetaDBGWAS
 
+//pkg-config executable
+PKG_CONFIG_EXECUTABLE:FILEPATH=/usr/bin/pkg-config
+
 //The directory containing a CMake configuration file for boost_filesystem.
 boost_filesystem_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/boost_filesystem-1.71.0
 
 //The directory containing a CMake configuration file for boost_headers.
 boost_headers_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/boost_headers-1.71.0
+
+//The directory containing a CMake configuration file for gatb-core.
+gatb-core_DIR:PATH=gatb-core_DIR-NOTFOUND
+
+//The directory containing a CMake configuration file for gatb.
+gatb_DIR:PATH=gatb_DIR-NOTFOUND
+
+//Path to a library.
+pkgcfg_lib_hdf5_hdf5:FILEPATH=/usr/lib/x86_64-linux-gnu/hdf5/serial/libhdf5.so
+
+//The directory containing a CMake configuration file for qibuild.
+qibuild_DIR:PATH=qibuild_DIR-NOTFOUND
 
 
 ########################
@@ -384,8 +408,51 @@ CMAKE_UNAME:INTERNAL=/usr/bin/uname
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
 //Details about finding Boost
 FIND_PACKAGE_MESSAGE_DETAILS_Boost:INTERNAL=[/usr/lib/x86_64-linux-gnu/cmake/Boost-1.71.0/BoostConfig.cmake][cfound components: filesystem ][v1.71.0()]
+//Details about finding PkgConfig
+FIND_PACKAGE_MESSAGE_DETAILS_PkgConfig:INTERNAL=[/usr/bin/pkg-config][v0.29.1()]
+//ADVANCED property for variable: PKG_CONFIG_EXECUTABLE
+PKG_CONFIG_EXECUTABLE-ADVANCED:INTERNAL=1
+__pkg_config_checked_hdf5:INTERNAL=1
 //ADVANCED property for variable: boost_filesystem_DIR
 boost_filesystem_DIR-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: boost_headers_DIR
 boost_headers_DIR-ADVANCED:INTERNAL=1
+hdf5_CFLAGS:INTERNAL=-I/usr/include/hdf5/serial
+hdf5_CFLAGS_I:INTERNAL=
+hdf5_CFLAGS_OTHER:INTERNAL=
+hdf5_FOUND:INTERNAL=1
+hdf5_INCLUDEDIR:INTERNAL=
+hdf5_INCLUDE_DIRS:INTERNAL=/usr/include/hdf5/serial
+hdf5_LDFLAGS:INTERNAL=-L/usr/lib/x86_64-linux-gnu/hdf5/serial;-lhdf5
+hdf5_LDFLAGS_OTHER:INTERNAL=
+hdf5_LIBDIR:INTERNAL=
+hdf5_LIBRARIES:INTERNAL=hdf5
+hdf5_LIBRARY_DIRS:INTERNAL=/usr/lib/x86_64-linux-gnu/hdf5/serial
+hdf5_LIBS:INTERNAL=
+hdf5_LIBS_L:INTERNAL=
+hdf5_LIBS_OTHER:INTERNAL=
+hdf5_LIBS_PATHS:INTERNAL=
+hdf5_MODULE_NAME:INTERNAL=hdf5
+hdf5_PREFIX:INTERNAL=
+hdf5_STATIC_CFLAGS:INTERNAL=-I/usr/include/hdf5/serial
+hdf5_STATIC_CFLAGS_I:INTERNAL=
+hdf5_STATIC_CFLAGS_OTHER:INTERNAL=
+hdf5_STATIC_INCLUDE_DIRS:INTERNAL=/usr/include/hdf5/serial
+hdf5_STATIC_LDFLAGS:INTERNAL=-L/usr/lib/x86_64-linux-gnu/hdf5/serial;-lhdf5
+hdf5_STATIC_LDFLAGS_OTHER:INTERNAL=
+hdf5_STATIC_LIBDIR:INTERNAL=
+hdf5_STATIC_LIBRARIES:INTERNAL=hdf5
+hdf5_STATIC_LIBRARY_DIRS:INTERNAL=/usr/lib/x86_64-linux-gnu/hdf5/serial
+hdf5_STATIC_LIBS:INTERNAL=
+hdf5_STATIC_LIBS_L:INTERNAL=
+hdf5_STATIC_LIBS_OTHER:INTERNAL=
+hdf5_STATIC_LIBS_PATHS:INTERNAL=
+hdf5_VERSION:INTERNAL=1.10.4
+hdf5_hdf5_INCLUDEDIR:INTERNAL=
+hdf5_hdf5_LIBDIR:INTERNAL=
+hdf5_hdf5_PREFIX:INTERNAL=
+hdf5_hdf5_VERSION:INTERNAL=
+//ADVANCED property for variable: pkgcfg_lib_hdf5_hdf5
+pkgcfg_lib_hdf5_hdf5-ADVANCED:INTERNAL=1
+prefix_result:INTERNAL=
 
