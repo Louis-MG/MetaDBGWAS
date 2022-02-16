@@ -29,7 +29,7 @@ cd ..
 
 mkdir build
 cd build
-cmake ..
+cmake ../src
 make -j 4
 
 cd ../..
