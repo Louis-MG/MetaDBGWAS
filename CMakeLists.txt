@@ -9,5 +9,4 @@ find_package(Boost REQUIRED COMPONENTS filesystem)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 find_package(GatbCore REQUIRED)
 
-add_executable(MetaDBGWAS build_dbg.cpp global.cpp Utils.cpp) #fichier qui une fois compile sera l'executable, faut tous les mettre pour avoir l'executable
-target_link_libraries(MetaDBGWAS PUBLIC Boost::filesystem GatbCore)
+add_subdirectory(src)

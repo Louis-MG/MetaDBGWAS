@@ -77,7 +77,6 @@ void openFileForReading(const string &filePath, ifstream &stream);
 void openFileForWriting(const string &filePath, ofstream &stream);
 void createFolder(const string &path);
 void removeOldAndCreateFolder(const string &path, const string &reason="No details given");
-string getDirWhereDBGWASIsInstalled();
 
 //tries to parse s, and returns a pair<bool, double>
 //the first value indicates if s was successfully parsed into a double

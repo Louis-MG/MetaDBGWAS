@@ -29,6 +29,8 @@
 #include "Utils.h"
 #include "global.h"
 
+//TODO: see f I can safely delete createFolder, getVectorStringFromFile, openFileForWriting
+
 using namespace std;
 
 char complement(char b)
@@ -135,8 +137,6 @@ int getNbLinesInFile(const string &filename) {
 }
 
 void checkParametersBuildDBG(Tool *tool) {
-  keepNA = tool->getInput()->get(STR_KEEP_NA) != 0;
-
   //check output
   string outputFolderPath = stripLastSlashIfExists(tool->getInput()->getStr(STR_OUTPUT));
   boost::filesystem::path p(outputFolderPath.c_str());

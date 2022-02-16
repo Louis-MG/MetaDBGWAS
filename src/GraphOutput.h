@@ -30,14 +30,14 @@
 #include <functional>
 
 #include <set>
-#include <stdlib.h> // for exit()
+#include <cstdlib> // for exit()
 #include <iostream>
 #include <fstream>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <boost/regex.hpp>
-#include <assert.h> 
+#include <cassert>
 #include <gatb/gatb_core.hpp>
 
 

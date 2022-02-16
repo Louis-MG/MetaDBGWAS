@@ -10,7 +10,7 @@ cd ..
 echo 'Starting bcalm2 installation'
 #bcalm compilation
 cd bcalm
-mkdir build;  cd build;  cmake ..;  make -j 8
+mkdir build;  cd build;  cmake ..;  make -j 4
 
 cd ../..
 
@@ -27,8 +27,9 @@ tar -zxvf dbgwas.Linux.precompiled.tar.gz
 rm dbgwas.Linux.precompiled.tar.gz
 cd ..
 
-mkdir build
-cd build
-cmake ..
+cmake .
+make -j 4
 
-echo "Installation complete ! Do not forget to install the R adn C++ libraries."
+cd ..
+
+echo "Installation complete ! Do not forget to install the R and C++ libraries."
