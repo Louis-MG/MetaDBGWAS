@@ -27,7 +27,7 @@ tar -zxvf dbgwas.Linux.precompiled.tar.gz
 rm dbgwas.Linux.precompiled.tar.gz
 cd ..
 
-cmake ./src
+cmake .
 make -j 4
 
 cd ..
