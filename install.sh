@@ -27,11 +27,9 @@ tar -zxvf dbgwas.Linux.precompiled.tar.gz
 rm dbgwas.Linux.precompiled.tar.gz
 cd ..
 
-mkdir build
-cd build
-cmake ..
+cmake ./src
 make -j 4
 
-cd ../..
+cd ..
 
 echo "Installation complete ! Do not forget to install the R and C++ libraries."
