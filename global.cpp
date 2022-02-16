@@ -36,11 +36,6 @@ const char* STR_OUTPUT = "-output";
 const char* STR_NBCORES = "-nb-cores";
 const char* STR_KEEP_NA = "-keepNA";
 
-
-//variables controlling where the executable is
-string DBGWAS_lib = ""; //set on first command in main.cpp
-
-
 //global vars used by both programs
 Graph* graph;
 vector< UnitigIdStrandPos >* nodeIdToUnitigId;
