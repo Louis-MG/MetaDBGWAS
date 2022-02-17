@@ -44,7 +44,7 @@ vector< UnitigIdStrandPos >* nodeIdToUnitigId;
 
 void populateParser (Tool *tool) {
   // We add some custom arguments for command line interface
-  //TODO: ajouter le nombre de  core ?
+  tool->getParser()->push_front (new OptionOneParam(STR_NBCORES, "Number of cores to use", false, "4"));
   tool->getParser()->push_front (new OptionOneParam (STR_OUTPUT, "Path to the folder where the final and temporary files will be stored.",  false, "output"));
   tool->getParser()->push_front (new OptionOneParam (STR_KSKMER_SIZE, "K-mer size.",  false, "31"));
   tool->getParser()->push_front (new OptionOneParam (STR_PATH_TO_FASTA_FILES, "Path to the folder where the input fasta files are stored", true, "./"));

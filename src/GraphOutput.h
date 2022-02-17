@@ -220,13 +220,6 @@ public:
                 }
 
 
-                /* TODO
-                 * I do not understand this well...
-                if (cur_node ==nb_els.node) // prevent self loops on same kmer
-                     if (sequence.length() == sizeKmer)
-                        continue;
-                */
-                //Replaced the preceding by:
                 if (cur_node ==idNodes) // prevent self loops on same kmer
                     continue;
                 
