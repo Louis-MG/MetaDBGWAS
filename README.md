@@ -49,12 +49,12 @@ This tool expands the work of [DBGWAS](https://gitlab.com/leoisl/dbgwas) [(Jaill
 	* General
 --files <path> path to one file or a directory containing the files.
 --output <path> path to the output folder. Default set to ./ .
---threads <int> number of threads to use. DEfault set to 4.
+--threads <int> number of threads to use. Default set to 4.
 --verbose <int> level of verbosity. Default to 1, 0-1. 0 is equivalent to --quiet.
 --clean removes files from output directory if not empty.
 
         * Lighter
---K <int> <int> kmer length and genome size (in base). Recommenmded is 17 X.
+--K <int> <int> kmer length and genome size (in base). Recommended is 17 X.
         or
 --k <int> <int> <float> kmer length and genome size (in base), alpha (probability of sampling a kmer). Recommended is 17 X X.
 
