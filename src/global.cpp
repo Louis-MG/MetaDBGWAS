@@ -31,8 +31,6 @@
 
 using namespace std;
 
-//TODO: ajouter un parametre avec le path vers les fichiers fasta qui contiennent les sequences a traiter
-
 const char* STR_PATH_TO_FASTA_FILES = "--files";
 const char* STR_KSKMER_SIZE = "--kmer";
 const char* STR_OUTPUT = "--output";

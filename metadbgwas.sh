@@ -198,14 +198,21 @@ fi
 
 mkdir $output/unitigs
 ./bcalm/build/bcalm -in $output/fof.txt -kmer-size $kmer -nb-cores $threads -out-dir $output/unitigs $verbosity_level
-mv ./fof.unitigs.fa $output/unitigs
-echo "$output/unitigs/fof.unitigs.fa" > $output/fof_unitigs.txt #creates the file of file for reindeer with unitigs
+mv ./fof.unitigs.fa ./unitigs.fa
+mv ./unitigs.fa $output/unitigs
+echo "$output/unitigs/unitigs.fa" > $output/fof_unitigs.txt #creates the file of file for reindeer with unitigs
 
 
 # Reindeer
-mkdir $output/matrix
-./REINDEER/Reindeer -o $output/matrix -t $threads --nocount -k $kmer --index -f $output/fof_unitigs.txt
+mkdir $output/step1
+./REINDEER/Reindeer -o $output/matrix -t $threads --nocount -k $kmer --index -f $output/fof_unitigs.txt #TODO: can reindeer take just one file ?
 
 # MetaDBGWAS executable to get .edges and .nodes 
 
 ./src/MetaDBGWAS --files $output/fof.unitigs.fa --output $output --threads $threads --kmer $kmer
+
+# DBGWAS
+
+#creating the setp 2 folder :
+mkdir step1
+mv *.edges.dbg *.nodes ./step1
