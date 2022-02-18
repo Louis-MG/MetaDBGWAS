@@ -71,9 +71,12 @@ Reindeer uses kmer, threads, and output parameters. No others need to be specifi
         * Miscellaneous
 --license prints the license text in standard output.
 --help displays help.\n"
+```
 
-	* Exemple
-bash metadbgwas.sh --files /test/ --output ./output --threads 4 --verbose 1 --K 17 6000000
+# Exemple
+
+```bash
+bash metadbgwas.sh --files ./test/ --output ./output --threads 4 --verbose 1 --K 17 6000000
 ```
 
 # Output
