@@ -33,10 +33,10 @@ using namespace std;
 
 //TODO: ajouter un parametre avec le path vers les fichiers fasta qui contiennent les sequences a traiter
 
-const char* STR_PATH_TO_FASTA_FILES = "-f";
-const char* STR_KSKMER_SIZE = "-k";
-const char* STR_OUTPUT = "-output";
-const char* STR_NBCORES = "-nb-cores";
+const char* STR_PATH_TO_FASTA_FILES = "--files";
+const char* STR_KSKMER_SIZE = "--kmer";
+const char* STR_OUTPUT = "--output";
+const char* STR_NBCORES = "--threads";
 
 //global vars used by both programs
 Graph* graph;
