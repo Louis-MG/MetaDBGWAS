@@ -65,24 +65,13 @@ string readFileAsString(const char* fileName);
 //strips all last "/" if exists in the parameter
 string stripLastSlashIfExists (string path);
 
-void copyDirectoryRecursively(const fs::path& sourceDir, const fs::path& destinationDir);
-
 int getNbLinesInFile(const string &filename);
 
-void checkParametersBuildDBG(Tool *tool);
 
 void fatalError (const string &message);
 void executeCommand(const string &command, bool verbose=true, const string &messageIfItFails="");
 void openFileForReading(const string &filePath, ifstream &stream);
 void openFileForWriting(const string &filePath, ofstream &stream);
-void createFolder(const string &path);
-void removeOldAndCreateFolder(const string &path, const string &reason="No details given");
-
-//tries to parse s, and returns a pair<bool, double>
-//the first value indicates if s was successfully parsed into a double
-//the second value indicates the double (it is only valid if the first is true)
-tuple<bool, double> is_number(const std::string& s);
-
 
 
 //global vars used by all programs
