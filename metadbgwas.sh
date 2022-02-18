@@ -208,4 +208,4 @@ mkdir $output/matrix
 
 # MetaDBGWAS executable to get .edges and .nodes 
 
-#./src/MetaDBGWAS --files $output/fof.unitigs.fa --output $output --threads $threads --kmer $kmer
+./src/MetaDBGWAS --files $output/fof.unitigs.fa --output $output --threads $threads --kmer $kmer
