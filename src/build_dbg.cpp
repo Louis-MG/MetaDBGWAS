@@ -214,7 +214,7 @@ char getUnitigStrandTheForwardNodeMapsTo(const gatb::core::debruijn::impl::Graph
 
 void loadUnitigs (const string path_to_unitigs) {
     /*
-     * This function loads the Unitigs from the file produced by bcalm. //
+     * This function loads the unitigs from the file produced by bcalm. Named foo.unitigs.fa .
      */
 
     IBank * inbank = gatb::core::bank::impl::Bank::open ( path_to_unitigs ) ;
@@ -263,13 +263,13 @@ void build_dbg::execute ()
 
 
     //create the step1 folder in the outputfolder
-    string outputFolder = stripLastSlashIfExists(getInput()->getStr(STR_OUTPUT))+string("/step1");
+    string outputFolder = stripLastSlashIfExists(getInput()->getStr(STR_OUTPUT))+string("/graph"); //TODO: should I keep the files in the common output folder or ina  separate one ?
     createFolder(outputFolder);
 
     //create the reads file
     string readsFile(string("/readsFile")); //TODO: change the read file below to the output file of bcalm
 
-    //Builds the DBG using GATB // TODO: might not need this part now
+    //Builds the DBG using GATB // TODO: do not need this part now
     auto *graph = new Graph ; gatb::core::debruijn::impl::Graph::create("-in %s -kmer-size %d -abundance-min 0 -out %s/graph -nb-cores %d",
                                                                         readsFile.c_str(), kmerSize, outputFolder.c_str(), nbCores);
 
