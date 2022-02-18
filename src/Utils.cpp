@@ -136,19 +136,6 @@ int getNbLinesInFile(const string &filename) {
   return n;
 }
 
-void checkParametersBuildDBG(Tool *tool) {
-  //check output
-  string outputFolderPath = stripLastSlashIfExists(tool->getInput()->getStr(STR_OUTPUT));
-  boost::filesystem::path p(outputFolderPath.c_str());
-  if (boost::filesystem::exists(p)) {
-    stringstream ss;
-    ss << "Could not create dir " << outputFolderPath << " - path already exists. Remove it and re-run the tool, or use -skip1 or -skip2 parameters.";
-    fatalError(ss.str());
-  }
-  createFolder(p.string());
-}
-
-
 void fatalError (const string &message) {
   cerr << endl << endl << "[FATAL ERROR] " << message << endl << endl;
   cerr.flush();
@@ -208,37 +195,6 @@ void openFileForReading(const string &filePath, ifstream &stream) {
     ss << "Error opening file " << filePath;
     fatalError(ss.str());
   }
-}
-
-void openFileForWriting(const string &filePath, ofstream &stream) {
-  stream.open(filePath);
-  if (!stream.is_open()) {
-    stringstream ss;
-    ss << "Error opening file " << filePath;
-    fatalError(ss.str());
-  }
-}
-
-void createFolder(const string &path) {
-  boost::filesystem::path folder(path.c_str());
-
-  if (boost::filesystem::exists(folder))
-    return;
-
-  if (!boost::filesystem::create_directories(folder)) {
-    stringstream ss;
-    ss << "Could not create dir " << path << " - unknown reasons...";
-    fatalError(ss.str());
-  }
-}
-
-void removeOldAndCreateFolder(const string &path, const string &reason){
-  boost::filesystem::path folder(path.c_str());
-  if (boost::filesystem::exists(folder)) {
-    cerr << "[WARNING] Removing " << path << " because path already exists (" << reason << "). " << endl;
-    boost::filesystem::remove_all(folder);
-  }
-  createFolder(folder.string());
 }
 
 
