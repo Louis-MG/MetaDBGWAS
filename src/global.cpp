@@ -31,10 +31,12 @@
 
 using namespace std;
 
+//TODO: ajouter un parametre avec le path vers les fichiers fasta qui contiennent les sequences a traiter
+
+const char* STR_PATH_TO_FASTA_FILES = "-f";
 const char* STR_KSKMER_SIZE = "-k";
 const char* STR_OUTPUT = "-output";
 const char* STR_NBCORES = "-nb-cores";
-const char* STR_KEEP_NA = "-keepNA";
 
 //global vars used by both programs
 Graph* graph;
@@ -42,6 +44,8 @@ vector< UnitigIdStrandPos >* nodeIdToUnitigId;
 
 void populateParser (Tool *tool) {
   // We add some custom arguments for command line interface
+  tool->getParser()->push_front (new OptionOneParam(STR_NBCORES, "Number of cores to use", false, "4"));
   tool->getParser()->push_front (new OptionOneParam (STR_OUTPUT, "Path to the folder where the final and temporary files will be stored.",  false, "output"));
   tool->getParser()->push_front (new OptionOneParam (STR_KSKMER_SIZE, "K-mer size.",  false, "31"));
+  tool->getParser()->push_front (new OptionOneParam (STR_PATH_TO_FASTA_FILES, "Path to the folder where the input fasta files are stored", true, "./"));
 }

@@ -37,8 +37,7 @@ extern vector< UnitigIdStrandPos >* nodeIdToUnitigId;
 extern const char* STR_KSKMER_SIZE;
 extern const char* STR_OUTPUT;
 extern const char* STR_NBCORES;
-extern const char* STR_KEEP_NA;
-
+extern const char* STR_PATH_TO_FASTA_FILES;
 
 void populateParser (Tool *tool);
 
