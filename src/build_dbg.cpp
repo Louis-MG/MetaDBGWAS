@@ -212,14 +212,14 @@ char getUnitigStrandTheForwardNodeMapsTo(const gatb::core::debruijn::impl::Graph
 //TODO: complete the function to load the unitigs. Then change the type of function to output smthg
 
 
-void loadUnitigs (const string path_to_unitigs) {
-    /*
+/*void loadUnitigs (const string path_to_unitigs) {
+    *//*
      * This function loads the unitigs from the file produced by bcalm. Named foo.unitigs.fa .
-     */
+     *//*
 
     IBank * inbank = gatb::core::bank::impl::Bank::open ( path_to_unitigs ) ;
     // loading the unitigs, GraphOutput already builds a graph line 170 : construct_graph()
-};
+};*/
 
 
 class EdgeConstructionVisitor : public boost::static_visitor<>    {
@@ -259,7 +259,7 @@ void build_dbg::execute ()
     //gets the number of cores to use
     int nbCores = getInput()->getInt(STR_NBCORES);
     //creates variable where the unitig(s) file is (are)
-    string fastaFolder = getInput()->getStr(STR_PATH_TO_FASTA_FILES);
+    string linear_seqs_name = getInput()->getStr(STR_PATH_TO_FASTA_FILES);
 
 
     //create the step1 folder in the outputfolder
@@ -270,16 +270,16 @@ void build_dbg::execute ()
     string readsFile(string("/readsFile")); //TODO: change the read file below to the output file of bcalm
 
     //Builds the DBG using GATB // TODO: do not need this part now
-    auto *graph = new Graph ; gatb::core::debruijn::impl::Graph::create("-in %s -kmer-size %d -abundance-min 0 -out %s/graph -nb-cores %d",
-                                                                        readsFile.c_str(), kmerSize, outputFolder.c_str(), nbCores);
+    // auto *graph = new Graph ; gatb::core::debruijn::impl::Graph::create("-in %s -kmer-size %d -abundance-min 0 -out %s/graph -nb-cores %d",
+    //                                                                   readsFile.c_str(), kmerSize, outputFolder.c_str(), nbCores);
 
     // Finding the unitigs
     //nodeIdToUnitigId translates the nodes that are stored in the GATB graph to the id of the unitigs together with the unitig strand
     nodeIdToUnitigId = new vector< UnitigIdStrandPos >((size_t)graph->getInfo()["kmers_nb_solid"]->getInt()); //map nodeMPFHIndex() to unitigIds and strand
-    string linear_seqs_name = outputFolder+"/graph.unitigs";//TODO: change output name of bcalm so it is graph.unitigs
+    //string linear_seqs_name = STR_PATH_TO_FASTA_FILES;//TODO: change output name of bcalm so it is graph.unitigs
     //construct_linear_seqs (*graph, linear_seqs_name, *nodeIdToUnitigId); //TODO: this line should be replaced with my loadUnitigs
 
-    loadUnitigs(fastaFolder);
+    //loadUnitigs(fastaFolder);
 
     //builds and outputs .nodes and .edges.dbg files, see GraphOutput.h for the inner code
     typedef boost::variant <
