@@ -27,7 +27,7 @@
 */
 
 #include "Utils.h"
-#include "global.h"
+#include "PhenoCounter.h"
 
 //TODO: see f I can safely delete createFolder, getVectorStringFromFile, openFileForWriting
 
@@ -54,12 +54,9 @@ char complement(char b)
 }
 
 
-
-
-
 int getNbLinesInFile(const string &filename) {
   std::ifstream file;
-  openFileForReading(filename.c_str(), file);
+  openFileForReading(filename, file);
 
   // Number of lines in the file
   int n = std::count(std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>(), '\n');
@@ -78,7 +75,7 @@ void fatalError (const string &message) {
 
 //strips all last "/" if exists in the parameter
 string stripLastSlashIfExists (string path) {
-  while(path.size()>0 && path.back()=='/')
+  while(!path.empty() && path.back()=='/')
     path.pop_back();
   return path;
 }
@@ -109,6 +106,31 @@ tuple<bool, double> is_number(const std::string& s) {
         return make_tuple(false, number);
     }
     return make_tuple(true, number);
+}
+
+void openFileForWriting(const string &filePath, ofstream &stream) {
+    stream.open(filePath);
+    if (!stream.is_open()) {
+        stringstream ss;
+        ss << "Error opening file " << filePath;
+        fatalError(ss.str());
+    }
+}
+
+//Read all strings in the readsFile file and return them as a vector of strings
+vector<string> getVectorStringFromFile(const string &readsFile) {
+    vector<string> allReadFilesNames;
+    string tempStr;
+
+    ifstream readsFileStream;
+    openFileForReading(readsFile, readsFileStream);
+    while (getline(readsFileStream, tempStr)) {
+        if (tempStr.size() > 0)
+            allReadFilesNames.push_back(tempStr);
+    }
+    readsFileStream.close();
+
+    return allReadFilesNames;
 }
 
 

@@ -114,7 +114,7 @@ public:
  * for generating inputs for step 2 :
  */
 
-//TODO: voir comment on fait pour initialiser les classes dans un code
+//TODO: structure declaree mais est-elle utilisee ?
 struct Strain {
     string id, phenotype, path;
 

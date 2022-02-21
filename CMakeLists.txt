@@ -3,7 +3,7 @@ project(MetaDBGWAS) #nom du projet a utiliser pour le reste du script
 
 set(CMAKE_CXX_STANDARD 11) # version C++
 
-find_package(Boost REQUIRED COMPONENTS filesystem)
+find_package(Boost REQUIRED COMPONENTS filesystem serialization)
 
 # Use manual find_package script until Gatb supports cmake config files
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")

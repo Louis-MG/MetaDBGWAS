@@ -158,7 +158,7 @@ struct MapAndPhase
             if (unitigIdToCount.find(i) == unitigIdToCount.end() )
                 mappingOutputFile << "0 ";
             else
-                mappingOutputFile << (presenceAbsenceCountMode ? 1 : unitigIdToCount[i]) << " ";
+                mappingOutputFile << unitigIdToCount[i] << " ";
         }
 
         mappingOutputFile.close();
@@ -318,7 +318,7 @@ void generateBugwasInput (const vector <string> &allReadFilesNames, const string
     cerr << endl << endl << "[Generating bugwas and gemma input]..." << endl;
 
     //create the ID and Phenotype file
-    Strain::createIdPhenoFile(outputFolder+string("/step1/bugwas_input.id_phenotype"), strains);
+    Strain::createIdPhenoFile(outputFolder+string("/bugwas_input.id_phenotype"), strains);
 
     //Create XU
     vector< vector<int> > XU(nbContigs);
@@ -387,13 +387,13 @@ void generateBugwasInput (const vector <string> &allReadFilesNames, const string
 
     //create the files for bugwas - binary ones
     {
-        generate_XU(outputFolder+string("/step1/bugwas_input.all_rows.binary"), XUbinary);
+        generate_XU(outputFolder+string("/bugwas_input.all_rows.binary"), XUbinary);
         map< vector<int>, vector<int> > pattern2Unitigs = getUnitigsWithSamePattern(XUbinary, nbContigs);
-        generate_unique_id_to_original_ids(outputFolder+string("/step1/bugwas_input.unique_rows_to_all_rows.binary"),
-                                           outputFolder+string("/step1/gemma_input.pattern_to_nb_of_unitigs.binary"),
-                                           outputFolder+string("/step1/gemma_input.unitig_to_pattern.binary"),
+        generate_unique_id_to_original_ids(outputFolder+string("/bugwas_input.unique_rows_to_all_rows.binary"),
+                                           outputFolder+string("/gemma_input.pattern_to_nb_of_unitigs.binary"),
+                                           outputFolder+string("/gemma_input.unitig_to_pattern.binary"),
                                            pattern2Unitigs);
-        generate_XU_unique(outputFolder+string("/step1/bugwas_input.unique_rows.binary"), XUbinary, pattern2Unitigs); //TODO: c'est ici que des XU sont utilises
+        generate_XU_unique(outputFolder+string("/bugwas_input.unique_rows.binary"), XUbinary, pattern2Unitigs); //TODO: c'est ici que des XU sont utilises
     }
     cerr << "[Generating bugwas and gemma input] - Done!" << endl;
 
@@ -434,13 +434,13 @@ void generateBugwasInput (const vector <string> &allReadFilesNames, const string
 ** METHOD  :
 ** PURPOSE : executes map_reads
 ** INPUT   : output folder name, unitigs
-** OUTPUT  :
+** OUTPUT  : bugwas_input.* files (4) and weight_correction file
 ** RETURN  :
 ** REMARKS :
 *********************************************************************/
 void map_reads::execute ()
 {
-    //TODO: voir si je peux recharger mon graph d'unitigs pour pas le refaire, possibe qu'il soit reutilise ici
+    //TODO: verifier que le graph est reutilise
     //get the parameters
     string outputFolder = stripLastSlashIfExists(getInput()->getStr(STR_OUTPUT))+string("/step1");
     string tmpFolder = outputFolder+string("/tmp");
@@ -448,7 +448,7 @@ void map_reads::execute ()
     int nbCores = getInput()->getInt(STR_NBCORES);
 
     //pas toucher, pour du code futur de dbgwas mais a voir comment j'enleve
-    presenceAbsenceCountMode = true;
+    //bool presenceAbsenceCountMode = true;
 
     //get the nbContigs
     int nbContigs = getNbLinesInFile(outputFolder+string("/step1/graph.nodes"));
