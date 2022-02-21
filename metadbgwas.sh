@@ -205,7 +205,7 @@ echo "$output/unitigs/unitigs.fa" > $output/unitigs/fof_unitigs.txt #creates the
 
 # Reindeer
 mkdir $output/step1
-./REINDEER/Reindeer -o $output/matrix -t $threads --nocount -k $kmer --index -f $output/fof_unitigs.txt #TODO: can reindeer take just one file ?
+./REINDEER/Reindeer -o $output/matrix -t $threads --nocount -k $kmer --index -f $output/unitigs/fof_unitigs.txt
 
 # MetaDBGWAS executable to get .edges and .nodes 
 
@@ -215,4 +215,4 @@ mkdir $output/step1
 
 #creating the setp 2 folder :
 mkdir step1
-mv *.edges.dbg *.nodes ./step1
+mv graph.edges.dbg graph.nodes ./step1
