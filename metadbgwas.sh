@@ -25,7 +25,7 @@ kmer=31
 #Reindeer
 
 #dbgwas
-strain=''
+strains=''
 newick=''
 
 #strains
@@ -118,6 +118,8 @@ do
 	shift 4;;
 	-k | --kmer) kmer="#2"
 	shift 2;;
+	--strains) strains="$2"
+	shift 2;;
 	--version) Version; exit;;
 	--license) License; exit;;
 	-v | --verbose) verbose="$2"
@@ -209,10 +211,9 @@ mkdir $output/step1
 
 # MetaDBGWAS executable to get .edges and .nodes 
 
-./src/MetaDBGWAS --files $output/unitigs/unitigs.fa --output $output --threads $threads --kmer $kmer
+./src/MetaDBGWAS --files $output/unitigs/unitigs.fa --output $output --threads $threads --kmer $kmer --strains $strains
 
 # DBGWAS
 
 #creating the setp 2 folder :
-mkdir step1
 mv graph.edges.dbg graph.nodes ./step1
