@@ -70,7 +70,7 @@ Reindeer uses kmer, threads, and output parameters. No others need to be specifi
 
         * Miscellaneous
 --license prints the license text in standard output.
---help displays help.\n"
+--help displays help."
 ```
 
 # Exemple

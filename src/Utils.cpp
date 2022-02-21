@@ -53,75 +53,8 @@ char complement(char b)
   return '?';
 }
 
-string reverse_complement(const string &seq)
-{
-  string s(seq.begin(),seq.end());
-  string::iterator pos;
-
-  reverse(s.begin(), s.end());
-
-  for(pos=s.begin();pos!=s.end();++pos)
-    *pos=complement(*pos);
-
-  return s;
-}
 
 
-//Read all strings in the readsFile file and return them as a vector of strings
-vector<string> getVectorStringFromFile(const string &readsFile) {
-  vector<string> allReadFilesNames;
-  string tempStr;
-
-  ifstream readsFileStream;
-  openFileForReading(readsFile, readsFileStream);
-  while (getline(readsFileStream, tempStr)) {
-    if (tempStr.size() > 0)
-      allReadFilesNames.push_back(tempStr);
-  }
-  readsFileStream.close();
-
-  return allReadFilesNames;
-}
-
-string readFileAsString(const char* fileName) {
-  std::ifstream t;
-  openFileForReading(fileName, t);
-  std::string str;
-
-  t.seekg(0, std::ios::end);
-  str.reserve(t.tellg());
-  t.seekg(0, std::ios::beg);
-
-  str.assign((std::istreambuf_iterator<char>(t)),
-             std::istreambuf_iterator<char>());
-  t.close();
-  return str;
-}
-
-
-void copyDirectoryRecursively(const fs::path& sourceDir, const fs::path& destinationDir)
-{
-  if (!fs::exists(sourceDir) || !fs::is_directory(sourceDir))
-  {
-    throw std::runtime_error("Source directory " + sourceDir.string() + " does not exist or is not a directory");
-  }
-  if (fs::exists(destinationDir))
-  {
-    throw std::runtime_error("Destination directory " + destinationDir.string() + " already exists");
-  }
-  if (!fs::create_directory(destinationDir))
-  {
-    throw std::runtime_error("Cannot create destination directory " + destinationDir.string());
-  }
-
-  for (const auto& dirEnt : fs::recursive_directory_iterator{sourceDir})
-  {
-    const auto& path = dirEnt.path();
-    auto relativePathStr = path.string();
-    boost::replace_first(relativePathStr, sourceDir.string(), "");
-    fs::copy(path, destinationDir / relativePathStr);
-  }
-}
 
 
 int getNbLinesInFile(const string &filename) {
@@ -143,43 +76,6 @@ void fatalError (const string &message) {
 }
 
 
-void executeCommand(const string &command, bool verbose, const string &messageIfItFails) {
-  // run a process and create a streambuf that reads its stdout and stderr
-  if (verbose)
-    cerr << "Executing " << command << "..." << endl;
-
-  //create the process
-  redi::ipstream proc(command, redi::pstreams::pstdout | redi::pstreams::pstderr);
-  string line;
-
-  // read child's stdout
-  while (getline(proc.out(), line)) {
-    if (verbose)
-      cout << line << endl;
-  }
-  // read child's stderr
-  while (getline(proc.err(), line)) {
-    if (verbose)
-      cerr << line << endl;
-  }
-
-  //check exit status
-  proc.close();
-  if (proc.rdbuf()->exited()) {
-    if (proc.rdbuf()->status() != 0) {
-      stringstream ss;
-      ss << "Error executing " << command << ". Exit status: " << proc.rdbuf()->status() << endl;
-      if (messageIfItFails != "")
-        ss << "Message: " << messageIfItFails << endl;
-      fatalError(ss.str());
-    }
-    if (verbose)
-      cerr << "Executing " << command << " - Done!" << endl;
-  }
-  else
-    fatalError("On executeCommand()");
-}
-
 //strips all last "/" if exists in the parameter
 string stripLastSlashIfExists (string path) {
   while(path.size()>0 && path.back()=='/')
@@ -197,17 +93,3 @@ void openFileForReading(const string &filePath, ifstream &stream) {
   }
 }
 
-
-//tries to parse s, and returns a pair<bool, double>
-//the first value indicates if s was successfully parsed into a double
-//the second value indicates the double (it is only valid if the first is true)
-tuple<bool, double> is_number(const std::string& s) {
-  double number;
-  try {
-    number = std::stod(s);
-  }
-  catch(...) {
-    return make_tuple(false, number);
-  }
-  return make_tuple(true, number);
-}
