@@ -52,11 +52,8 @@ public:
     void operator() (GraphOutput<span>& graphOutput) const
     {
         graphOutput.open();
-        cout << "this is fine 2" << endl ;
         graphOutput.load_nodes_extremities(linear_seqs_name);
-        cout << "this is fine 3" << endl ;
         graphOutput.construct_graph(linear_seqs_name);
-        cout << "this is fine 4" << endl ;
         graphOutput.close();
     }
 };
@@ -101,7 +98,6 @@ void build_dbg::execute ()
     else if (kmerSize < KMER_SPAN(2))  {  graphOutput = GraphOutput<KMER_SPAN(2)>(graph, outputFolder+string("/graph")); }
     else if (kmerSize < KMER_SPAN(3))  {  graphOutput = GraphOutput<KMER_SPAN(3)>(graph, outputFolder+string("/graph")); }
     else { throw gatb::core::system::Exception ("Graph failure because of unhandled kmer size %d", kmerSize); }
-    cout << "this is fine 1" << endl;
     boost::apply_visitor (EdgeConstructionVisitor(linear_seqs_name),  graphOutput);
 
     //save disk space

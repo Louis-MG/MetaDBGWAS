@@ -67,7 +67,7 @@ string stripLastSlashIfExists (string path);
 
 int getNbLinesInFile(const string &filename);
 
-
+void createFolder(const string &path);
 void fatalError (const string &message);
 void executeCommand(const string &command, bool verbose=true, const string &messageIfItFails="");
 void openFileForReading(const string &filePath, ifstream &stream);

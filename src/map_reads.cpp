@@ -447,11 +447,18 @@ void map_reads::execute ()
     string longReadsFile = tmpFolder+string("/readsFile");
     int nbCores = getInput()->getInt(STR_NBCORES);
 
+    //create the tmp folder of step1
+    createFolder(tmpFolder);
+
+    //create the reads file
+    string readsFile(tmpFolder+string("/readsFile"));
+    Strain::createReadsFile(readsFile, strains);
+
     //pas toucher, pour du code futur de dbgwas mais a voir comment j'enleve
     //bool presenceAbsenceCountMode = true;
 
     //get the nbContigs
-    int nbContigs = getNbLinesInFile(outputFolder+string("/step1/graph.nodes"));
+    int nbContigs = getNbLinesInFile(outputFolder+string("/graph.nodes"));
 
     //Do the Mapping
     //Maps all the reads back to the graph

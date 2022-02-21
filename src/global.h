@@ -39,6 +39,7 @@ extern const char* STR_KSKMER_SIZE;
 extern const char* STR_OUTPUT;
 extern const char* STR_NBCORES;
 extern const char* STR_PATH_TO_FASTA_FILES;
+extern const char* STR_STRAINS_FILE;
 
 void populateParser (Tool *tool);
 

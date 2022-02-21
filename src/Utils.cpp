@@ -72,7 +72,6 @@ void fatalError (const string &message) {
   exit(1);
 }
 
-
 //strips all last "/" if exists in the parameter
 string stripLastSlashIfExists (string path) {
   while(!path.empty() && path.back()=='/')
@@ -116,6 +115,21 @@ void openFileForWriting(const string &filePath, ofstream &stream) {
         fatalError(ss.str());
     }
 }
+
+
+void createFolder(const string &path) {
+    boost::filesystem::path folder(path.c_str());
+
+    if (boost::filesystem::exists(folder))
+        return;
+
+    if (!boost::filesystem::create_directories(folder)) {
+        stringstream ss;
+        ss << "Could not create dir " << path << " - unknown reasons...";
+        fatalError(ss.str());
+    }
+}
+
 
 //Read all strings in the readsFile file and return them as a vector of strings
 vector<string> getVectorStringFromFile(const string &readsFile) {
