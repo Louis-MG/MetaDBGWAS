@@ -200,7 +200,7 @@ mkdir $output/unitigs
 ./bcalm/build/bcalm -in $output/fof.txt -kmer-size $kmer -nb-cores $threads -out-dir $output/unitigs $verbosity_level
 mv ./fof.unitigs.fa ./unitigs.fa
 mv ./unitigs.fa $output/unitigs
-echo "$output/unitigs/unitigs.fa" > $output/fof_unitigs.txt #creates the file of file for reindeer with unitigs
+echo "$output/unitigs/unitigs.fa" > $output/unitigs/fof_unitigs.txt #creates the file of file for reindeer with unitigs
 
 
 # Reindeer
@@ -209,7 +209,7 @@ mkdir $output/step1
 
 # MetaDBGWAS executable to get .edges and .nodes 
 
-./src/MetaDBGWAS --files $output/fof.unitigs.fa --output $output --threads $threads --kmer $kmer
+./src/MetaDBGWAS --files $output/unitigs/unitigs.fa --output $output --threads $threads --kmer $kmer
 
 # DBGWAS
 
