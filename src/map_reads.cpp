@@ -318,7 +318,7 @@ void generateBugwasInput (const vector <string> &allReadFilesNames, const string
     cerr << endl << endl << "[Generating bugwas and gemma input]..." << endl;
 
     //create the ID and Phenotype file
-    Strain::createIdPhenoFile(outputFolder+string("/bugwas_input.id_phenotype"), strains);
+    Strain::createIdPhenoFile(outputFolder+string("/step1/bugwas_input.id_phenotype"), strains);
 
     //Create XU
     vector< vector<int> > XU(nbContigs);
@@ -343,7 +343,7 @@ void generateBugwasInput (const vector <string> &allReadFilesNames, const string
     //creates also a file saying if the unitig was inverted (-1) or not (1)
     //this is a multiplicative factor that will correct the weight (estimated effect) from the statistical test
     ofstream weightCorrectionStream;
-    openFileForWriting(outputFolder+string("/weight_correction"), weightCorrectionStream);
+    openFileForWriting(outputFolder+string("/step1/weight_correction"), weightCorrectionStream);
 
     for (int i=0;i<XUbinary.size();i++) {
         //TODO [CONTINUOUS GENOTYPE] : no need to transform - it will come correct already
@@ -387,13 +387,13 @@ void generateBugwasInput (const vector <string> &allReadFilesNames, const string
 
     //create the files for bugwas - binary ones
     {
-        generate_XU(outputFolder+string("/bugwas_input.all_rows.binary"), XUbinary);
+        generate_XU(outputFolder+string("/step1/bugwas_input.all_rows.binary"), XUbinary);
         map< vector<int>, vector<int> > pattern2Unitigs = getUnitigsWithSamePattern(XUbinary, nbContigs);
-        generate_unique_id_to_original_ids(outputFolder+string("/bugwas_input.unique_rows_to_all_rows.binary"),
-                                           outputFolder+string("/gemma_input.pattern_to_nb_of_unitigs.binary"),
-                                           outputFolder+string("/gemma_input.unitig_to_pattern.binary"),
+        generate_unique_id_to_original_ids(outputFolder+string("/step1/bugwas_input.unique_rows_to_all_rows.binary"),
+                                           outputFolder+string("/step1/gemma_input.pattern_to_nb_of_unitigs.binary"),
+                                           outputFolder+string("/step1/gemma_input.unitig_to_pattern.binary"),
                                            pattern2Unitigs);
-        generate_XU_unique(outputFolder+string("/bugwas_input.unique_rows.binary"), XUbinary, pattern2Unitigs);
+        generate_XU_unique(outputFolder+string("/step1/bugwas_input.unique_rows.binary"), XUbinary, pattern2Unitigs); //TODO: c'est ici que des XU sont utilises
     }
     cerr << "[Generating bugwas and gemma input] - Done!" << endl;
 
@@ -432,30 +432,26 @@ void generateBugwasInput (const vector <string> &allReadFilesNames, const string
 
 /*********************************************************************
 ** METHOD  :
-** PURPOSE :
-** INPUT   :
+** PURPOSE : executes map_reads
+** INPUT   : output folder name, unitigs
 ** OUTPUT  :
 ** RETURN  :
 ** REMARKS :
 *********************************************************************/
 void map_reads::execute ()
 {
+    //TODO: voir si je peux recharger mon graph d'unitigs pour pas le refaire, possibe qu'il soit reutilise ici
     //get the parameters
     string outputFolder = stripLastSlashIfExists(getInput()->getStr(STR_OUTPUT))+string("/step1");
     string tmpFolder = outputFolder+string("/tmp");
     string longReadsFile = tmpFolder+string("/readsFile");
     int nbCores = getInput()->getInt(STR_NBCORES);
 
-    //TODO [CONTINUOUS GENOTYPE]
-    //TODO: seeveral questions are still unclear if we use the Freq count mode (how to run bugwas, the coloring, etc...). For now I am disabling this option
-    //string countMode = getInput()->getStr(STR_COUNT_MODE);
-    //presenceAbsenceCountMode = (countMode=="01");
+    //pas toucher, pour du code futur de dbgwas mais a voir comment j'enleve
     presenceAbsenceCountMode = true;
-    //TODO: seeveral questions are still unclear if we use the Freq count mode (how to run bugwas, the coloring, etc...). For now I am disabling this option
-
 
     //get the nbContigs
-    int nbContigs = getNbLinesInFile(outputFolder+string("/graph.nodes")); //TODO: update name and location
+    int nbContigs = getNbLinesInFile(outputFolder+string("/step1/graph.nodes"));
 
     //Do the Mapping
     //Maps all the reads back to the graph
