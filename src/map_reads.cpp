@@ -457,7 +457,7 @@ void map_reads::execute ()
 
 
     //get the nbContigs
-    int nbContigs = getNbLinesInFile(outputFolder+string("/graph.nodes"));
+    int nbContigs = getNbLinesInFile(outputFolder+string("/graph.nodes")); //TODO: update name and location
 
     //Do the Mapping
     //Maps all the reads back to the graph

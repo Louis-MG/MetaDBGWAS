@@ -57,7 +57,7 @@ char complement(char b);
 string reverse_complement(const string &seq);
 //Read all strings in the readsFile file and return them as a vector of strings
 vector<string> getVectorStringFromFile(const string &readsFile);
-
+tuple<bool, double> is_number(const std::string& s);
 
 
 string readFileAsString(const char* fileName);
@@ -108,5 +108,45 @@ public:
         throw runtime_error("Invalid unitig.");
     }
 };
+
+/*
+ * for generating inputs for step 2 :
+ */
+
+
+struct Strain {
+    string id, phenotype, path;
+
+    Strain(const string &id, const string &phenotype, const string &path) : id(id), phenotype(phenotype) {
+        //transfor to canonical path
+        boost::filesystem::path boostPath(boost::filesystem::canonical(path));
+        this->path = boostPath.string();
+    }
+
+    static void createReadsFile(const string &readsFile, vector< Strain >* strains) {
+        ofstream fout;
+        openFileForWriting(readsFile, fout);
+
+        for (const auto &strain : (*strains))
+            fout << strain.path << endl;
+
+        fout.close();
+    }
+
+    static void createIdPhenoFile(const string &filePath, vector< Strain >* strains) {
+        ofstream fout;
+        openFileForWriting(filePath, fout);
+        fout << "ID\tpheno" << endl;
+
+        for (const auto &strain : (*strains))
+            fout << strain.id << "\t" << strain.phenotype << endl;
+
+        fout.close();
+    }
+
+    //save a phenoCounter representing all phenotypes to step1/phenoCounter file
+    static void createPhenotypeCounter(const string &filePath, vector< Strain >* strains);
+};
+
 
 #endif //KISSPLICE_UTILS_H

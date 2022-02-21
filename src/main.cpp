@@ -28,8 +28,9 @@
 
 // We include the header file for the tool
 #include "build_dbg.hpp"
+#include "map_reads.hpp"
 #include <cstdlib>
-#include <time.h>
+#include <ctime>
 #define BOOST_NO_CXX11_SCOPED_ENUMS
 #include <boost/filesystem.hpp>
 #undef BOOST_NO_CXX11_SCOPED_ENUMS
@@ -49,6 +50,8 @@ int main (int argc, char* argv[])
         //Build DBG
         build_dbg().run(argc, argv); //this call will set up graph and nodeIdToUnitigId
         cerr << "Done!" << endl;
+        //map reads
+        map_reads().run(argc, argv); // this call will generate inputs for gemma, bugwas
     }
     catch (Exception& e)
     {

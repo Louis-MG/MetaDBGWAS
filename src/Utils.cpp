@@ -93,3 +93,37 @@ void openFileForReading(const string &filePath, ifstream &stream) {
   }
 }
 
+/*
+ * Next lines are for generating inputs for step 2
+ */
+
+//tries to parse s, and returns a pair<bool, double>
+//the first value indicates if s was successfully parsed into a double
+//the second value indicates the double (it is only valid if the first is true)
+tuple<bool, double> is_number(const std::string& s) {
+    double number;
+    try {
+        number = std::stod(s);
+    }
+    catch(...) {
+        return make_tuple(false, number);
+    }
+    return make_tuple(true, number);
+}
+
+
+void Strain::createPhenotypeCounter(const string &filePath, vector< Strain >* strains) {
+    PhenoCounter phenoCounter;
+    for (const auto &strain : (*strains))
+        phenoCounter.add(strain.phenotype, 1);
+    //serialize phenoCounter
+    ofstream phenoCounterFile;
+    {
+        openFileForWriting(filePath, phenoCounterFile);
+        boost::archive::text_oarchive boostOutputArchive(phenoCounterFile);
+        //serialization itself
+        boostOutputArchive & phenoCounter;
+    } //boostOutputArchive is closed on destruction
+    phenoCounterFile.close();
+}
+
