@@ -440,8 +440,6 @@ void generateBugwasInput (const vector <string> &allReadFilesNames, const string
 *********************************************************************/
 void map_reads::execute ()
 {
-    if (skip1) return;
-
     //get the parameters
     string outputFolder = stripLastSlashIfExists(getInput()->getStr(STR_OUTPUT))+string("/step1");
     string tmpFolder = outputFolder+string("/tmp");

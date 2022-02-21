@@ -32,14 +32,6 @@
 
 using namespace std;
 
-/*********************************************************************
-** METHOD  :
-** PURPOSE :
-** INPUT   :
-** OUTPUT  :
-** RETURN  :
-** REMARKS :
-*********************************************************************/
 // The Tool constructor allows to give a name to our tool.
 // This name appears when one gets help in the command line or in the final output
 build_dbg::build_dbg ()  : Tool ("build_dbg") //give a name to our tool
@@ -72,7 +64,7 @@ public:
 
 /*********************************************************************
 ** METHOD  :
-** PURPOSE : produce a debruijn graph
+** PURPOSE : produce a debruijn graph with the unitigs
 ** INPUT   : fasta file
 ** OUTPUT  : outputs some stats
 ** RETURN  : .edges and .nodes files
