@@ -53,8 +53,9 @@
 using namespace std;
 namespace fs = boost::filesystem;
 
-char complement(char b);
-string reverse_complement(const string &seq);
+void checkStrainsFile(const string &strainsFile);
+void checkParametersMapping(Tool *tool);
+
 //Read all strings in the readsFile file and return them as a vector of strings
 vector<string> getVectorStringFromFile(const string &readsFile);
 tuple<bool, double> is_number(const std::string& s);
@@ -114,12 +115,11 @@ public:
  * for generating inputs for step 2 :
  */
 
-//TODO: structure declaree mais est-elle utilisee ?
 struct Strain {
     string id, phenotype, path;
 
     Strain(const string &id, const string &phenotype, const string &path) : id(id), phenotype(phenotype) {
-        //transform to canonical path
+        //transfor to canonical path
         boost::filesystem::path boostPath(boost::filesystem::canonical(path));
         this->path = boostPath.string();
     }
@@ -148,6 +148,7 @@ struct Strain {
     //save a phenoCounter representing all phenotypes to step1/phenoCounter file
     static void createPhenotypeCounter(const string &filePath, vector< Strain >* strains);
 };
+
 
 
 #endif //KISSPLICE_UTILS_H

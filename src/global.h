@@ -40,6 +40,8 @@ extern const char* STR_OUTPUT;
 extern const char* STR_NBCORES;
 extern const char* STR_PATH_TO_FASTA_FILES;
 extern const char* STR_STRAINS_FILE;
+extern const char* STR_KEEP_NA;
+extern bool keepNA;
 
 void populateParser (Tool *tool);
 

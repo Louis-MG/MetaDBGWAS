@@ -223,26 +223,6 @@ void generate_XU(const string &filename, const vector< vector<int> > &XU) {
     XUFile.close();
 }
 
-void generate_unique_id_to_original_ids(const string &filename,
-                                        const map< vector<int>, vector<int> > &pattern2Unitigs) {
-    ofstream uniqueIdToOriginalIdsFile;
-    openFileForWriting(filename, uniqueIdToOriginalIdsFile);
-
-    //for each pattern
-    int i=0;
-    auto it=pattern2Unitigs.begin();
-    for (;it!=pattern2Unitigs.end();++it, ++i) {
-        //print the id of this pattern
-        uniqueIdToOriginalIdsFile << i << " = ";
-
-        //and the unitigs in it
-        for (auto id : it->second)
-            uniqueIdToOriginalIdsFile << id << " ";
-
-        uniqueIdToOriginalIdsFile << endl;
-    }
-    uniqueIdToOriginalIdsFile.close();
-}
 
 void generate_unique_id_to_original_ids(const string &uniqueIdToOriginalIdsFilename,
                                         const string &gemmaPatternToNbUnitigsFilename,
@@ -440,13 +420,13 @@ void generateBugwasInput (const vector <string> &allReadFilesNames, const string
 *********************************************************************/
 void map_reads::execute ()
 {
-    //TODO: verifier que le graph est reutilise
+    //populates strains file if given
+    checkParametersMapping(this);
+
     //get the parameters
+    int nbCores = getInput()->getInt(STR_NBCORES);
     string outputFolder = stripLastSlashIfExists(getInput()->getStr(STR_OUTPUT))+string("/step1");
     string tmpFolder = outputFolder+string("/tmp");
-    string longReadsFile = tmpFolder+string("/readsFile");
-    int nbCores = getInput()->getInt(STR_NBCORES);
-
     //create the tmp folder of step1
     createFolder(tmpFolder);
 
@@ -454,18 +434,18 @@ void map_reads::execute ()
     string readsFile(tmpFolder+string("/readsFile"));
     Strain::createReadsFile(readsFile, strains);
 
-    //pas toucher, pour du code futur de dbgwas mais a voir comment j'enleve
-    //bool presenceAbsenceCountMode = true;
+    string longReadsFile = tmpFolder+string("/readsFile");
+    //string strains = getInput()->getStr(STR_STRAINS_FILE);
 
     //get the nbContigs
-    int nbContigs = getNbLinesInFile(outputFolder+string("/graph.nodes"));
+    int nbContigs = getNbLinesInFile(string("/graph.nodes"));
 
     //Do the Mapping
     //Maps all the reads back to the graph
 
     //get all the read files' name
     vector <string> allReadFilesNames = getVectorStringFromFile(longReadsFile);
-
+    cout << "this is fine 5" << endl;
     // We create an iterator over an integer range
     Range<int>::Iterator allReadFilesNamesIt(0, allReadFilesNames.size() - 1);
 

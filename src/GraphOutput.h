@@ -130,10 +130,8 @@ public:
     //kMinus1_MerLinks stores all the leftest and rightest kmers of each unitig
     void load_nodes_extremities(const string &linear_seqs_name)
     {
-        cout << "FILE IS" << linear_seqs_name << endl;
         IBank *Nodes = Bank::open(linear_seqs_name); //TODO: find out why the hell this doesnt work
         LOCAL (Nodes);
-        cout << "This is fine 5\n";
         long nb_nodes = 0;
 
         // We loop over sequences.

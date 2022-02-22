@@ -28,31 +28,11 @@
 
 #include "Utils.h"
 #include "PhenoCounter.h"
+#include "global.h"
 
 //TODO: see f I can safely delete createFolder, getVectorStringFromFile, openFileForWriting
 
 using namespace std;
-
-char complement(char b)
-{
-  switch(b)
-  {
-    case 'A': return 'T';
-    case 'T': return 'A';
-    case 'G': return 'C';
-    case 'C': return 'G';
-
-    case 'a': return 't';
-    case 't': return 'a';
-    case 'g': return 'c';
-    case 'c': return 'g';
-
-    case 'N': return 'N';
-    case '*': return '*';
-  }
-  return '?';
-}
-
 
 int getNbLinesInFile(const string &filename) {
   std::ifstream file;
@@ -92,6 +72,90 @@ void openFileForReading(const string &filePath, ifstream &stream) {
 /*
  * Next lines are for generating inputs for step 2
  */
+
+
+void checkParametersMapping(Tool *tool) {
+    //check the strains file
+    keepNA = tool->getInput()->get(STR_KEEP_NA) != 0;
+    string strainsFile = tool->getInput()->getStr(STR_STRAINS_FILE);
+    checkStrainsFile(strainsFile);
+
+}
+
+
+//this function also populates strains if needed
+void checkStrainsFile(const string &strainsFile) {
+
+    vector<Strain> localStrains;
+    bool header=true;
+    ifstream input;
+    openFileForReading(strainsFile, input);
+    set<string> allIds;
+
+    for(string line; getline( input, line ); )
+    {
+        //parse header
+        if (header) {
+            header=false;
+            continue;
+        }
+
+        //ignore empty lines
+        if (line.size()==0)
+            continue;
+
+        //create the strain
+        stringstream ss;
+        ss << line;
+        string id, pheno, path;
+        ss >> id >> pheno >> path;
+
+        //check for duplicated IDs
+        if (allIds.find(id)!=allIds.end()) {
+            stringstream ss;
+            ss << "Duplicated IDs in " << strainsFile << ": " << id << endl;
+            fatalError(ss.str());
+        }
+        allIds.insert(id);
+
+        //check for disallowed phenotypes
+        bool phenoIsNumber;
+        double phenoAsNumber;
+        std::tie(phenoIsNumber, phenoAsNumber) = is_number(pheno);
+
+        //allowed phenotypes are only "NA" or numbers between 0 and 1
+        if (!phenoIsNumber && pheno!="NA") {
+            stringstream ss;
+            ss << "Phenotype not allowed: " << pheno << " . The only allowed values for phenotypes are real numbers or NA." << endl;
+            fatalError(ss.str());
+        }
+
+        //check if the path is ok
+        ifstream file;
+        openFileForReading(path, file);
+        if (!file.is_open()) {
+            stringstream ss;
+            ss << "Error opening file " << path << " in " << strainsFile << endl;
+            fatalError(ss.str());
+        }
+        file.close();
+
+
+        //add the strain if it is different from NA
+        if (pheno=="NA" && keepNA==false) {
+            cerr << "[WARNING] Skipping strain " << id << " because its phenotype is NA and " << STR_KEEP_NA << " is not set." << endl;
+        }else {
+            Strain strain(id, pheno, path);
+            localStrains.push_back(strain);
+        }
+    }
+    input.close();
+
+    //in the end, check if strain is null. If it is, populate it
+    if (strains==NULL)
+        strains = new vector<Strain>(localStrains);
+}
+
 
 //tries to parse s, and returns a pair<bool, double>
 //the first value indicates if s was successfully parsed into a double

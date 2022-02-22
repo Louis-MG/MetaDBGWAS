@@ -36,15 +36,18 @@ const char* STR_KSKMER_SIZE = "--kmer";
 const char* STR_OUTPUT = "--output";
 const char* STR_NBCORES = "--threads";
 const char* STR_STRAINS_FILE = "--strains";
+const char* STR_KEEP_NA = "--keepNA";
 
 //global vars used by both programs
 Graph* graph;
 vector< Strain >* strains = NULL;
 vector< UnitigIdStrandPos >* nodeIdToUnitigId;
+bool keepNA = false;
 
 void populateParser (Tool *tool) {
   // We add some custom arguments for command line interface
   tool->getParser()->push_front (new OptionOneParam(STR_NBCORES, "Number of cores to use", false, "4"));
+  tool->getParser()->push_front (new OptionNoParam (STR_KEEP_NA, "Keep strains with phenotype NA.",  false));
   tool->getParser()->push_front (new OptionOneParam (STR_OUTPUT, "Path to the folder where the final and temporary files will be stored.",  false, "output"));
   tool->getParser()->push_front (new OptionOneParam (STR_KSKMER_SIZE, "K-mer size.",  false, "31"));
   tool->getParser()->push_front (new OptionOneParam (STR_PATH_TO_FASTA_FILES, "Path to the folder where the input fasta files are stored", true, "./"));
