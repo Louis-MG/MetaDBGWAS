@@ -67,7 +67,8 @@ void mapReadToTheGraphCore(const string &read, const Graph &graph, const vector<
 
             //get the unitig localization of this kmer
             u_int64_t index = graph.nodeMPHFIndex(node);
-            UnitigIdStrandPos unitigIdStrandPos=nodeIdToUnitigId[index];
+            cout << index << endl;
+            UnitigIdStrandPos unitigIdStrandPos=nodeIdToUnitigId[index]; //TODO: find problem. See email for screenshots.
 
             if (lastUnitig != unitigIdStrandPos.unitigId) {
                 if (unitigIdToCount.find(unitigIdStrandPos.unitigId) == unitigIdToCount.end() )
@@ -416,7 +417,7 @@ void generateBugwasInput (const vector <string> &allReadFilesNames, const string
 ** INPUT   : output folder name, unitigs
 ** OUTPUT  : bugwas_input.* files (4) and weight_correction file
 ** RETURN  :
-** REMARKS :
+** REMARKS : deletes graph, NodeIdToUnitigs obects as well as the tmpFolder
 *********************************************************************/
 void map_reads::execute ()
 {
@@ -425,6 +426,7 @@ void map_reads::execute ()
 
     //get the parameters
     int nbCores = getInput()->getInt(STR_NBCORES);
+    string referenceOutputFolder = getInput()->getStr(STR_OUTPUT); //keep the original output folder in a variable for file manipulation
     string outputFolder = stripLastSlashIfExists(getInput()->getStr(STR_OUTPUT))+string("/step1");
     string tmpFolder = outputFolder+string("/tmp");
     //create the tmp folder of step1
@@ -438,7 +440,13 @@ void map_reads::execute ()
     //string strains = getInput()->getStr(STR_STRAINS_FILE);
 
     //get the nbContigs
-    int nbContigs = getNbLinesInFile(string("/graph.nodes"));
+    int nbContigs = getNbLinesInFile(referenceOutputFolder + string("/graph.nodes"));
+
+
+    // Finding the unitigs
+    //nodeIdToUnitigId translates the nodes that are stored in the GATB graph to the id of the unitigs together with the unitig strand
+    //orioginaly intilised in build_dbg.cpp line 271
+    nodeIdToUnitigId = new vector< UnitigIdStrandPos >((size_t)graph->getInfo()["kmers_nb_solid"]->getInt());
 
     //Do the Mapping
     //Maps all the reads back to the graph
@@ -458,14 +466,18 @@ void map_reads::execute ()
     cerr << "[Starting mapping process... ]" << endl;
     cerr << "Using " << nbCores << " cores to map " << allReadFilesNames.size() << " read files." << endl;
 
+    for (auto i: allReadFilesNames)
+        std::cout << i << ' ';
+
     // We iterate the range.  NOTE: we could also use lambda expression (easing the code readability)
     uint64_t nbOfReadsProcessed = 0;
     dispatcher.iterate(allReadFilesNamesIt,
                        MapAndPhase(allReadFilesNames, *graph, outputFolder, tmpFolder, nbOfReadsProcessed, synchro,
-                                   *nodeIdToUnitigId, nbContigs));
+                                   *nodeIdToUnitigId, nbContigs)); //TODO: trouver pourquoi la nodeIdToUnitigId est vide en memoire
 
+    cout << "this is fine 6" << endl;
     //generate the bugwas input
-    generateBugwasInput(allReadFilesNames, outputFolder, tmpFolder, nbContigs);
+    generateBugwasInput(allReadFilesNames, outputFolder, tmpFolder, nbContigs); //TODO : see if right with oputputFolder instead of referenceOutputFolder
 
     //after the mapping, free some memory that will not be needed anymore
     delete graph;
@@ -475,7 +487,7 @@ void map_reads::execute ()
     //remove temp directory
     boost::filesystem::remove_all(tmpFolder);
     //remove GATB's graph file
-    remove((outputFolder+string("/graph.h5")).c_str());
+    remove((referenceOutputFolder+string("/graph.h5")).c_str()); //TODO: check if right
 
     cerr << endl << "[Mapping process finished!]" << endl;
     cerr.flush();
