@@ -62,7 +62,7 @@ public:
 /*********************************************************************
 ** METHOD  :
 ** PURPOSE : produce a debruijn graph with the unitigs
-** INPUT   : fasta file
+** INPUT   : fasta file with unitigs from Bcalm
 ** OUTPUT  : outputs some stats
 ** RETURN  : .edges and .nodes files
 ** REMARKS :
@@ -77,12 +77,15 @@ void build_dbg::execute ()
     //creates variable where the unitigs file is
     string linear_seqs_name = getInput()->getStr(STR_PATH_TO_FASTA_FILES);
     //create the step1 folder in the outputfolder
-    string outputFolder = stripLastSlashIfExists(getInput()->getStr(STR_OUTPUT)); //TODO: should I keep the files in the common output folder or ina  separate one ?
+    string outputFolder = stripLastSlashIfExists(getInput()->getStr(STR_OUTPUT)); //TODO: should I keep the files in the common output folder or in a separate one ?
 
     //Builds the DBG with unitigs using GATB
-    graph = new Graph ;
-    *graph = gatb::core::debruijn::impl::Graph::create("-in %s -kmer-size %d -abundance-min 0 -out %s/graph -nb-cores %d",
-                                                       linear_seqs_name.c_str(), kmerSize, outputFolder.c_str(), nbCores);
+    graph = new Graph ; //TODO: changer en GaphUnitig (GraphUnitigs.hpp) when the code will be usable (god knows when)
+    //test line to load the .h5 from bcalm :
+    *graph = gatb::core::debruijn::impl::Graph::load(outputFolder + "/unitigs/fof.h5");
+    // line that works :
+    //*graph = gatb::core::debruijn::impl::Graph::("-in %s -kmer-size %d -abundance-min 0 -out %s/graph -nb-cores %d", //TODO: same
+    //                                                   linear_seqs_name.c_str(), kmerSize, outputFolder.c_str(), nbCores);
 
     //builds and outputs .nodes and .edges.dbg files, see GraphOutput.h for the inner code
     typedef boost::variant <

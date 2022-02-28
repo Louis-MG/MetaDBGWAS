@@ -69,6 +69,10 @@ void mapReadToTheGraphCore(const string &read, const Graph &graph, const vector<
             u_int64_t index = graph.nodeMPHFIndex(node);
             cout << index << endl;
             UnitigIdStrandPos unitigIdStrandPos=nodeIdToUnitigId[index]; //TODO: find problem. See email for screenshots.
+            // from the doc in Graph.hpp, it light be ULONG_MAX that is outputed
+            // https://www.includehelp.com/cpp-tutorial/ULLONG_MAX-constant-with-example.aspxconfirms
+            // thus a node is not in the graph.
+            // load graph from the .h5 of balcm then ?
 
             if (lastUnitig != unitigIdStrandPos.unitigId) {
                 if (unitigIdToCount.find(unitigIdStrandPos.unitigId) == unitigIdToCount.end() )
@@ -473,7 +477,7 @@ void map_reads::execute ()
     uint64_t nbOfReadsProcessed = 0;
     dispatcher.iterate(allReadFilesNamesIt,
                        MapAndPhase(allReadFilesNames, *graph, outputFolder, tmpFolder, nbOfReadsProcessed, synchro,
-                                   *nodeIdToUnitigId, nbContigs)); //TODO: trouver pourquoi la nodeIdToUnitigId est vide en memoire
+                                   *nodeIdToUnitigId, nbContigs));
 
     cout << "this is fine 6" << endl;
     //generate the bugwas input

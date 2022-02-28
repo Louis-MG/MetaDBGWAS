@@ -130,15 +130,15 @@ public:
     //kMinus1_MerLinks stores all the leftest and rightest kmers of each unitig
     void load_nodes_extremities(const string &linear_seqs_name)
     {
-        IBank *Nodes = Bank::open(linear_seqs_name); //TODO: find out why the hell this doesnt work
+        IBank *Nodes = Bank::open(linear_seqs_name);
         LOCAL (Nodes);
         long nb_nodes = 0;
 
         // We loop over sequences.
         // for each node, output all the out-edges (in-edges will correspond to out-edges of neighbors)
         ProgressIterator<Sequence> it(*Nodes, "Loading endpoints of unitigs");
-        ModelCanonical kMinus1_merModel(graph->getKmerSize()-1); //TODO: graph might be a problem but lets see
-        ModelCanonical k_merModel(graph->getKmerSize());
+        ModelCanonical kMinus1_merModel(graph->getKmerSize()-1); //TODO: Nodes are implicitly the kmer at the extremities with NodeGU, must check
+        ModelCanonical k_merModel(graph->getKmerSize()); //TODO: method unitigLastNode instead of geting k-1 kmer
         for (it.first(); !it.isDone(); it.next()) {
             string sequence = it.item().toString();
 
