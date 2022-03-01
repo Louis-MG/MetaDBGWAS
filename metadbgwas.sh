@@ -121,9 +121,9 @@ do
 	shift 2;;
 	--strains) strains="$2"
 	shift 2;;
-	--nc-db) nc-db="$2"
+	--nc-db) ncDB="-nc-db $2"
 	shift 2;;
-	--pt-db) pt-db="$2"
+	--pt-db) ptDB="-pt-db $2"
 	shift 2;;
 	--keepNA) keepNA="-keepNA"
 	shift;;
@@ -133,9 +133,10 @@ do
 	shift 2;;
 	-h | --help) Help; exit;;
 	-* | --*) echo "Unknown option"; exit;;
-	*) Help; exit;
+	*) break;
 	esac
 done
+
 
 #creates output dir if it doesnt exist yet
 
@@ -227,4 +228,4 @@ mv graph.edges.dbg graph.nodes ./step1
 
 #starting DBGWAS at step 2:
 
-./DBGWAS/bin/DBGWAS -k $kmer -strains $strains -keepNA -nb-cores $threads -output $output -skip1 $keepNA
+./DBGWAS/bin/DBGWAS -k $kmer -strains $strains -keepNA -nb-cores $threads -output $output -skip1 $keepNA $ncDB $ptDB
