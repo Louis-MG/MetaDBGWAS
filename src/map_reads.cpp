@@ -334,7 +334,7 @@ void generateBugwasInput (const vector <string> &allReadFilesNames, const string
     //creates also a file saying if the unitig was inverted (-1) or not (1)
     //this is a multiplicative factor that will correct the weight (estimated effect) from the statistical test
     ofstream weightCorrectionStream;
-    openFileForWriting(outputFolder+string("weight_correction"), weightCorrectionStream);
+    openFileForWriting(outputFolder+string("/weight_correction"), weightCorrectionStream);
 
     for (int i=0;i<XUbinary.size();i++) {
         //1. Transform frequency to binary
