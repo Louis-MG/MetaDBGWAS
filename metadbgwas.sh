@@ -19,20 +19,18 @@ alpha=0
 kmer_l=17
 
 #bcalm2
-
 kmer=31
 
 #Reindeer
+#kmer as bcalm
 
 #dbgwas
-strains=''
-newick=''
-
-#strains
-#k
-#newick
-
-
+strains='' #strais file
+newick='' #phylo tree file
+ncDB='' #nucleotide database file
+ptDB='' #protein database file
+keepNA=''
+#kmer as bcalm too
 
 #miscealenous
 
@@ -89,13 +87,16 @@ Reindeer uses kmer, threads, and output parameters. No others need to be specifi
         * DBGWAS
 --strains A text file describing the strains containing 3 columns: 1) ID of the strain; 2) Phenotype (a real number or NA); 3) Path to a multi-fasta file containing the sequences of the strain. This fil>
 --newick Optional path to a newick tree file. If (and only if) a newick tree file is provided, the lineage effect analysis is computed and PCs figures are generated.
+--nc-db Optional  A list of Fasta files separated by comma containing annotations in a nucleotide alphabet format (e.g.: -nc-db path/to/file_1.fa,path/to/file_2.fa,etc). You can customize these files to work better with DBGWAS (see https://gitlab.com/leoisl/dbgwas/tree/master#customizing-annotation-databases).
+--pt-db Optionnal A list of Fasta files separated by comma containing annotations in a protein alphabet format (e.g.: -pt-db path/to/file_1.fa,path/to/file_2.fa,etc). You can customize these files to work better with DBGWAS (see https://gitlab.com/leoisl/dbgwas/tree/master#customizing-annotation-databases).
+--keepNA Optionnal Keep strains with phenotype NA.
 
         * Miscellaneous
 --license prints the license text in standard output.
 --help displays help.
 
         * Exemple
-bash metadbgwas.sh --files /test/ --output ./output --threads 4 --verbose 1 --K 17 6000000\n
+bash metadbgwas.sh --files /test/ --output ./output --threads 4 --verbose 1 --K 17 6000000
 	"
 }
 
@@ -120,13 +121,19 @@ do
 	shift 2;;
 	--strains) strains="$2"
 	shift 2;;
+	--nc-db) nc-db="$2"
+	shift 2;;
+	--pt-db) pt-db="$2"
+	shift 2;;
+	--keepNA) keepNA="-keepNA"
+	shift;;
 	--version) Version; exit;;
 	--license) License; exit;;
 	-v | --verbose) verbose="$2"
 	shift 2;;
 	-h | --help) Help; exit;;
 	-* | --*) echo "Unknown option"; exit;;
-	*) break;
+	*) Help; exit;
 	esac
 done
 
@@ -220,4 +227,4 @@ mv graph.edges.dbg graph.nodes ./step1
 
 #starting DBGWAS at step 2:
 
-./DBGWAS/bin/DBGWAS -strain -nb-core $threads -skip1 -o $output
+./DBGWAS/bin/DBGWAS -k $kmer -strains $strains -keepNA -nb-cores $threads -output $output -skip1 $keepNA
