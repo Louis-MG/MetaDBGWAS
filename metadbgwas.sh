@@ -199,7 +199,7 @@ else
 fi
 
 mkdir $output/unitigs
-./bcalm/build/bcalm -in $output/fof.txt -kmer-size $kmer -nb-cores $threads -out-dir $output/unitigs $verbosity_level
+./bcalm/build/bcalm -in $output/fof.txt -kmer-size $kmer -nb-cores $threads -out-dir $output/unitigs $verbosity_level -abundance-min 1
 mv ./fof.unitigs.fa ./unitigs.fa
 mv ./unitigs.fa $output/unitigs
 echo "$output/unitigs/unitigs.fa" > $output/unitigs/fof_unitigs.txt #creates the file of file for reindeer with unitigs
@@ -215,5 +215,9 @@ mkdir $output/step1
 
 # DBGWAS
 
-#creating the setp 2 folder :
+#creating the step 2 folder :
 mv graph.edges.dbg graph.nodes ./step1
+
+#starting DBGWAS at step 2:
+
+./DBGWAS/bin/DBGWAS -strain -nb-core $threads -skip1 -o $output

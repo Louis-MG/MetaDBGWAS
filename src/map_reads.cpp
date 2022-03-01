@@ -67,12 +67,18 @@ void mapReadToTheGraphCore(const string &read, const Graph &graph, const vector<
 
             //get the unitig localization of this kmer
             u_int64_t index = graph.nodeMPHFIndex(node);
-            cout << index << endl;
+            if (index == ULONG_MAX ) {
+                cerr << "The kmer" << LRKmer << "was not found in the graph." << endl ; //to make it easier to use and debug in the future
+                abort();
+            }
+            //TODO: several LRKmers are not in the unitig graph. no clue why.
+            //TODO: UPDATE
+            //TODO: got my clue: bcalm has default setting to minimum abundance of kmers set to 2 for consideration when building unitigs, so 44M kmers where ignored pon test file of 50M.
+            //TODO: have to find what to do with that info. Since Lighter corrected the reads maybe we are good with -abundance-min 1.
+            //TODO : UPDATE : we keep -abundance-min to 1
             UnitigIdStrandPos unitigIdStrandPos=nodeIdToUnitigId[index]; //TODO: find problem. See email for screenshots.
-            // from the doc in Graph.hpp, it light be ULONG_MAX that is outputed
-            // https://www.includehelp.com/cpp-tutorial/ULLONG_MAX-constant-with-example.aspxconfirms
+            // from the comment in Graph.hpp of gatb core, if ULONG_MAX is outputed
             // thus a node is not in the graph.
-            // load graph from the .h5 of balcm then ?
 
             if (lastUnitig != unitigIdStrandPos.unitigId) {
                 if (unitigIdToCount.find(unitigIdStrandPos.unitigId) == unitigIdToCount.end() )
@@ -139,13 +145,12 @@ struct MapAndPhase
         SubjectIterator <Sequence> it(inputBank->iterator(), NB_OF_READS_NOTIFICATION_MAP_AND_PHASE, mapAndPhaseIteratorListener);
 
         //XU_strain_i = how many times each unitig map to a strain
-        //TODO [CONTINUOUS GENOTYPE] - add the suffix to this file, so that we know if it is binary or continuous counting
         ofstream mappingOutputFile;
         openFileForWriting(tmpFolder+string("/XU_strain_")+to_string(i), mappingOutputFile);
 
         // We loop over sequences.
         unsigned long readIndex = 0;
-        map<int,int> unitigIdToCount; //TODO: change this to a vector
+        map<int,int> unitigIdToCount;
         for (it.first(); !it.isDone(); it.next()) {
             string read = (it.item()).toString();
             //transform the read to upper case
@@ -244,7 +249,7 @@ void generate_unique_id_to_original_ids(const string &uniqueIdToOriginalIdsFilen
     int i=0;
     auto it=pattern2Unitigs.begin();
     for (;it!=pattern2Unitigs.end();++it, ++i) {
-        //goes through the unitigos of this file
+        //goes through the unitigs of this file
         for (auto id : it->second) {
             //uniqueIdToOriginalIdsFile
             //print all the unitigs of a pattern i in line i
@@ -296,6 +301,7 @@ void generate_XU_unique(const string &filename, const vector< vector<int> > &XU,
     XUUnique.close();
 }
 
+//TODO: this part can be replaced with loading of the REINDEER matrix
 //generate the bugwas input
 void generateBugwasInput (const vector <string> &allReadFilesNames, const string &outputFolder, const string &tmpFolder, int nbContigs) {
     //Generate the XU (the bugwas input - the matrix where the unitigs are rows and the strains are columns)
@@ -328,16 +334,14 @@ void generateBugwasInput (const vector <string> &allReadFilesNames, const string
     //creates also a file saying if the unitig was inverted (-1) or not (1)
     //this is a multiplicative factor that will correct the weight (estimated effect) from the statistical test
     ofstream weightCorrectionStream;
-    openFileForWriting(outputFolder+string("/step1/weight_correction"), weightCorrectionStream);
+    openFileForWriting(outputFolder+string("weight_correction"), weightCorrectionStream);
 
     for (int i=0;i<XUbinary.size();i++) {
-        //TODO [CONTINUOUS GENOTYPE] : no need to transform - it will come correct already
         //1. Transform frequency to binary
         for (int j = 0; j < XUbinary[i].size(); j++)
             XUbinary[i][j] = ((int)((bool)(XUbinary[i][j])));
 
-        //TODO [CONTINUOUS GENOTYPE] : how to do this with continous genotype?
-        //2. Transform to the enconding where 0 is the major allele and 1 is the minor one
+        //2. Transform to the encoding where 0 is the major allele and 1 is the minor one
         //count how many 0s and 1s we have
         int count0=0;
         int count1=0;
@@ -441,7 +445,6 @@ void map_reads::execute ()
     Strain::createReadsFile(readsFile, strains);
 
     string longReadsFile = tmpFolder+string("/readsFile");
-    //string strains = getInput()->getStr(STR_STRAINS_FILE);
 
     //get the nbContigs
     int nbContigs = getNbLinesInFile(referenceOutputFolder + string("/graph.nodes"));
@@ -457,7 +460,7 @@ void map_reads::execute ()
 
     //get all the read files' name
     vector <string> allReadFilesNames = getVectorStringFromFile(longReadsFile);
-    cout << "this is fine 5" << endl;
+
     // We create an iterator over an integer range
     Range<int>::Iterator allReadFilesNamesIt(0, allReadFilesNames.size() - 1);
 
@@ -470,16 +473,12 @@ void map_reads::execute ()
     cerr << "[Starting mapping process... ]" << endl;
     cerr << "Using " << nbCores << " cores to map " << allReadFilesNames.size() << " read files." << endl;
 
-    for (auto i: allReadFilesNames)
-        std::cout << i << ' ';
-
     // We iterate the range.  NOTE: we could also use lambda expression (easing the code readability)
     uint64_t nbOfReadsProcessed = 0;
     dispatcher.iterate(allReadFilesNamesIt,
                        MapAndPhase(allReadFilesNames, *graph, outputFolder, tmpFolder, nbOfReadsProcessed, synchro,
                                    *nodeIdToUnitigId, nbContigs));
 
-    cout << "this is fine 6" << endl;
     //generate the bugwas input
     generateBugwasInput(allReadFilesNames, outputFolder, tmpFolder, nbContigs); //TODO : see if right with oputputFolder instead of referenceOutputFolder
 

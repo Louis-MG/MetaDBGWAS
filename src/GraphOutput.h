@@ -176,7 +176,9 @@ public:
         // We loop over sequences.
         // for each node, output all the out-edges (in-edges will correspond to out-edges of neighbors)
         ProgressIterator<Sequence> it(*Nodes, "Building .nodes and .edges files");
+
         ModelCanonical kMinus1_merModel(graph->getKmerSize()-1);
+
         ModelCanonical k_merModel(graph->getKmerSize());
         int index=0;
         for (it.first(); !it.isDone(); it.next(), index++)
