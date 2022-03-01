@@ -67,6 +67,8 @@ Reindeer uses kmer, threads, and output parameters. No others need to be specifi
         * DBGWAS
 --strains A text file describing the strains containing 3 columns: 1) ID of the strain; 2) Phenotype (a real number or NA); 3) Path to a multi-fasta file containing the sequences of the strain. This fil>
 --newick Optional path to a newick tree file. If (and only if) a newick tree file is provided, the lineage effect analysis is computed and PCs figures are generated.
+--nc-db A list of Fasta files separated by comma containing annotations in a nucleotide alphabet format (e.g.: -nc-db path/to/file_1.fa,path/to/file_2.fa,etc). You can customize these files to work better with DBGWAS (see https://gitlab.com/leoisl/dbgwas/tree/master#customizing-annotation-databases).
+--pt-db A list of Fasta files separated by comma containing annotations in a protein alphabet format (e.g.: -pt-db path/to/file_1.fa,path/to/file_2.fa,etc). You can customize these files to work better with DBGWAS (see https://gitlab.com/leoisl/dbgwas/tree/master#customizing-annotation-databases).
 
         * Miscellaneous
 --license prints the license text in standard output.
@@ -87,6 +89,7 @@ User can find in the output folder :
 - matrix folder with the matrix of absence/presence of kmers in the unitigs. Ouptut from Reindeer.
 - fof.txt : file of files for input of bcalm
 - fof_unitigs.txt : file of file for input of Reindeer.
+- step1 folder with the graph files (.nodes and .edges.dbg) as well as input files for gemma and bugwas 
 
 # License
 
