@@ -49,7 +49,7 @@ This tool expands the work of [DBGWAS](https://gitlab.com/leoisl/dbgwas) [(Jaill
 	* General
 --files <path> path to one file or a directory containing the files.
 --output <path> path to the output folder. Default set to ./ .
---threads <int> number of threads to use. Default set to 4.
+--threads <int> number of threads to use. !! Default set to 4 !!
 --verbose <int> level of verbosity. Default to 1, 0-1. 0 is equivalent to --quiet.
 --clean removes files from output directory if not empty.
 
@@ -78,7 +78,7 @@ Reindeer uses kmer, threads, and output parameters. No others need to be specifi
 # Exemple
 
 ```bash
-bash metadbgwas.sh --files ./test/ --output ./output --threads 4 --verbose 1 --K 17 6000000
+bash metadbgwas.sh --files ./test/ --output ./output --K 17 6000000
 ```
 
 # Output
