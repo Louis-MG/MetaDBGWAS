@@ -30,8 +30,6 @@
 #include "PhenoCounter.h"
 #include "global.h"
 
-//TODO: see f I can safely delete createFolder, getVectorStringFromFile, openFileForWriting
-
 using namespace std;
 
 int getNbLinesInFile(const string &filename) {

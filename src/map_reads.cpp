@@ -480,7 +480,7 @@ void map_reads::execute ()
                                    *nodeIdToUnitigId, nbContigs));
 
     //generate the bugwas input
-    generateBugwasInput(allReadFilesNames, outputFolder, tmpFolder, nbContigs); //TODO : see if right with oputputFolder instead of referenceOutputFolder
+    generateBugwasInput(allReadFilesNames, outputFolder, tmpFolder, nbContigs);
 
     //after the mapping, free some memory that will not be needed anymore
     delete graph;
@@ -490,7 +490,7 @@ void map_reads::execute ()
     //remove temp directory
     boost::filesystem::remove_all(tmpFolder);
     //remove GATB's graph file
-    remove((referenceOutputFolder+string("/graph.h5")).c_str()); //TODO: check if right
+    remove((referenceOutputFolder+string("/graph.h5")).c_str());
 
     cerr << endl << "[Mapping process finished!]" << endl;
     cerr.flush();
