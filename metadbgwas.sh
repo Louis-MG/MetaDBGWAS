@@ -207,7 +207,10 @@ else
 fi
 
 mkdir $output/unitigs
-./bcalm/build/bcalm -in $output/fof.txt -kmer-size $kmer -nb-cores $threads -out-dir $output/unitigs $verbosity_level -abundance-min 1
+#the optiuon abundance min is used to keep all kmers: we already corrected them, and not keeping them all to build the unitigs would have 2 unfortunate consequences :
+	# 1 some variation would be lost, and we want to analyse it !
+	# 2 when mapping the kmers to the unitig grpah, that causes a segfault (index > ULONG_MAX)
+./bcalm/build/bcalm -in $output/fof.txt -kmer-size $kmer -nb-cores $threads -out-dir $output/unitigs $verbosity_level -abundance-min 1 
 mv ./fof.unitigs.fa ./unitigs.fa
 mv ./unitigs.fa $output/unitigs
 echo "$output/unitigs/unitigs.fa" > $output/unitigs/fof_unitigs.txt #creates the file of file for reindeer with unitigs
@@ -215,7 +218,10 @@ echo "$output/unitigs/unitigs.fa" > $output/unitigs/fof_unitigs.txt #creates the
 
 # Reindeer
 mkdir $output/step1
-./REINDEER/Reindeer -o $output/matrix -t $threads --nocount -k $kmer --index -f $output/unitigs/fof_unitigs.txt
+# first we index:
+./REINDEER/Reindeer --index -f $output/unitigs/fof_unitigs.txt --nocount -o $output/matrix -k $kmer -t $threads
+#then we query the unitigs on the index of kmers we built precendently:
+./REINDEER/Reindeer --query -l $output/matrix -q $output/unitigs/unitigs.fa -o $output/matrix --nocount
 
 # MetaDBGWAS executable to get .edges and .nodes 
 
@@ -224,8 +230,9 @@ mkdir $output/step1
 # DBGWAS
 
 #creating the step 2 folder :
-mv graph.edges.dbg graph.nodes ./step1
+mv graph.edges.dbg graph.nodes $output/step1
 
 #starting DBGWAS at step 2:
+
 
 ./DBGWAS/bin/DBGWAS -k $kmer -strains $strains -keepNA -nb-cores $threads -output $output -skip1 $keepNA $ncDB $ptDB
