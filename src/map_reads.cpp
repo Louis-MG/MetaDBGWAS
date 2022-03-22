@@ -34,7 +34,6 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <sstream>
 #include <chrono>
 #include <vector>
 #include <set>
@@ -77,7 +76,11 @@ void map_reads::execute ()
     auto t1 = std::chrono::high_resolution_clock::now();
 
     //generate the bugwas input
-    std::cout << "[Starting conversion of abundance matrix to presence/absence matrix ...]" << std::endl;
+    std::cout << "[Generating gemma/bugwas input files ...]" << std::endl;
+
+    //create the ID and Phenotype file
+    Strain::createIdPhenoFile(outputFolder+string("/bugwas_input.id_phenotype"), strains);
+
     std::string matrix = referenceOutputFolder + "matrix/reindeer_output/TRUC";//TODO: replace with filename; //input abundance matrix
     std::string output = "bugwas_input.all_rows.binary" ;//TODO:same ; //output presence/absence matrix
     // streams
@@ -163,6 +166,39 @@ void map_reads::execute ()
 
     // writes uniques and unique_to_all, gemma unique patterns to nb unitigs outputs
     write_bugwas_gemma(vector_of_unique_patterns, rawname, filenames, map_unique_to_all);
+
+    // create a vector indexed by the unitigIndex containing each position a vector of phenotypeValue,
+    // indicating the phenotypes of each appearance of the unitig in the strains
+    // it can be used to know the total count of a unitig (size of the vector) and their phenotype count in step 3
+    // (e.g. how many times an unitig appeared in strains with phenotype 0, >0 and NA)
+    //TODO: instead of representing the phenotype of each appearance, just use a pair <count, phenotype>
+    //TODO: this could save disk
+    cerr << "[Generating unitigs2PhenoCounter...]" << endl;
+    //get the nbContigs
+    int nbContigs = getNbLinesInFile(referenceOutputFolder + string("/graph.nodes"));
+    vector< PhenoCounter > unitigs2PhenoCounter(nbContigs);
+    for(int strainIndex=0;strainIndex<allReadFilesNames.size();strainIndex++) {
+        ifstream unitigCountForStrain;
+        openFileForReading(tmpFolder+string("/XU_strain_")+to_string(strainIndex), unitigCountForStrain);
+        for (int unitigIndex=0; unitigIndex<nbContigs; unitigIndex++) {
+            int count;
+            unitigCountForStrain >> count;
+            unitigs2PhenoCounter[unitigIndex].add((*strains)[strainIndex].phenotype, count);
+        }
+        unitigCountForStrain.close();
+    }
+
+    //serialize unitigs2PhenoCounter
+    {
+        ofstream unitigs2PhenoCounterFile;
+        openFileForWriting(outputFolder+string("/unitigs2PhenoCounter"), unitigs2PhenoCounterFile);
+        boost::archive::text_oarchive boostOutputArchive(unitigs2PhenoCounterFile);
+        //serialization itself
+        boostOutputArchive & unitigs2PhenoCounter;
+    } //boostOutputArchive and the stream are closed on destruction
+
+    Strain::createPhenotypeCounter(outputFolder+string("/phenoCounter"), strains);
+    cerr << "[Generating unitigs2PhenoCounter...] - Done!" << endl;
 
     // finishing measuring time
     auto t2 = std::chrono::high_resolution_clock::now();
