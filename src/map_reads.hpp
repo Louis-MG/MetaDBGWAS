@@ -33,6 +33,20 @@
 #include <gatb/gatb_core.hpp>
 /********************************************************************************/
 
+//this struct contains the name of a kmer, and pattern is a vector of its absence/presence
+struct SKmer {
+    std::string name;
+    std::vector<int> pattern;
+    int corrected;
+};
+
+
+// declarations
+SKmer process_line(const std::string& line_buffer);
+void write_bugwas_gemma(const std::vector<std::vector<int>>& vector_of_unique_patterns, std::string& rawname, std::vector<std::string>& filenames, std::map<std::vector<int>, std::vector<int>>& map_unique_to_all);
+SKmer minor_allele_description(SKmer data);
+
+
 class map_reads : public Tool
 {
 public:
@@ -52,6 +66,118 @@ public:
         return toReturn;
     }
 };
+
+SKmer process_line(const std::string& line_buffer) {
+    /*
+     * this function processes lines by putting them in a structure than contains  the Kmer name, a vector of its absence/presence pattern. Ignores the corrected attribute.
+     */
+    std::vector<int> output_pattern;
+    std::string kmer_name;
+    std::istringstream input(line_buffer);
+    //loop over tab-separated words in the line :
+    for (std::string word; std::getline(input, word, '\t'); ) {
+        if (word.starts_with(">")) { // if id resets line
+            kmer_name = word;
+        } else if (word.ends_with("*")) { // if abundance is 0
+            output_pattern.push_back(0);
+        } else {
+            output_pattern.push_back(1); // if abundance is anything else than 0
+        }
+    }
+    // Kmer output_struct{kmer_name, output_pattern};
+    // output_pattern.clear();
+    return {kmer_name, output_pattern};
+}
+
+SKmer minor_allele_description(SKmer data) {
+    /*
+     * this function changes the pattern of presence/absence of a SKmer into the minor allele description if needed, and changed the 'corrected' accordingly (1: did not change; -1: changed).
+     */
+    float sum ;
+    std::vector<int> corr_vector;
+    for (auto& n : data.pattern) {
+        sum += n;
+    }
+    if (sum/(float)data.pattern.size() > 0.5) {
+        for (int i = 0; i < data.pattern.size(); i++) {
+            std::cout << i << std::endl;
+            switch (data.pattern.at(i)) {
+                case 0:
+                    corr_vector.push_back(1);
+                    break;
+                case 1:
+                    corr_vector.push_back(0);
+                    break;
+            }
+        }
+        data.corrected = -1;
+        data.pattern = corr_vector;
+    } else {
+        data.corrected = 1;
+    }
+    return data;
+}
+
+
+void write_bugwas_gemma(const std::vector<std::vector<int>>& vector_of_unique_patterns, std::string& rawname, std::vector<std::string>& filenames, std::map<std::vector<int>, std::vector<int>>& map_unique_to_all) {
+    /*
+     * this function builds output files : unique_patterns, unique_to_all, and gemma_pattern_to_nb_unitigs, gemma_unitig_to_patterns.
+     */
+    std::ofstream outstream_unique (rawname+".unique_rows.binary", std::ofstream::binary);
+    std::ofstream outstream_unique_to_all (rawname+".unique_rows_to_all_rows.binary", std::ofstream::binary);
+    std::ofstream outstream_gemma_pattern_to_nb_unitigs ("gemma_input.pattern_to_nb_of_unitigs.binary", std::ofstream::binary);
+    std::ofstream outstream_gemma_unitig_to_patterns ("gemma_input.unitig_to_pattern.binary", std::ofstream::binary);
+
+
+    //error check
+    if (outstream_unique.fail()) {
+        perror("ERROR: could not open bugwas_input.unique_rows.binary");
+        std::exit(1);
+    } else if (outstream_unique_to_all.fail()) {
+        perror("ERROR: could not open bugwas_inputunique_rows_to_all_rows.binary");
+        std::exit(1);
+    } else if (outstream_gemma_pattern_to_nb_unitigs.fail()) {
+        perror("ERROR: could not open gemma_input.pattern_to_nb_of_unitigs.binary");
+        std::exit(1);
+    } else if (outstream_gemma_unitig_to_patterns.fail()) {
+        perror("ERROR: could not open gemma_input.unitig_to_pattern.binary");
+        std::exit(1);
+    }
+
+    //TODO: check that my understanding of the output files is ok
+
+    // header for unique_pattern
+    outstream_unique << "ps ";
+    for (const std::string &i : filenames) {
+        outstream_unique << i << " ";
+    }
+    outstream_unique << "\n";
+
+    int n = 0;
+    for (const auto &i : vector_of_unique_patterns) {
+        // writes the unique patterns in their file
+        outstream_unique << n << " ";
+        for (const auto &j : i) {
+            outstream_unique << j << " " ;
+        }
+        outstream_unique << "\n" ;
+        // writes connection between unique pattern and all the unitigs each represents in unique_to_all, and the reciprocal in unitig_to_pattern
+        for (const auto &j : map_unique_to_all[i]) {
+            outstream_unique_to_all << j << " ";
+            outstream_gemma_unitig_to_patterns << j << " " << n << "\n";
+        }
+        outstream_unique_to_all << "\n" ;
+
+        // writes the number of unitigs that each unique pattern represents
+        outstream_gemma_pattern_to_nb_unitigs << n << " " << map_unique_to_all[i].size() << "\n";
+
+        n++;
+    }
+    outstream_unique.close();
+    outstream_unique_to_all.close();
+    outstream_gemma_pattern_to_nb_unitigs.close();
+    outstream_gemma_unitig_to_patterns.close();
+}
 
 /********************************************************************************/
 

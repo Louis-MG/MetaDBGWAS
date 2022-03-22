@@ -138,7 +138,7 @@ public:
         // for each node, output all the out-edges (in-edges will correspond to out-edges of neighbors)
         ProgressIterator<Sequence> it(*Nodes, "Loading endpoints of unitigs");
         ModelCanonical kMinus1_merModel(graph->getKmerSize()-1); //TODO: Nodes are implicitly the kmer at the extremities with NodeGU, must check
-        ModelCanonical k_merModel(graph->getKmerSize()); //TODO: method unitigLastNode instead of geting k-1 kmer
+        ModelCanonical k_merModel(graph->getKmerSize()); //TODO: method unitigLastNode instead of getting k-1 kmer
         for (it.first(); !it.isDone(); it.next()) {
             string sequence = it.item().toString();
 
@@ -146,9 +146,9 @@ public:
             typename ModelCanonical::Kmer leftkMinus1_mer, rightkMinus1_mer, leftk_mer, rightk_mer;
 
             //code kmers (the canonical (minimum between fw and rc will be saved))
-            leftkMinus1_mer = kMinus1_merModel.codeSeed(sequence.c_str(), Data::ASCII, 0);
+            leftkMinus1_mer = kMinus1_merModel.codeSeed(sequence.c_str(), Data::ASCII, 0); //seq, encoding, startindex (index of the firts nucleotide in the seq buffer)
             leftk_mer = k_merModel.codeSeed(sequence.c_str(), Data::ASCII, 0);
-            rightkMinus1_mer = kMinus1_merModel.codeSeed(sequence.c_str(), Data::ASCII, sequence.length()-(graph->getKmerSize()-1));
+            rightkMinus1_mer = kMinus1_merModel.codeSeed(sequence.c_str(), Data::ASCII, sequence.length()-(graph->getKmerSize()-1)); //le changement de startindex est fait pour decaler la sequence
             rightk_mer = k_merModel.codeSeed(sequence.c_str(), Data::ASCII, sequence.length()-graph->getKmerSize());
 
             //kMinus1_MerLinks maps the kmer to its unitig id, strand, and if it is the leftest or the rightest kmer of the unitig
