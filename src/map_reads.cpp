@@ -30,7 +30,6 @@
 #include "map_reads.hpp"
 #include "Utils.h"
 #include "PhenoCounter.h"
-#include <boost/algorithm/string/predicate.hpp>
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -80,12 +79,12 @@ void map_reads::execute ()
 
     // create the ID and Phenotype file
     Strain::createIdPhenoFile(outputFolder+string("/bugwas_input.id_phenotype"), strains);
-    // create the vector for the Pheno files: //TODO: si utile
-    int nbUnitigs = getNbLinesInFile(referenceOutputFolder + string("/graph.nodes")); //TODO: inutile ?
+    // create the vector for the Pheno files:
+    int nbUnitigs = getNbLinesInFile(referenceOutputFolder + string("/graph.nodes"));
     std::vector< PhenoCounter > unitigs2PhenoCounter(nbUnitigs);
 
-    std::string matrix = referenceOutputFolder + "matrix/reindeer_output/query_results";//TODO: replace with filename; //input abundance matrix
-    std::string output = "bugwas_input.all_rows.binary" ;//TODO:same ; //output presence/absence matrix
+    std::string matrix = referenceOutputFolder + "matrix/reindeer_output/query_results";//TODO: check the name of the file
+    std::string output = "bugwas_input.all_rows.binary" ;
     // streams
     std::ifstream stream (matrix, std::ifstream::binary);
     std::ofstream outstream (outputFolder + output, std::ofstream::binary);
@@ -118,6 +117,8 @@ void map_reads::execute ()
     // read the data line by line:
     std::string line_buffer;
     std::set<std::vector<int>> vector_set;
+    // sorts the strains to get them in the same order sa the files, thus in the order of the reindeer output matrix //TODO: check that this is valid
+    sort((*strains).begin(), (*strains).end());
     int n = 0; // line counter
     while(std::getline(stream, line_buffer).good()) {
         if (line_buffer.starts_with("query")) {
@@ -251,7 +252,7 @@ void unitigs_to_Phenocounter(SKmer& data, std::vector<int>& vector_pheno_count) 
     /*
      * This function adds a Kmer abundance to Phenocounter vector (serialised). Vector follows the order : 0, 1, NA
      */
-
+    //TODO: check if the
 
 }
 
