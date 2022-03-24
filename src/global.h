@@ -41,7 +41,9 @@ extern const char* STR_NBCORES;
 extern const char* STR_PATH_TO_FASTA_FILES;
 extern const char* STR_STRAINS_FILE;
 extern const char* STR_KEEP_NA;
+extern const char* STR_PHENOTYPE_THRESHOLD;
 extern bool keepNA;
+extern double phenotypeThreshold;
 
 void populateParser (Tool *tool);
 

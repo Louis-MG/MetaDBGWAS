@@ -75,13 +75,16 @@ void map_reads::execute ()
     // measuring time
     auto t1 = std::chrono::high_resolution_clock::now();
 
-    //generate the bugwas input
+    // generate the bugwas input
     std::cout << "[Generating gemma/bugwas input files ...]" << std::endl;
 
-    //create the ID and Phenotype file
+    // create the ID and Phenotype file
     Strain::createIdPhenoFile(outputFolder+string("/bugwas_input.id_phenotype"), strains);
+    // create the vector for the Pheno files: //TODO: si utile
+    int nbUnitigs = getNbLinesInFile(referenceOutputFolder + string("/graph.nodes")); //TODO: inutile ?
+    std::vector< PhenoCounter > unitigs2PhenoCounter(nbUnitigs);
 
-    std::string matrix = referenceOutputFolder + "matrix/reindeer_output/TRUC";//TODO: replace with filename; //input abundance matrix
+    std::string matrix = referenceOutputFolder + "matrix/reindeer_output/query_results";//TODO: replace with filename; //input abundance matrix
     std::string output = "bugwas_input.all_rows.binary" ;//TODO:same ; //output presence/absence matrix
     // streams
     std::ifstream stream (matrix, std::ifstream::binary);
@@ -134,9 +137,16 @@ void map_reads::execute ()
             // we write the body:
             // 1: parse the line and build the SKmer
             SKmer raw_data = process_line(line_buffer);
-            // 2: change, if needed, the allele description of the SKmer
-            SKmer data = minor_allele_description(raw_data);
-            // 3: keep track of the change in allele description
+            // 2: adds the counts to thew PhenoCounter vector
+            //TODO: verifier code
+            for (int i =0; i < raw_data.pattern.size(); i++) {
+                unitigs2PhenoCounter[n].add((*strains)[i].phenotype, raw_data.pattern.at(i)); // TODO: Strains are probably not in the same order, dammit
+            }
+            // 2: changes abundance counts to presence/absence (0 stays 0 and more than 1 becomes 1)
+            SKmer binarised_data = binarise_counts(raw_data);
+            // 3: change, if needed, the allele description of the SKmer
+            SKmer data = minor_allele_description(binarised_data);
+            // 4: keep track of the change in allele description
             weight_corr_track << data.corrected << "\n";
             // next
             vector_of_kmers.push_back(data);
@@ -175,18 +185,14 @@ void map_reads::execute ()
     //TODO: this could save disk
     cerr << "[Generating unitigs2PhenoCounter...]" << endl;
     //get the nbContigs
-    int nbContigs = getNbLinesInFile(referenceOutputFolder + string("/graph.nodes"));
-    vector< PhenoCounter > unitigs2PhenoCounter(nbContigs);
+/*    int nbUnitigs = getNbLinesInFile(referenceOutputFolder + string("/graph.nodes")); //TODO:inutile
+    vector< PhenoCounter > unitigs2PhenoCounter(nbUnitigs); //TODO: a mettre au debut de mon traitement des lignes
     for(int strainIndex=0;strainIndex<allReadFilesNames.size();strainIndex++) {
-        ifstream unitigCountForStrain;
-        openFileForReading(tmpFolder+string("/XU_strain_")+to_string(strainIndex), unitigCountForStrain);
-        for (int unitigIndex=0; unitigIndex<nbContigs; unitigIndex++) {
+        for (int unitigIndex=0; unitigIndex<nbUnitigs; unitigIndex++) { //TODO: remplacer ca par le fait qu'on parcours deja tous les untitigs, donc index devient juste l'ordre de traitement des lignes
             int count;
-            unitigCountForStrain >> count;
             unitigs2PhenoCounter[unitigIndex].add((*strains)[strainIndex].phenotype, count);
         }
-        unitigCountForStrain.close();
-    }
+    }*/
 
     //serialize unitigs2PhenoCounter
     {
@@ -197,7 +203,7 @@ void map_reads::execute ()
         boostOutputArchive & unitigs2PhenoCounter;
     } //boostOutputArchive and the stream are closed on destruction
 
-    Strain::createPhenotypeCounter(outputFolder+string("/phenoCounter"), strains);
+    Strain::createPhenotypeCounter(outputFolder+string("/phenoCounter"), strains); //TODO: devrait marcher
     cerr << "[Generating unitigs2PhenoCounter...] - Done!" << endl;
 
     // finishing measuring time
@@ -207,11 +213,149 @@ void map_reads::execute ()
 
     //after the mapping, free some memory that will not be needed anymore
     delete graph;
+    delete nodeIdToUnitigId;
 
     //clean-up - saving some disk space
     //remove GATB's graph file
     remove((referenceOutputFolder+string("/graph.h5")).c_str());
 
-    cerr << endl << "[Convertion process finished!]" << endl;
+    cerr << endl << "[Generating gemma/bugwas input files ...] - Done!" << endl;
     cerr.flush();
+}
+
+SKmer process_line(const std::string& line_buffer) {
+    /*
+     * this function processes lines by putting them in a structure than contains  the Kmer name, a vector of its abundance pattern. Ignores the corrected attribute.
+     */
+    std::vector<int> output_pattern;
+    std::string kmer_name;
+    std::istringstream input(line_buffer);
+    //loop over tab-separated words in the line :
+    for (std::string word; std::getline(input, word, '\t'); ) {
+        if (word.starts_with(">")) { // if id resets line
+            kmer_name = word;
+        } else if (word.ends_with("*")) { // if abundance is 0
+            output_pattern.push_back(0);
+        } else { // if abundance is more than 0
+            size_t lastindex = word.find_last_of(":");
+            std::string appearance_nb = word.substr(lastindex,word.size()-lastindex); // finds 17 in 0-20:17
+            output_pattern.push_back(std::stoi(appearance_nb));
+        }
+    }
+    // Kmer output_struct{kmer_name, output_pattern};
+    // output_pattern.clear();
+    return {kmer_name, output_pattern};
+}
+
+void unitigs_to_Phenocounter(SKmer& data, std::vector<int>& vector_pheno_count) {
+    /*
+     * This function adds a Kmer abundance to Phenocounter vector (serialised). Vector follows the order : 0, 1, NA
+     */
+
+
+}
+
+SKmer binarise_counts(SKmer& data) {
+    /*
+     * this function binaries the abundance of a kmer
+     */
+    for (int i = 0; i < data.pattern.size(); i++) {
+        switch (data.pattern.at(i)) {
+            case 0:
+                break;
+            default:
+                data.pattern.at(i) = 1;
+                break;
+        }
+    }
+    return data;
+}
+
+SKmer minor_allele_description(SKmer& data) {
+    /*
+     * this function changes the pattern of presence/absence of a SKmer into the minor allele description if needed, and changed the 'corrected' accordingly (1: did not change; -1: changed).
+     */
+    float sum ;
+    std::vector<int> corr_vector;
+    for (auto& n : data.pattern) {
+        sum += n;
+    }
+    if (sum/(float)data.pattern.size() > 0.5) {
+        for (int i = 0; i < data.pattern.size(); i++) {
+            switch (data.pattern.at(i)) {
+                case 0:
+                    corr_vector.push_back(1);
+                    break;
+                case 1:
+                    corr_vector.push_back(0);
+                    break;
+            }
+        }
+        data.corrected = -1;
+        data.pattern = corr_vector;
+    } else {
+        data.corrected = 1;
+    }
+    return data;
+}
+
+
+void write_bugwas_gemma(const std::vector<std::vector<int>>& vector_of_unique_patterns, std::string& rawname, std::vector<std::string>& filenames, std::map<std::vector<int>, std::vector<int>>& map_unique_to_all) {
+    /*
+     * this function builds output files : unique_patterns, unique_to_all, and gemma_pattern_to_nb_unitigs, gemma_unitig_to_patterns.
+     */
+    std::ofstream outstream_unique (rawname+".unique_rows.binary", std::ofstream::binary);
+    std::ofstream outstream_unique_to_all (rawname+".unique_rows_to_all_rows.binary", std::ofstream::binary);
+    std::ofstream outstream_gemma_pattern_to_nb_unitigs ("gemma_input.pattern_to_nb_of_unitigs.binary", std::ofstream::binary);
+    std::ofstream outstream_gemma_unitig_to_patterns ("gemma_input.unitig_to_pattern.binary", std::ofstream::binary);
+
+
+    //error check
+    if (outstream_unique.fail()) {
+        perror("ERROR: could not open bugwas_input.unique_rows.binary");
+        std::exit(1);
+    } else if (outstream_unique_to_all.fail()) {
+        perror("ERROR: could not open bugwas_inputunique_rows_to_all_rows.binary");
+        std::exit(1);
+    } else if (outstream_gemma_pattern_to_nb_unitigs.fail()) {
+        perror("ERROR: could not open gemma_input.pattern_to_nb_of_unitigs.binary");
+        std::exit(1);
+    } else if (outstream_gemma_unitig_to_patterns.fail()) {
+        perror("ERROR: could not open gemma_input.unitig_to_pattern.binary");
+        std::exit(1);
+    }
+
+    //TODO: check that my understanding of the output files is ok
+
+    // header for unique_pattern
+    outstream_unique << "ps ";
+    for (const std::string &i : filenames) {
+        outstream_unique << i << " ";
+    }
+    outstream_unique << "\n";
+
+    int n = 0;
+    for (const auto &i : vector_of_unique_patterns) {
+        // writes the unique patterns in their file
+        outstream_unique << n << " ";
+        for (const auto &j : i) {
+            outstream_unique << j << " " ;
+        }
+        outstream_unique << "\n" ;
+        // writes connection between unique pattern and all the unitigs each represents in unique_to_all, and the reciprocal in unitig_to_pattern
+        for (const auto &j : map_unique_to_all[i]) {
+            outstream_unique_to_all << j << " ";
+            outstream_gemma_unitig_to_patterns << j << " " << n << "\n";
+        }
+        outstream_unique_to_all << "\n" ;
+
+        // writes the number of unitigs that each unique pattern represents
+        outstream_gemma_pattern_to_nb_unitigs << n << " " << map_unique_to_all[i].size() << "\n";
+
+        n++;
+    }
+    outstream_unique.close();
+    outstream_unique_to_all.close();
+    outstream_gemma_pattern_to_nb_unitigs.close();
+    outstream_gemma_unitig_to_patterns.close();
 }

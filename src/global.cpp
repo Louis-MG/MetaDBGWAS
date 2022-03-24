@@ -37,12 +37,14 @@ const char* STR_OUTPUT = "--output";
 const char* STR_NBCORES = "--threads";
 const char* STR_STRAINS_FILE = "--strains";
 const char* STR_KEEP_NA = "--keepNA";
+const char* STR_PHENOTYPE_THRESHOLD = "-phenoThreshold";
 
 //global vars used by both programs
 Graph* graph;
 vector< Strain >* strains = NULL;
 vector< UnitigIdStrandPos >* nodeIdToUnitigId;
 bool keepNA = false;
+double phenotypeThreshold = 0.0;
 
 void populateParser (Tool *tool) {
   // We add some custom arguments for command line interface
@@ -52,4 +54,5 @@ void populateParser (Tool *tool) {
   tool->getParser()->push_front (new OptionOneParam (STR_KSKMER_SIZE, "K-mer size.",  false, "31"));
   tool->getParser()->push_front (new OptionOneParam (STR_PATH_TO_FASTA_FILES, "Path to the folder where the input fasta files are stored", true, "./"));
   tool->getParser()->push_front (new OptionOneParam (STR_STRAINS_FILE, "A text file describing the strains containing 3 columns: 1) ID of the strain; 2) Phenotype (a real number or NA); 3) Path to a multi-fasta file containing the sequences of the strain. This file needs a header. Check the sample_example folder or https://gitlab.com/leoisl/dbgwas/raw/master/sample_example/strains for an example.",  true));
+  tool->getParser()->push_front (new OptionOneParam (STR_PHENOTYPE_THRESHOLD, "Phenotype threshold. Values <= than this are considered Phenotype 0, and > than this are considered Phenotype 1. Used only on the visualisation.",  false, "0.0"));
 }
