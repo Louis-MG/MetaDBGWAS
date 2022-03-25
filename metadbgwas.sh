@@ -30,6 +30,7 @@ newick='' #phylo tree file
 ncDB='' #nucleotide database file
 ptDB='' #protein database file
 keepNA=''
+threshold=0.0
 #kmer as bcalm too
 
 #miscealenous
@@ -127,6 +128,8 @@ do
 	shift 2;;
 	--keepNA) keepNA="-keepNA"
 	shift;;
+  --threshold) threshold="-threshold $2"
+  shift;;
 	--version) Version; exit;;
 	--license) License; exit;;
 	-v | --verbose) verbose="$2"
@@ -234,5 +237,4 @@ mv graph.edges.dbg graph.nodes $output/step1
 
 #starting DBGWAS at step 2:
 
-
-./DBGWAS/bin/DBGWAS -k $kmer -strains $strains -keepNA -nb-cores $threads -output $output -skip1 $keepNA $ncDB $ptDB
+./DBGWAS/bin/DBGWAS -k $kmer -strains $strains -keepNA -nb-cores $threads -output $output -skip1 $keepNA $ncDB $ptDB $threshold

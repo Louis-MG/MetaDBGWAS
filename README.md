@@ -20,6 +20,7 @@ This tool expands the work of [DBGWAS](https://gitlab.com/leoisl/dbgwas) [(Jaill
 * [pthreads](https://en.wikipedia.org/wiki/Pthreads)
 * [blast](https://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs&DOC_TYPE=Download) The blast suite in your path
 * [R](https://www.r-project.org/) >= 3.2.0 
+* [Boost](https://www.boost.org/)
 
 # Installation
 
@@ -69,6 +70,7 @@ Reindeer uses kmer, threads, and output parameters. No others need to be specifi
 --newick Optional path to a newick tree file. If (and only if) a newick tree file is provided, the lineage effect analysis is computed and PCs figures are generated.
 --nc-db A list of Fasta files separated by comma containing annotations in a nucleotide alphabet format (e.g.: -nc-db path/to/file_1.fa,path/to/file_2.fa,etc). You can customize these files to work better with DBGWAS (see https://gitlab.com/leoisl/dbgwas/tree/master#customizing-annotation-databases).
 --pt-db A list of Fasta files separated by comma containing annotations in a protein alphabet format (e.g.: -pt-db path/to/file_1.fa,path/to/file_2.fa,etc). You can customize these files to work better with DBGWAS (see https://gitlab.com/leoisl/dbgwas/tree/master#customizing-annotation-databases).
+--threshold maximum value for which phenotype will be considered to be 0.
 
         * Miscellaneous
 --license prints the license text in standard output.
@@ -89,7 +91,7 @@ User can find in the output folder :
 - matrix folder with the matrix of absence/presence of kmers in the unitigs. Ouptut from Reindeer.
 - fof.txt : file of files for input of bcalm
 - fof_unitigs.txt : file of file for input of Reindeer.
-- step1 folder with the graph files (.nodes and .edges.dbg) as well as input files for gemma and bugwas 
+- step1 folder with the graph files (.nodes and .edges.dbg) as well as input files for gemma and bugwas.
 
 # License
 
