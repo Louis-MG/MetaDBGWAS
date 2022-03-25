@@ -48,12 +48,12 @@ SKmer minor_allele_description(SKmer& data);
 void write_bugwas_gemma(const std::vector<std::vector<int>>& vector_of_unique_patterns, std::string& rawname, std::vector<std::string>& filenames, std::map<std::vector<int>, std::vector<int>>& map_unique_to_all);
 
 
-class map_reads : public Tool
+class input_files_gen : public Tool
 {
 public:
 
     // Constructor
-    map_reads ();
+    input_files_gen ();
 
     // Actual job done by the tool is here
     void execute ();

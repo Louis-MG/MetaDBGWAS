@@ -27,7 +27,7 @@
 */
 
 #include "global.h"
-#include "map_reads.hpp"
+#include "input_files_gen.hpp"
 #include "Utils.h"
 #include "PhenoCounter.h"
 #include <iostream>
@@ -48,7 +48,7 @@
 *********************************************************************/
 // The Tool constructor allows to give a name to our tool.
 // This name appears when one gets help in the command line or in the final output
-map_reads::map_reads ()  : Tool ("map_reads") //give a name to our tool
+input_files_gen::input_files_gen ()  : Tool ("input_files_gen") //give a name to our tool
 {
     populateParser(this);
 }
@@ -57,13 +57,13 @@ map_reads::map_reads ()  : Tool ("map_reads") //give a name to our tool
 
 /*********************************************************************
 ** METHOD  :
-** PURPOSE : executes map_reads
+** PURPOSE : executes input_files_gen
 ** INPUT   : output folder name, unitigs
 ** OUTPUT  : bugwas_input.* files (4) and weight_correction file
 ** RETURN  :
 ** REMARKS : deletes graph, NodeIdToUnitigs obects as well as the tmpFolder
 *********************************************************************/
-void map_reads::execute ()
+void input_files_gen::execute ()
 {
     //populates strains file if given
     checkParametersMapping(this);
@@ -239,21 +239,13 @@ SKmer process_line(const std::string& line_buffer) {
             output_pattern.push_back(0);
         } else { // if abundance is more than 0
             size_t lastindex = word.find_last_of(":");
-            std::string appearance_nb = word.substr(lastindex,word.size()-lastindex); // finds 17 in 0-20:17
+            std::string appearance_nb = word.substr(lastindex+1,word.size()-lastindex); // finds 17 in 0-20:17
             output_pattern.push_back(std::stoi(appearance_nb));
         }
     }
     // Kmer output_struct{kmer_name, output_pattern};
     // output_pattern.clear();
     return {kmer_name, output_pattern};
-}
-
-void unitigs_to_Phenocounter(SKmer& data, std::vector<int>& vector_pheno_count) {
-    /*
-     * This function adds a Kmer abundance to Phenocounter vector (serialised). Vector follows the order : 0, 1, NA
-     */
-    //TODO: check if the
-
 }
 
 SKmer binarise_counts(SKmer& data) {
