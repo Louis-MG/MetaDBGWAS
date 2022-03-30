@@ -3,7 +3,11 @@
 # Louis-Mael Gueguen lm.gueguen@orange.fr
 
 
-#donner les valeurs par defaut aux parametres
+#############################################
+#
+#       Parameters
+#
+#############################################
 
 
 #General
@@ -86,7 +90,7 @@ Help()
 Reindeer uses kmer, threads, and output parameters. No others need to be specified. 
 
         * DBGWAS
---strains A text file describing the strains containing 3 columns: 1) ID of the strain; 2) Phenotype (a real number or NA); 3) Path to a multi-fasta file containing the sequences of the strain. This fil>
+--strains A text file describing the strains containing 3 columns: 1) ID of the strain; 2) Phenotype (a real number or NA); 3) Path to a multi-fasta file containing the sequences of the strain. This file needs the header. Tab separated.
 --newick Optional path to a newick tree file. If (and only if) a newick tree file is provided, the lineage effect analysis is computed and PCs figures are generated.
 --nc-db Optional  A list of Fasta files separated by comma containing annotations in a nucleotide alphabet format (e.g.: -nc-db path/to/file_1.fa,path/to/file_2.fa,etc). You can customize these files to work better with DBGWAS (see https://gitlab.com/leoisl/dbgwas/tree/master#customizing-annotation-databases).
 --pt-db Optionnal A list of Fasta files separated by comma containing annotations in a protein alphabet format (e.g.: -pt-db path/to/file_1.fa,path/to/file_2.fa,etc). You can customize these files to work better with DBGWAS (see https://gitlab.com/leoisl/dbgwas/tree/master#customizing-annotation-databases).
@@ -163,9 +167,13 @@ then
 fi
 
 
-#Lighter
-#else tells user that file is not found
+#############################################
+#
+#       Lighter
+#
+#############################################
 
+#else tells user that file is not found
 if [ $verbose -ge 1 ]
 then
 	echo "Starting kmer corrections with Lighter ..."
@@ -197,10 +205,14 @@ else
 	echo "File/folder not found, verify the path."
 fi
 
-#Bcalm 2
 
-find $output/*.fq* -type f > fof.txt
-mv fof.txt $output
+#############################################
+#
+#       Bcalm 2
+#
+#############################################
+
+find $output/*.cor.fq* -type f > $output/fof.txt
 if [ $verbose -ge 1 ] #loop to silence the command if --verbose is at 0
 then
 	echo 'Starting bcalm2 ...'
@@ -208,29 +220,46 @@ then
 else
 	verbosity_level=''
 fi
-
 mkdir $output/unitigs
-#the optiuon abundance min is used to keep all kmers: we already corrected them, and not keeping them all to build the unitigs would have 2 unfortunate consequences :
+#we create the de Bruijn Graph of the files we want to index
+for i in $output/*.cor.fq*
+do
+	echo $i
+        ./bcalm/build/bcalm -in $i -kmer-size $kmer -nb-cores $threads -out-dir $output/unitigs $verbosity_level -abundance-min 1
+	mv *.unitigs.fa $output/unitigs
+done
+find $output/unitigs/*.unitigs.fa -type f > $output/fof_unitigs_index.txt
+#the option abundance min is used to keep all kmers: we already corrected them, and not keeping them all to build the unitigs would have 2 unfortunate consequences :
 	# 1 some variation would be lost, and we want to analyse it !
-	# 2 when mapping the kmers to the unitig grpah, that causes a segfault (index > ULONG_MAX)
-./bcalm/build/bcalm -in $output/fof.txt -kmer-size $kmer -nb-cores $threads -out-dir $output/unitigs $verbosity_level -abundance-min 1 
+	# 2 when mapping the kmers to the unitig graph, that causes a segfault (index > ULONG_MAX)
+./bcalm/build/bcalm -in $output/fof.txt -kmer-size $kmer -nb-cores $threads -out-dir $output/unitigs $verbosity_level -abundance-min 1
+rm fof.txt
 mv ./fof.unitigs.fa ./unitigs.fa
 mv ./unitigs.fa $output/unitigs
-echo "$output/unitigs/unitigs.fa" > $output/unitigs/fof_unitigs.txt #creates the file of file for reindeer with unitigs
 
 
-# Reindeer
+#############################################
+#
+#	Reindeer
+#
+#############################################
+
 mkdir $output/step1
 # first we index:
-./REINDEER/Reindeer --index -f $output/unitigs/fof_unitigs.txt --nocount -o $output/matrix -k $kmer -t $threads
+./REINDEER/Reindeer --index -f $output/unitigs/fof_unitigs_index.txt -o $output/matrix -k $kmer -t $threads
 #then we query the unitigs on the index of kmers we built precendently:
-./REINDEER/Reindeer --query -l $output/matrix -q $output/unitigs/unitigs.fa -o $output/matrix --nocount
+./REINDEER/Reindeer --query -l $output/matrix -q $output/unitigs/unitigs.fa -o $output/matrix
 
-# MetaDBGWAS executable to get .edges and .nodes 
-
+# MetaDBGWAS executable to get .edges and .nodes, gemman and bugwas input files, as well as the pheno files.
 ./src/MetaDBGWAS --files $output/unitigs/unitigs.fa --output $output --threads $threads --kmer $kmer --strains $strains
 
-# DBGWAS
+
+#############################################
+#
+#       DBGWAS
+#
+#############################################
+
 
 #creating the step 2 folder :
 mv graph.edges.dbg graph.nodes $output/step1
@@ -238,3 +267,4 @@ mv graph.edges.dbg graph.nodes $output/step1
 #starting DBGWAS at step 2:
 
 ./DBGWAS/bin/DBGWAS -k $kmer -strains $strains -keepNA -nb-cores $threads -output $output -skip1 $keepNA $ncDB $ptDB $threshold
+
