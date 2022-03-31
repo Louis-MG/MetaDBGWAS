@@ -2,6 +2,7 @@
 
 GREEN='\132[1;32m' # green color
 NC='\033[0m' # No Color
+GREEN_BACKGROUND='\e[42m' #self explanatory right?
 
 #lighter compilation
 echo "${GREEN}Starting Lighter installation${NC}"
@@ -37,4 +38,4 @@ make -j 4
 
 cd ..
 
-echo "${GREEN}Installation complete ! Do not forget to install the R and C++ libraries.${NC}"
+echo "${GREEN}Installation complete !${NC} ${GREEN_BACKGROUND}Do not forget to install the R and C++ libraries.${NC}"
