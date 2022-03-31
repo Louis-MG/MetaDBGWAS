@@ -228,12 +228,12 @@ do
         ./bcalm/build/bcalm -in $i -kmer-size $kmer -nb-cores $threads -out-dir $output/unitigs $verbosity_level -abundance-min 1
 	mv *.unitigs.fa $output/unitigs
 done
-find $output/unitigs/*.unitigs.fa -type f > $output/fof_unitigs_index.txt
+find $output/unitigs/*.unitigs.fa -type f > $output/unitigs/fof_unitigs_index.txt
 #the option abundance min is used to keep all kmers: we already corrected them, and not keeping them all to build the unitigs would have 2 unfortunate consequences :
 	# 1 some variation would be lost, and we want to analyse it !
 	# 2 when mapping the kmers to the unitig graph, that causes a segfault (index > ULONG_MAX)
 ./bcalm/build/bcalm -in $output/fof.txt -kmer-size $kmer -nb-cores $threads -out-dir $output/unitigs $verbosity_level -abundance-min 1
-rm fof.txt
+rm $output/fof.txt
 mv ./fof.unitigs.fa ./unitigs.fa
 mv ./unitigs.fa $output/unitigs
 
