@@ -118,10 +118,11 @@ struct Strain {
     string id, phenotype, path;
 
     Strain(const string &id, const string &phenotype, const string &path) : id(id), phenotype(phenotype) {
-        //transfor to canonical path
+        //transform to canonical path
         boost::filesystem::path boostPath(boost::filesystem::canonical(path));
         this->path = boostPath.string();
     }
+
 
     static void createReadsFile(const string &readsFile, vector< Strain >* strains) {
         ofstream fout;

@@ -118,7 +118,7 @@ void input_files_gen::execute ()
     std::string line_buffer;
     std::set<std::vector<int>> vector_set;
     // sorts the strains to get them in the same order sa the files, thus in the order of the reindeer output matrix //TODO: check that this is valid
-    sort((*strains).begin(), (*strains).end());
+    std::sort((*strains).begin(), (*strains).end(), [](const Strain& a, const Strain& b) {return a.path < b.path;});
     int n = 0; // line counter
     while(std::getline(stream, line_buffer).good()) {
         if (line_buffer.starts_with("query")) {
