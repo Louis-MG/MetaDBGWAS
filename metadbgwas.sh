@@ -3,6 +3,9 @@
 # Louis-Mael Gueguen lm.gueguen@orange.fr
 
 
+GREEN='\132[1;32m' # green color
+NC='\033[0m' # No Color
+
 #############################################
 #
 #       Parameters
@@ -176,7 +179,7 @@ fi
 #else tells user that file is not found
 if [ $verbose -ge 1 ]
 then
-	echo "Starting kmer corrections with Lighter ..."
+	echo "${GREEN}Starting kmer corrections with Lighter ...${NC}"
 fi
 
 if [ -f $files ]
@@ -215,7 +218,7 @@ fi
 find $output/*.cor.fq* -type f > $output/fof.txt
 if [ $verbose -ge 1 ] #loop to silence the command if --verbose is at 0
 then
-	echo 'Starting bcalm2 ...'
+	echo '${GREEN}Starting bcalm2 ...${NC}'
 	verbosity_level='-verbose $verbose'
 else
 	verbosity_level=''
@@ -225,7 +228,7 @@ mkdir $output/unitigs
 for i in $output/*.cor.fq*
 do
 	echo $i
-        ./bcalm/build/bcalm -in $i -kmer-size $kmer -nb-cores $threads -out-dir $output/unitigs $verbosity_level -abundance-min 1
+        ./bcalm/build/bcalm -in $i -kmer-size $kmer -nb-cores $threads  $verbosity_level -abundance-min 1 # TODO: add the -out option to give prefix and avoid moving files around
 	mv *.unitigs.fa $output/unitigs
 done
 find $output/unitigs/*.unitigs.fa -type f > $output/unitigs/fof_unitigs_index.txt
@@ -266,5 +269,6 @@ mv graph.edges.dbg graph.nodes $output/step1
 
 #starting DBGWAS at step 2:
 
+echo '${GREEN}Starting DBGWAS ...${NC}'
 ./DBGWAS/bin/DBGWAS -k $kmer -strains $strains -keepNA -nb-cores $threads -output $output -skip1 $keepNA $ncDB $ptDB $threshold
 
