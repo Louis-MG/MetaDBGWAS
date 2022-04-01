@@ -3,8 +3,8 @@
 # Louis-Mael Gueguen lm.gueguen@orange.fr
 
 
-GREEN='\132[1;32m' # green color
-NC='\033[0m' # No Color
+GREEN='\e[0;32m' # green color
+NC='\e[0m' # No Color
 
 #############################################
 #
@@ -251,7 +251,7 @@ mkdir $output/step1
 # first we index:
 ./REINDEER/Reindeer --index -f $output/unitigs/fof_unitigs_index.txt -o $output/matrix -k $kmer -t $threads
 #then we query the unitigs on the index of kmers we built precendently:
-./REINDEER/Reindeer --query -l $output/matrix -q $output/unitigs/unitigs.fa -o $output/matrix
+./REINDEER/Reindeer --query -l $output/matrix -q $output/unitigs/unitigs.fa -o $output/matrix -t $threads
 
 # MetaDBGWAS executable to get .edges and .nodes, gemman and bugwas input files, as well as the pheno files.
 ./src/MetaDBGWAS --files $output/unitigs/unitigs.fa --output $output --threads $threads --kmer $kmer --strains $strains

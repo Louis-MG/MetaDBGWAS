@@ -1,7 +1,7 @@
 #!/bin/bash
 
-GREEN='\132[1;32m' # green color
-NC='\033[0m' # No Color
+GREEN='\e[0;32m' # green color
+NC='\e[0m' # No Color
 GREEN_BACKGROUND='\e[42m' #self explanatory right?
 
 #lighter compilation
