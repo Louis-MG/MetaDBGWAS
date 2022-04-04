@@ -83,15 +83,14 @@ void input_files_gen::execute ()
     int nbUnitigs = getNbLinesInFile(referenceOutputFolder + string("/graph.nodes"));
     std::vector< PhenoCounter > unitigs2PhenoCounter(nbUnitigs);
 
-    std::string matrix = referenceOutputFolder + "matrix/reindeer_output/query_results";//TODO: check the name of the file
-    std::string output = "bugwas_input.all_rows.binary" ;
+    std::string matrix = referenceOutputFolder + "/matrix/query_results/out_query_Reindeer_P40_unitigs_0.out";//TODO: check the name of the file
+    std::string output = "/bugwas_input.all_rows.binary" ;
     // streams
     std::ifstream stream (matrix, std::ifstream::binary);
     std::ofstream outstream (outputFolder + output, std::ofstream::binary);
     std::ofstream weight_corr_track ("weight_correction", std::ofstream::binary);
     // other files names prefix
-    size_t lastindex = output.find_last_of(".");
-    std::string rawname = output.substr(0, lastindex);
+    std::string rawname = "/bugwas_input";
     // must use stream.fail() with a switch case to now if the thing went fine : no
     // file operation causes C++ to stop.
     // see https://www.eecs.umich.edu/courses/eecs380/HANDOUTS/cppBinaryFileIO-2.html
@@ -176,7 +175,7 @@ void input_files_gen::execute ()
     weight_corr_track.close();
 
     // writes uniques and unique_to_all, gemma unique patterns to nb unitigs outputs
-    write_bugwas_gemma(vector_of_unique_patterns, rawname, filenames, map_unique_to_all);
+    write_bugwas_gemma(outputFolder, vector_of_unique_patterns, rawname, filenames, map_unique_to_all);
 
     // create a vector indexed by the unitigIndex containing each position a vector of phenotypeValue,
     // indicating the phenotypes of each appearance of the unitig in the strains
@@ -293,14 +292,14 @@ SKmer minor_allele_description(SKmer& data) {
 }
 
 
-void write_bugwas_gemma(const std::vector<std::vector<int>>& vector_of_unique_patterns, std::string& rawname, std::vector<std::string>& filenames, std::map<std::vector<int>, std::vector<int>>& map_unique_to_all) {
+void write_bugwas_gemma(const std::string& outputFolder, const std::vector<std::vector<int>>& vector_of_unique_patterns, std::string& rawname, std::vector<std::string>& filenames, std::map<std::vector<int>, std::vector<int>>& map_unique_to_all) {
     /*
      * this function builds output files : unique_patterns, unique_to_all, and gemma_pattern_to_nb_unitigs, gemma_unitig_to_patterns.
      */
-    std::ofstream outstream_unique (rawname+".unique_rows.binary", std::ofstream::binary);
-    std::ofstream outstream_unique_to_all (rawname+".unique_rows_to_all_rows.binary", std::ofstream::binary);
-    std::ofstream outstream_gemma_pattern_to_nb_unitigs ("gemma_input.pattern_to_nb_of_unitigs.binary", std::ofstream::binary);
-    std::ofstream outstream_gemma_unitig_to_patterns ("gemma_input.unitig_to_pattern.binary", std::ofstream::binary);
+    std::ofstream outstream_unique (outputFolder+rawname+".unique_rows.binary", std::ofstream::binary);
+    std::ofstream outstream_unique_to_all (outputFolder+rawname+".unique_rows_to_all_rows.binary", std::ofstream::binary);
+    std::ofstream outstream_gemma_pattern_to_nb_unitigs (outputFolder+"gemma_input.pattern_to_nb_of_unitigs.binary", std::ofstream::binary);
+    std::ofstream outstream_gemma_unitig_to_patterns (outputFolder+"gemma_input.unitig_to_pattern.binary", std::ofstream::binary);
 
 
     //error check

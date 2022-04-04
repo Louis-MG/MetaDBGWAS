@@ -45,7 +45,7 @@ struct SKmer {
 SKmer process_line(const std::string& line_buffer);
 SKmer binarise_counts(SKmer& data);
 SKmer minor_allele_description(SKmer& data);
-void write_bugwas_gemma(const std::vector<std::vector<int>>& vector_of_unique_patterns, std::string& rawname, std::vector<std::string>& filenames, std::map<std::vector<int>, std::vector<int>>& map_unique_to_all);
+void write_bugwas_gemma(const std::string& outputFolder, const std::vector<std::vector<int>>& vector_of_unique_patterns, std::string& rawname, std::vector<std::string>& filenames, std::map<std::vector<int>, std::vector<int>>& map_unique_to_all);
 
 
 class input_files_gen : public Tool

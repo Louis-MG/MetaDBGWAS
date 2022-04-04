@@ -37,7 +37,7 @@ newick='' #phylo tree file
 ncDB='' #nucleotide database file
 ptDB='' #protein database file
 keepNA=''
-threshold=0.0
+threshold=
 #kmer as bcalm too
 
 #miscealenous
@@ -265,7 +265,7 @@ mkdir $output/step1
 
 
 #creating the step 2 folder :
-mv graph.edges.dbg graph.nodes $output/step1
+mv $output/graph.edges.dbg $output/graph.nodes $output/step1
 
 #starting DBGWAS at step 2:
 
