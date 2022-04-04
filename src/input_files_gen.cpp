@@ -123,7 +123,7 @@ void input_files_gen::execute ()
         if (line_buffer.starts_with("query")) {
             // we obtain the file names and store them:
             std::istringstream input(line_buffer);
-            for (std::string word; std::getline(input, word, '\t'); ) {
+            for (std::string word; std::getline(input, word, ' '); ) {
                 filenames.push_back(word);
             }
             // removes "query"
@@ -219,8 +219,7 @@ void input_files_gen::execute ()
     //remove GATB's graph file
     remove((referenceOutputFolder+string("/graph.h5")).c_str());
 
-    cerr << endl << "[Generating gemma/bugwas input files ...] - Done!" << endl;
-    cerr.flush();
+    std::cout << endl << "[Generating gemma/bugwas input files ...] - Done!" << std::endl;
 }
 
 SKmer process_line(const std::string& line_buffer) {
@@ -298,8 +297,8 @@ void write_bugwas_gemma(const std::string& outputFolder, const std::vector<std::
      */
     std::ofstream outstream_unique (outputFolder+rawname+".unique_rows.binary", std::ofstream::binary);
     std::ofstream outstream_unique_to_all (outputFolder+rawname+".unique_rows_to_all_rows.binary", std::ofstream::binary);
-    std::ofstream outstream_gemma_pattern_to_nb_unitigs (outputFolder+"gemma_input.pattern_to_nb_of_unitigs.binary", std::ofstream::binary);
-    std::ofstream outstream_gemma_unitig_to_patterns (outputFolder+"gemma_input.unitig_to_pattern.binary", std::ofstream::binary);
+    std::ofstream outstream_gemma_pattern_to_nb_unitigs (outputFolder+"/gemma_input.pattern_to_nb_of_unitigs.binary", std::ofstream::binary);
+    std::ofstream outstream_gemma_unitig_to_patterns (outputFolder+"/gemma_input.unitig_to_pattern.binary", std::ofstream::binary);
 
 
     //error check

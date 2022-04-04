@@ -138,7 +138,7 @@ struct Strain {
         ofstream fout;
         openFileForWriting(filePath, fout);
         fout << "ID\tpheno" << endl;
-
+        std::sort((*strains).begin(), (*strains).end(), [](const Strain& a, const Strain& b) {return a.path < b.path;});
         for (const auto &strain : (*strains))
             fout << strain.id << "\t" << strain.phenotype << endl;
 
