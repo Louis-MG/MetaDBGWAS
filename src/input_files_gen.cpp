@@ -88,7 +88,7 @@ void input_files_gen::execute ()
     // streams
     std::ifstream stream (matrix, std::ifstream::binary);
     std::ofstream outstream (outputFolder + output, std::ofstream::binary);
-    std::ofstream weight_corr_track ("weight_correction", std::ofstream::binary);
+    std::ofstream weight_corr_track (outputFolder + "/weight_correction", std::ofstream::binary);
     // other files names prefix
     std::string rawname = "/bugwas_input";
     // must use stream.fail() with a switch case to now if the thing went fine : no
