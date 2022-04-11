@@ -262,6 +262,6 @@ mv graph.edges.dbg graph.nodes $output/step1
 
 #starting DBGWAS at step 2:
 
-echo '${GREEN}Starting DBGWAS ...${NC}'
+echo "${GREEN}Starting DBGWAS ...${NC}"
 ./DBGWAS/bin/DBGWAS -k $kmer -strains $strains -keepNA -nb-cores $threads -output $output -skip1 $keepNA $ncDB $ptDB $threshold
 
