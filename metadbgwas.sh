@@ -37,7 +37,7 @@ newick='' #phylo tree file
 ncDB='' #nucleotide database file
 ptDB='' #protein database file
 keepNA=''
-threshold=
+threshold=0.0
 #kmer as bcalm too
 
 #miscealenous
@@ -75,7 +75,7 @@ Help()
    # Display Help
    echo "
         * General
---files <path> path to one file or a directory containing the files.
+--files <path> path to the directory containing the read files.
 --output <path> path to the output folder. Default set to ./ .
 --threads <int> number of threads to use. Default set to 4.
 --verbose <int> level of verbosity. Default to 1, 0-1. 0 is equivalent to --quiet.
@@ -179,33 +179,26 @@ fi
 #else tells user that file is not found
 if [ $verbose -ge 1 ]
 then
-	echo "${GREEN}Starting kmer corrections with Lighter ...${NC}"
+        echo "${GREEN}Starting kmer corrections with Lighter ...${NC}"
 fi
-
-if [ -f $files ]
+#checks folder existence
+if [ -d $files ]
 then
-	if [ $alpha -gt 0 ]
-	then
-		./Lighter/lighter -r $files -od $output -t $threads -discard -k $kmer_l $genome_size $alpha
-	else
-		./Lighter/lighter -r $files -od $output -t $threads -discard -K $kmer_l $genome_size
-	fi
-elif [ -d $files  ]
-then
-	if [ $alpha -gt 0 ]
-	then
-		for i in $files/*.f*
-		do
-			./Lighter/lighter -r ${i} -od $output -t $threads -discard -k $kmer_l $genome_size $alpha
-		done
-	else
-		for i in $files/*.f*
-		do
-			./Lighter/lighter -r ${i} -od $output -t $threads -discard -K $kmer_l $genome_size
-		done
-	fi
+        if [ $alpha -gt 0 ]
+        then
+                for i in $files/*.f*
+                do
+                        ./Lighter/lighter -r ${i} -od $output -t $threads -discard -k $kmer_l $genome_size $alpha
+                done
+        else
+                for i in $files/*.f*
+                do
+                        ./Lighter/lighter -r ${i} -od $output -t $threads -discard -K $kmer_l $genome_size
+                done
+        fi
 else
-	echo "File/folder not found, verify the path."
+        echo "Folder not found or is not a folder, verify the path."
+        exit 0
 fi
 
 
@@ -218,14 +211,14 @@ fi
 find $output/*.cor.fq* -type f > $output/fof.txt
 if [ $verbose -ge 1 ] #loop to silence the command if --verbose is at 0
 then
-	echo '${GREEN}Starting bcalm2 ...${NC}'
+	echo "${GREEN}Starting bcalm2 ...${NC}"
 	verbosity_level='-verbose $verbose'
 else
 	verbosity_level=''
 fi
 mkdir $output/unitigs
 #we create the de Bruijn Graph of the files we want to index
-for i in $output/*.cor.fq*
+for i in $output/*.cor*
 do
 	echo $i
         ./bcalm/build/bcalm -in $i -kmer-size $kmer -nb-cores $threads  $verbosity_level -abundance-min 1 # TODO: add the -out option to give prefix and avoid moving files around
@@ -265,7 +258,7 @@ mkdir $output/step1
 
 
 #creating the step 2 folder :
-mv $output/graph.edges.dbg $output/graph.nodes $output/step1
+mv graph.edges.dbg graph.nodes $output/step1
 
 #starting DBGWAS at step 2:
 

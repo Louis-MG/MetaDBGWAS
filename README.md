@@ -48,7 +48,7 @@ This tool expands the work of [DBGWAS](https://gitlab.com/leoisl/dbgwas) [(Jaill
 
 ```
 	* General
---files <path> path to one file or a directory containing the files.
+--files <path> path to the directory containing the read files.
 --output <path> path to the output folder. Default set to ./ .
 --threads <int> number of threads to use. !! Default set to 4 !!
 --verbose <int> level of verbosity. Default to 1, 0-1. 0 is equivalent to --quiet.
