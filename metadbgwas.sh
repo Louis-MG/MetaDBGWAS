@@ -37,7 +37,7 @@ newick='' #phylo tree file
 ncDB='' #nucleotide database file
 ptDB='' #protein database file
 keepNA=''
-threshold=0.0
+threshold=
 #kmer as bcalm too
 
 #miscealenous
@@ -75,7 +75,7 @@ Help()
    # Display Help
    echo "
         * General
---files <path> path to the directory containing the read files.
+--files <path> path to one file or a directory containing the files.
 --output <path> path to the output folder. Default set to ./ .
 --threads <int> number of threads to use. Default set to 4.
 --verbose <int> level of verbosity. Default to 1, 0-1. 0 is equivalent to --quiet.
@@ -147,6 +147,9 @@ do
 	esac
 done
 
+#gets local directory of metadbgwas
+metadbgwas_path=$(dirname $0)
+metadbgwas_path=$(cd $metadbgwas_path && pwd)
 
 #creates output dir if it doesnt exist yet
 
@@ -188,19 +191,18 @@ then
         then
                 for i in $files/*.f*
                 do
-                        ./Lighter/lighter -r ${i} -od $output -t $threads -discard -k $kmer_l $genome_size $alpha
+                        $metadbgwas_path/Lighter/lighter -r ${i} -od $output -t $threads -discard -k $kmer_l $genome_size $alpha
                 done
         else
                 for i in $files/*.f*
                 do
-                        ./Lighter/lighter -r ${i} -od $output -t $threads -discard -K $kmer_l $genome_size
+                        $metadbgwas_path/Lighter/lighter -r ${i} -od $output -t $threads -discard -K $kmer_l $genome_size
                 done
-        fi
+	fi
 else
         echo "Folder not found or is not a folder, verify the path."
-        exit 0
+	exit 0
 fi
-
 
 #############################################
 #
@@ -218,17 +220,17 @@ else
 fi
 mkdir $output/unitigs
 #we create the de Bruijn Graph of the files we want to index
-for i in $output/*.cor*
+for i in $output/*.cor.fq*
 do
 	echo $i
-        ./bcalm/build/bcalm -in $i -kmer-size $kmer -nb-cores $threads  $verbosity_level -abundance-min 1 # TODO: add the -out option to give prefix and avoid moving files around
+        $metadbgwas_path/bcalm/build/bcalm -in $i -kmer-size $kmer -nb-cores $threads  $verbosity_level -abundance-min 1 # TODO: add the -out option to give prefix and avoid moving files around
 	mv *.unitigs.fa $output/unitigs
 done
 find $output/unitigs/*.unitigs.fa -type f > $output/unitigs/fof_unitigs_index.txt
 #the option abundance min is used to keep all kmers: we already corrected them, and not keeping them all to build the unitigs would have 2 unfortunate consequences :
 	# 1 some variation would be lost, and we want to analyse it !
 	# 2 when mapping the kmers to the unitig graph, that causes a segfault (index > ULONG_MAX)
-./bcalm/build/bcalm -in $output/fof.txt -kmer-size $kmer -nb-cores $threads -out-dir $output/unitigs $verbosity_level -abundance-min 1
+$metadbgwas_path/bcalm/build/bcalm -in $output/fof.txt -kmer-size $kmer -nb-cores $threads -out-dir $output/unitigs $verbosity_level -abundance-min 1
 rm $output/fof.txt
 mv ./fof.unitigs.fa ./unitigs.fa
 mv ./unitigs.fa $output/unitigs
@@ -242,12 +244,12 @@ mv ./unitigs.fa $output/unitigs
 
 mkdir $output/step1
 # first we index:
-./REINDEER/Reindeer --index -f $output/unitigs/fof_unitigs_index.txt -o $output/matrix -k $kmer -t $threads
+$metadbgwas_path/REINDEER/Reindeer --index -f $output/unitigs/fof_unitigs_index.txt -o $output/matrix -k $kmer -t 1
 #then we query the unitigs on the index of kmers we built precendently:
-./REINDEER/Reindeer --query -l $output/matrix -q $output/unitigs/unitigs.fa -o $output/matrix -t $threads
+$metadbgwas_path/REINDEER/Reindeer --query -l $output/matrix -q $output/unitigs/unitigs.fa -o $output/matrix -t 1
 
 # MetaDBGWAS executable to get .edges and .nodes, gemman and bugwas input files, as well as the pheno files.
-./src/MetaDBGWAS --files $output/unitigs/unitigs.fa --output $output --threads $threads --kmer $kmer --strains $strains
+$metadbgwas_path/src/MetaDBGWAS --files $output/unitigs/unitigs.fa --output $output --threads $threads --kmer $kmer --strains $strains
 
 
 #############################################
@@ -258,10 +260,10 @@ mkdir $output/step1
 
 
 #creating the step 2 folder :
-mv graph.edges.dbg graph.nodes $output/step1
+mv $output/graph.edges.dbg $output/graph.nodes $output/step1
 
 #starting DBGWAS at step 2:
 
 echo "${GREEN}Starting DBGWAS ...${NC}"
-./DBGWAS/bin/DBGWAS -k $kmer -strains $strains -keepNA -nb-cores $threads -output $output -skip1 $keepNA $ncDB $ptDB $threshold
+$metadbgwas_path/DBGWAS/bin/DBGWAS -k $kmer -strains $strains -keepNA -nb-cores $threads -output $output -skip1 $keepNA $ncDB $ptDB $threshold
 
