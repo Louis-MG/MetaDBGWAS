@@ -35,9 +35,8 @@
 
 //this struct contains the name of a kmer, and pattern is a vector of its absence/presence
 struct SKmer {
-    std::string name; //TODO:remove ?
     std::vector<int> pattern;
-    bool corrected; //TODO:change to bool
+    bool corrected;
 };
 
 

@@ -83,7 +83,7 @@ void input_files_gen::execute ()
     int nbUnitigs = getNbLinesInFile(referenceOutputFolder + string("/graph.nodes"));
     std::vector< PhenoCounter > unitigs2PhenoCounter(nbUnitigs);
 
-    std::string matrix = referenceOutputFolder + "/matrix/query_results/out_query_Reindeer_P40_unitigs_0.out";//TODO: check the name of the file
+    std::string matrix = referenceOutputFolder + "/matrix/query_results/out_query_Reindeer_P40_unitigs_0.out";
     std::string output = "/bugwas_input.all_rows.binary" ;
     // streams
     std::ifstream stream (matrix, std::ifstream::binary);
@@ -186,15 +186,6 @@ void input_files_gen::execute ()
     //TODO: instead of representing the phenotype of each appearance, just use a pair <count, phenotype>
     //TODO: this could save disk
     cerr << "[Generating unitigs2PhenoCounter...]" << endl;
-    //get the nbContigs
-/*    int nbUnitigs = getNbLinesInFile(referenceOutputFolder + string("/graph.nodes")); //TODO:inutile
-    vector< PhenoCounter > unitigs2PhenoCounter(nbUnitigs); //TODO: a mettre au debut de mon traitement des lignes
-    for(int strainIndex=0;strainIndex<allReadFilesNames.size();strainIndex++) {
-        for (int unitigIndex=0; unitigIndex<nbUnitigs; unitigIndex++) { //TODO: remplacer ca par le fait qu'on parcours deja tous les untitigs, donc index devient juste l'ordre de traitement des lignes
-            int count;
-            unitigs2PhenoCounter[unitigIndex].add((*strains)[strainIndex].phenotype, count);
-        }
-    }*/
 
     //serialize unitigs2PhenoCounter
     {
@@ -205,7 +196,7 @@ void input_files_gen::execute ()
         boostOutputArchive & unitigs2PhenoCounter;
     } //boostOutputArchive and the stream are closed on destruction
 
-    Strain::createPhenotypeCounter(outputFolder+string("/phenoCounter"), strains); //TODO: devrait marcher
+    Strain::createPhenotypeCounter(outputFolder+string("/phenoCounter"), strains);
     cerr << "[Generating unitigs2PhenoCounter...] - Done!" << endl;
 
     // finishing measuring time
@@ -223,12 +214,11 @@ SKmer process_line(const std::string& line_buffer) {
      * this function processes lines by putting them in a structure than contains  the Kmer name, a vector of its abundance pattern. Ignores the corrected attribute.
      */
     std::vector<int> output_pattern;
-    std::string kmer_name;
     std::istringstream input(line_buffer);
     //loop over tab-separated words in the line :
     for (std::string word; std::getline(input, word, '\t'); ) {
         if (word.starts_with(">")) { // if id resets line
-            kmer_name = word;
+            continue;
         } else if (word.ends_with("*")) { // if abundance is 0
             output_pattern.push_back(0);
         } else { // if abundance is more than 0
@@ -239,12 +229,12 @@ SKmer process_line(const std::string& line_buffer) {
     }
     // Kmer output_struct{kmer_name, output_pattern};
     // output_pattern.clear();
-    return {kmer_name, output_pattern};
+    return {output_pattern};
 }
 
 SKmer binarise_counts(SKmer& data) {
     /*
-     * this function binaries the abundance of a kmer
+     * this function binaries the abundance of a SKmer
      */
     for (int i = 0; i < data.pattern.size(); i++) {
         switch (data.pattern.at(i)) {
@@ -260,7 +250,7 @@ SKmer binarise_counts(SKmer& data) {
 
 SKmer minor_allele_description(SKmer& data) {
     /*
-     * this function changes the pattern of presence/absence of a SKmer into the minor allele description if needed, and changed the 'corrected' accordingly (1: did not change; -1: changed).
+     * this function changes the pattern of presence/absence of a SKmer into the minor allele description if needed, and changed the 'corrected' accordingly (true: did not change; false: changed).
      */
     float sum ;
     std::vector<int> corr_vector;
@@ -311,8 +301,6 @@ void write_bugwas_gemma(const std::string& outputFolder, const std::vector<std::
         perror("ERROR: could not open gemma_input.unitig_to_pattern.binary");
         std::exit(1);
     }
-
-    //TODO: check that my understanding of the output files is ok
 
     // header for unique_pattern
     outstream_unique << "ps ";
