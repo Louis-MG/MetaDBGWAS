@@ -103,8 +103,9 @@ void build_dbg::execute ()
     else { throw gatb::core::system::Exception ("Graph failure because of unhandled kmer size %d", kmerSize); }
     boost::apply_visitor (EdgeConstructionVisitor(linear_seqs_name),  graphOutput);
 
-    //save disk space
-    //remove(linear_seqs_name.c_str());
+    //save memory space
+    delete graph;
+    delete nodeIdToUnitigId;
 
     //print some stats
     cout << "################################################################################" << endl;

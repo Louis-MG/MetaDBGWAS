@@ -59,9 +59,9 @@ input_files_gen::input_files_gen ()  : Tool ("input_files_gen") //give a name to
 ** METHOD  :
 ** PURPOSE : executes input_files_gen
 ** INPUT   : output folder name, unitigs
-** OUTPUT  : bugwas_input.* files (4) and weight_correction file
+** OUTPUT  : bugwas_input.* files (4), gemma_input.* files (2) and weight_correction file
 ** RETURN  :
-** REMARKS : deletes graph, NodeIdToUnitigs obects as well as the tmpFolder
+** REMARKS : deletes graph, NodeIdToUnitigs objects as well as the tmpFolder
 *********************************************************************/
 void input_files_gen::execute ()
 {
@@ -137,17 +137,18 @@ void input_files_gen::execute ()
             // we write the body:
             // 1: parse the line and build the SKmer
             SKmer raw_data = process_line(line_buffer);
-            // 2: adds the counts to thew PhenoCounter vector
+            // 2: adds the counts to the PhenoCounter vector
             //TODO: verifier code
             for (int i =0; i < raw_data.pattern.size(); i++) {
-                unitigs2PhenoCounter[n].add((*strains)[i].phenotype, raw_data.pattern.at(i)); // TODO: Strains are probably not in the same order, dammit
+                unitigs2PhenoCounter[n].add((*strains)[i].phenotype, raw_data.pattern.at(i)); // Strains are ordered
             }
             // 2: changes abundance counts to presence/absence (0 stays 0 and more than 1 becomes 1)
             SKmer binarised_data = binarise_counts(raw_data);
             // 3: change, if needed, the allele description of the SKmer
             SKmer data = minor_allele_description(binarised_data);
             // 4: keep track of the change in allele description
-            weight_corr_track << data.corrected << "\n";
+            int corrected = (data.corrected) ? 1 : -1;
+            weight_corr_track << corrected << "\n";
             // next
             vector_of_kmers.push_back(data);
             outstream << n << " " ;
@@ -176,6 +177,7 @@ void input_files_gen::execute ()
 
     // writes uniques and unique_to_all, gemma unique patterns to nb unitigs outputs
     write_bugwas_gemma(outputFolder, vector_of_unique_patterns, rawname, filenames, map_unique_to_all);
+    std::cout << endl << "[Generating gemma/bugwas input files ...] - Done!" << std::endl;
 
     // create a vector indexed by the unitigIndex containing each position a vector of phenotypeValue,
     // indicating the phenotypes of each appearance of the unitig in the strains
@@ -211,15 +213,9 @@ void input_files_gen::execute ()
     auto ms_int = std::chrono::duration_cast<std::chrono::minutes>(t2 - t1);
     std::cout << "Conversion took " << ms_int.count() << "min\n";
 
-    //after the mapping, free some memory that will not be needed anymore
-    delete graph;
-    delete nodeIdToUnitigId;
-
     //clean-up - saving some disk space
     //remove GATB's graph file
     remove((referenceOutputFolder+string("/graph.h5")).c_str());
-
-    std::cout << endl << "[Generating gemma/bugwas input files ...] - Done!" << std::endl;
 }
 
 SKmer process_line(const std::string& line_buffer) {
@@ -282,10 +278,10 @@ SKmer minor_allele_description(SKmer& data) {
                     break;
             }
         }
-        data.corrected = -1;
+        data.corrected = false ;
         data.pattern = corr_vector;
     } else {
-        data.corrected = 1;
+        data.corrected = true ;
     }
     return data;
 }

@@ -39,20 +39,20 @@ using namespace std;
 //class used to count how many times a unitig is seen overall, in phenotype 0, 1 or NA
 class PhenoCounter {
 private:
-    vector<double> validPhenotypes;
+    vector<float> validPhenotypes;
     int NACount;
 public:
     PhenoCounter():validPhenotypes(), NACount(0){}
 
     //return # phenotypes <= threshold
-    int getPheno0(double threshold) const {
-      return std::count_if(validPhenotypes.begin(), validPhenotypes.end(), [&](double phenotype) {
+    int getPheno0(float threshold) const {
+      return std::count_if(validPhenotypes.begin(), validPhenotypes.end(), [&](float phenotype) {
           return phenotype <= threshold;
       });
     }
 
     //return # phenotypes > threshold
-    int getPheno1(double threshold) const { return validPhenotypes.size() - getPheno0(threshold); }
+    int getPheno1(float threshold) const { return validPhenotypes.size() - getPheno0(threshold); }
 
     //return # phenotypes == NA
     int getNA() const { return NACount; }
