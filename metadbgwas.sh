@@ -98,6 +98,7 @@ Reindeer uses kmer, threads, and output parameters. No others need to be specifi
 --nc-db Optional  A list of Fasta files separated by comma containing annotations in a nucleotide alphabet format (e.g.: -nc-db path/to/file_1.fa,path/to/file_2.fa,etc). You can customize these files to work better with DBGWAS (see https://gitlab.com/leoisl/dbgwas/tree/master#customizing-annotation-databases).
 --pt-db Optionnal A list of Fasta files separated by comma containing annotations in a protein alphabet format (e.g.: -pt-db path/to/file_1.fa,path/to/file_2.fa,etc). You can customize these files to work better with DBGWAS (see https://gitlab.com/leoisl/dbgwas/tree/master#customizing-annotation-databases).
 --keepNA Optionnal Keep strains with phenotype NA.
+--threshold maximum value for which phenotype will be considered to be 0.
 
         * Miscellaneous
 --license prints the license text in standard output.
