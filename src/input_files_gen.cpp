@@ -111,12 +111,12 @@ void input_files_gen::execute ()
     std::vector<SKmer> vector_of_kmers;
     std::vector<std::vector<int>> vector_of_unique_patterns ;
     std::vector<std::string> filenames ;
-    std::vector<std::vector<int>> unique_to_all ;
     std::map<std::vector<int>, std::vector<int>> map_unique_to_all ; //each time a unique is accountered, insert the pattern as a key and the n in the vector of values
     SKmer raw_data;
     SKmer binarised_data;
     SKmer data;
     std::string line_buffer;
+    int corrected;
     std::set<std::vector<int>> vector_set;
     // reads the input data
     outstream << "ps ";
@@ -152,7 +152,7 @@ void input_files_gen::execute ()
             // 3: change, if needed, the allele description of the SKmer
             data = minor_allele_description(binarised_data);
             // 4: keep track of the change in allele description
-            int corrected = (data.corrected) ? 1 : -1;
+            corrected = (data.corrected) ? 1 : -1;
             weight_corr_track << corrected << "\n";
             // next
             vector_of_kmers.push_back(data);
