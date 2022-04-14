@@ -24,6 +24,9 @@
 ## -------------------------------------------------------------------------
 
 ## Authors (alphabetically): Jacob L., Jaillard M., Lima L.
+## -------------------------------------------------------------------------
+
+## DISCLAIMER : This file was modified by Louis-Mael Gueguen. THe modified version of the program is published under the dual licensing AGPLv3, and zlib license.
 */
 
 #include "PhenoCounter.h"
