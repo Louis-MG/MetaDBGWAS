@@ -58,7 +58,7 @@ void checkParametersMapping(Tool *tool);
 
 //Read all strings in the readsFile file and return them as a vector of strings
 vector<string> getVectorStringFromFile(const string &readsFile);
-tuple<bool, double> is_number(const std::string& s);
+tuple<bool, float> is_number(const std::string& s);
 
 
 string readFileAsString(const char* fileName);

@@ -158,8 +158,8 @@ void checkStrainsFile(const string &strainsFile) {
 //tries to parse s, and returns a pair<bool, double>
 //the first value indicates if s was successfully parsed into a double
 //the second value indicates the double (it is only valid if the first is true)
-tuple<bool, double> is_number(const std::string& s) {
-    double number;
+tuple<bool, float> is_number(const std::string& s) {
+    float number;
     try {
         number = std::stod(s);
     }
