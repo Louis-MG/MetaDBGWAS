@@ -85,7 +85,6 @@ void input_files_gen::execute ()
     // create the vector for the Pheno files:
     int nbUnitigs = getNbLinesInFile(referenceOutputFolder + string("/graph.nodes"));
     std::vector< PhenoCounter > unitigs2PhenoCounter(nbUnitigs);
-
     std::string matrix = referenceOutputFolder + "/matrix/query_results/out_query_Reindeer_P40_unitigs_0.out";
     std::string output = "/bugwas_input.all_rows.binary" ;
     // streams
@@ -114,11 +113,14 @@ void input_files_gen::execute ()
     std::vector<std::string> filenames ;
     std::vector<std::vector<int>> unique_to_all ;
     std::map<std::vector<int>, std::vector<int>> map_unique_to_all ; //each time a unique is accountered, insert the pattern as a key and the n in the vector of values
-    // reads the input data
-    outstream << "ps ";
-    // read the data line by line:
+    SKmer raw_data;
+    SKmer binarised_data;
+    SKmer data;
     std::string line_buffer;
     std::set<std::vector<int>> vector_set;
+    // reads the input data
+    outstream << "ps ";
+    // read the data line by line
     // sorts the strains to get them in the same order sa the files, thus in the order of the reindeer output matrix //TODO: check that this is valid
     std::sort((*strains).begin(), (*strains).end(), [](const Strain& a, const Strain& b) {return a.path < b.path;});
     int n = 0; // line counter
@@ -139,16 +141,16 @@ void input_files_gen::execute ()
         } else {
             // we write the body:
             // 1: parse the line and build the SKmer
-            SKmer raw_data = process_line(line_buffer);
+            raw_data = process_line(line_buffer);
             // 2: adds the counts to the PhenoCounter vector
             //TODO: verifier code
             for (int i =0; i < raw_data.pattern.size(); i++) {
                 unitigs2PhenoCounter[n].add((*strains)[i].phenotype, raw_data.pattern.at(i)); // Strains are ordered
             }
             // 2: changes abundance counts to presence/absence (0 stays 0 and more than 1 becomes 1)
-            SKmer binarised_data = binarise_counts(raw_data);
+            binarised_data = binarise_counts(raw_data);
             // 3: change, if needed, the allele description of the SKmer
-            SKmer data = minor_allele_description(binarised_data);
+            data = minor_allele_description(binarised_data);
             // 4: keep track of the change in allele description
             int corrected = (data.corrected) ? 1 : -1;
             weight_corr_track << corrected << "\n";
@@ -177,6 +179,9 @@ void input_files_gen::execute ()
     stream.close();
     outstream.close();
     weight_corr_track.close();
+    vector_of_kmers.clear();
+    vector_of_kmers.shrink_to_fit();
+    vector_set.clear();
 
     // writes uniques and unique_to_all, gemma unique patterns to nb unitigs outputs
     write_bugwas_gemma(outputFolder, vector_of_unique_patterns, rawname, filenames, map_unique_to_all);
