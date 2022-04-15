@@ -78,7 +78,7 @@ void input_files_gen::execute ()
     auto t1 = std::chrono::high_resolution_clock::now();
 
     // generate the bugwas input
-    std::cout << "[Generating gemma/bugwas input files ...]";
+    std::cout << "[Generating gemma/bugwas input files ...]" << endl;
 
     // create the ID and Phenotype file
     Strain::createIdPhenoFile(outputFolder+string("/bugwas_input.id_phenotype"), strains);
@@ -117,7 +117,7 @@ void input_files_gen::execute ()
     std::string line_buffer;
     int corrected;
     std::set<std::vector<int>> vector_set;
-    // reads the input data
+    // prepare the header
     outstream << "ps ";
     // read the data line by line
     // sorts the strains to get them in the same order sa the files, thus in the order of the reindeer output matrix //TODO: check that this is valid
@@ -132,7 +132,7 @@ void input_files_gen::execute ()
             }
             // removes "query"
             filenames.erase(filenames.begin());
-            // write the header of both all_rows and all_rows_unique :
+            // write the header of all_rows :
             for (const std::string &i : filenames) {
                 outstream << i << " ";
             }
@@ -144,7 +144,7 @@ void input_files_gen::execute ()
             // 2: adds the counts to the PhenoCounter vector
             //TODO: verifier code
             for (int i =0; i < raw_data.pattern.size(); i++) {
-                unitigs2PhenoCounter[n].add((*strains)[i].phenotype, raw_data.pattern.at(i)); // Strains are ordered
+                unitigs2PhenoCounter[n].add((*strains)[i].phenotype, raw_data.pattern.at(i));
             }
             // 2: changes abundance counts to presence/absence (0 stays 0 and more than 1 becomes 1)
             binarised_data = binarise_counts(raw_data);
@@ -178,12 +178,13 @@ void input_files_gen::execute ()
     stream.close();
     outstream.close();
     weight_corr_track.close();
+
     //free some memory
     vector_set.clear();
 
     // writes uniques and unique_to_all, gemma unique patterns to nb unitigs outputs
     write_bugwas_gemma(outputFolder, vector_of_unique_patterns, rawname, filenames, map_unique_to_all);
-    std::cout << endl << "[Generating gemma/bugwas input files ...] - Done!" << std::endl;
+    std::cout << "[Generating gemma/bugwas input files ...] - Done!" << std::endl;
 
     //free memory
     vector_of_unique_patterns.clear();
