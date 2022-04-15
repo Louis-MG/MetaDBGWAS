@@ -78,7 +78,7 @@ void input_files_gen::execute ()
     auto t1 = std::chrono::high_resolution_clock::now();
 
     // generate the bugwas input
-    std::cout << "[Generating gemma/bugwas input files ...]" << std::endl;
+    std::cout << "[Generating gemma/bugwas input files ...]";
 
     // create the ID and Phenotype file
     Strain::createIdPhenoFile(outputFolder+string("/bugwas_input.id_phenotype"), strains);
@@ -108,7 +108,7 @@ void input_files_gen::execute ()
     }
 
     // variables
-    std::vector<SKmer> vector_of_kmers;
+    //std::vector<SKmer> vector_of_kmers;
     std::vector<std::vector<int>> vector_of_unique_patterns ;
     std::vector<std::string> filenames ;
     std::map<std::vector<int>, std::vector<int>> map_unique_to_all ; //each time a unique is accountered, insert the pattern as a key and the n in the vector of values
@@ -155,7 +155,7 @@ void input_files_gen::execute ()
             corrected = (data.corrected) ? 1 : -1;
             weight_corr_track << corrected << "\n";
             // next
-            vector_of_kmers.push_back(data);
+            //vector_of_kmers.push_back(data);
             outstream << n << " " ;
             for (const auto &i : data.pattern) {
                 outstream << i << " " ;
@@ -179,13 +179,18 @@ void input_files_gen::execute ()
     stream.close();
     outstream.close();
     weight_corr_track.close();
-    vector_of_kmers.clear();
-    vector_of_kmers.shrink_to_fit();
-    vector_set.clear();
+    //free some memory
+    //vector_of_kmers.clear();
+    // vector_of_kmers.shrink_to_fit();
+    //vector_set.clear();
 
     // writes uniques and unique_to_all, gemma unique patterns to nb unitigs outputs
     write_bugwas_gemma(outputFolder, vector_of_unique_patterns, rawname, filenames, map_unique_to_all);
     std::cout << endl << "[Generating gemma/bugwas input files ...] - Done!" << std::endl;
+
+    //free memory
+    vector_of_unique_patterns.clear();
+    vector_of_unique_patterns.shrink_to_fit();
 
     // create a vector indexed by the unitigIndex containing each position a vector of phenotypeValue,
     // indicating the phenotypes of each appearance of the unitig in the strains
@@ -193,7 +198,7 @@ void input_files_gen::execute ()
     // (e.g. how many times an unitig appeared in strains with phenotype 0, >0 and NA)
     //TODO: instead of representing the phenotype of each appearance, just use a pair <count, phenotype>
     //TODO: this could save disk
-    cerr << "[Generating unitigs2PhenoCounter...]" << endl;
+    cerr << "[Generating unitigs2PhenoCounter ...]" << endl;
 
     //serialize unitigs2PhenoCounter
     {
@@ -205,12 +210,12 @@ void input_files_gen::execute ()
     } //boostOutputArchive and the stream are closed on destruction
 
     Strain::createPhenotypeCounter(outputFolder+string("/phenoCounter"), strains);
-    cerr << "[Generating unitigs2PhenoCounter...] - Done!" << endl;
+    cout << "[Generating unitigs2PhenoCounter ...] - Done!" << endl;
 
     // finishing measuring time
     auto t2 = std::chrono::high_resolution_clock::now();
     auto ms_int = std::chrono::duration_cast<std::chrono::minutes>(t2 - t1);
-    std::cout << "Conversion took " << ms_int.count() << "min\n";
+    std::cout << "Generation took " << ms_int.count() << " min\n";
 
     //clean-up - saving some disk space
     //remove GATB's graph file
