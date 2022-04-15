@@ -108,7 +108,6 @@ void input_files_gen::execute ()
     }
 
     // variables
-    //std::vector<SKmer> vector_of_kmers;
     std::vector<std::vector<int>> vector_of_unique_patterns ;
     std::vector<std::string> filenames ;
     std::map<std::vector<int>, std::vector<int>> map_unique_to_all ; //each time a unique is accountered, insert the pattern as a key and the n in the vector of values
@@ -155,7 +154,6 @@ void input_files_gen::execute ()
             corrected = (data.corrected) ? 1 : -1;
             weight_corr_track << corrected << "\n";
             // next
-            //vector_of_kmers.push_back(data);
             outstream << n << " " ;
             for (const auto &i : data.pattern) {
                 outstream << i << " " ;
@@ -169,6 +167,7 @@ void input_files_gen::execute ()
                 vector_set.emplace(data.pattern);
                 std::vector<int> unitigs{n};
                 map_unique_to_all.emplace(data.pattern, unitigs);
+                unitigs.clear();
             } else {
                 map_unique_to_all[data.pattern].push_back(n);
                 // add n to the item (vector) pointed out above
@@ -180,9 +179,7 @@ void input_files_gen::execute ()
     outstream.close();
     weight_corr_track.close();
     //free some memory
-    //vector_of_kmers.clear();
-    // vector_of_kmers.shrink_to_fit();
-    //vector_set.clear();
+    vector_set.clear();
 
     // writes uniques and unique_to_all, gemma unique patterns to nb unitigs outputs
     write_bugwas_gemma(outputFolder, vector_of_unique_patterns, rawname, filenames, map_unique_to_all);
@@ -191,6 +188,9 @@ void input_files_gen::execute ()
     //free memory
     vector_of_unique_patterns.clear();
     vector_of_unique_patterns.shrink_to_fit();
+    filenames.clear();
+    filenames.shrink_to_fit();
+    map_unique_to_all.clear();
 
     // create a vector indexed by the unitigIndex containing each position a vector of phenotypeValue,
     // indicating the phenotypes of each appearance of the unitig in the strains
