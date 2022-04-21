@@ -164,7 +164,7 @@ void checkStrainsFile(const string &strainsFile) {
 tuple<bool, float> is_number(const std::string& s) {
     float number;
     try {
-        number = std::stod(s);
+        number = std::stof(s);
     }
     catch(...) {
         return make_tuple(false, number);

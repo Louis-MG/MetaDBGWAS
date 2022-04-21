@@ -180,7 +180,7 @@ void input_files_gen::execute ()
     weight_corr_track.close();
 
     //free some memory
-    vector_set.clear();
+    //vector_set.clear();
 
     // writes uniques and unique_to_all, gemma unique patterns to nb unitigs outputs
     write_bugwas_gemma(outputFolder, vector_of_unique_patterns, rawname, filenames, map_unique_to_all);
@@ -211,12 +211,12 @@ void input_files_gen::execute ()
     } //boostOutputArchive and the stream are closed on destruction
 
     Strain::createPhenotypeCounter(outputFolder+string("/phenoCounter"), strains);
-    cout << "[Generating unitigs2PhenoCounter ...] - Done!" << endl;
+    std::cerr << "[Generating unitigs2PhenoCounter ...] - Done!" << endl;
 
     // finishing measuring time
     auto t2 = std::chrono::high_resolution_clock::now();
     auto ms_int = std::chrono::duration_cast<std::chrono::minutes>(t2 - t1);
-    std::cout << "Generation took " << ms_int.count() << " min\n";
+    std::cerr << "Generation took " << ms_int.count() << " min\n";
 
     //clean-up - saving some disk space
     //remove GATB's graph file
