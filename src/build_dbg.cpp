@@ -107,11 +107,11 @@ void build_dbg::execute ()
     boost::apply_visitor (EdgeConstructionVisitor(linear_seqs_name),  graphOutput);
 
     //print some stats
-    cout << "################################################################################" << endl;
-    cout << "Stats: " << endl;
-    cout << "Number of kmers: " << graph->getInfo()["kmers_nb_solid"]->getInt() << endl;
-    cout << "Number of unitigs: " << getNbLinesInFile(outputFolder+string("/graph.nodes")) << endl;
-    cout << "################################################################################" << endl;
+    cerr << "################################################################################" << endl;
+    cerr << "Stats: " << endl;
+    cerr << "Number of kmers: " << graph->getInfo()["kmers_nb_solid"]->getInt() << endl;
+    cerr << "Number of unitigs: " << getNbLinesInFile(outputFolder+string("/graph.nodes")) << endl;
+    cerr << "################################################################################" << endl;
 
     //save memory space
     delete graph;
