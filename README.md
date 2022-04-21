@@ -28,6 +28,10 @@ This tool expands the work of [DBGWAS](https://gitlab.com/leoisl/dbgwas) [(Jaill
 	```shell
 	git clone --recursive https://github.com/Louis-MG/MetaDBGWAS.git
 	```
+2. Add the C++ libraries :
+        ```shell
+        sudo apt install libgatbcore-dev libhdf5-dev libboost-dev libpstreams-dev
+        ```
 2. Complete the installation :
 	```shell
 	cd MetaDBGWAS
@@ -38,16 +42,12 @@ This tool expands the work of [DBGWAS](https://gitlab.com/leoisl/dbgwas) [(Jaill
 	install.packages(c('ape', 'phangorn'))
 	install.packages("https://raw.githubusercontent.com/sgearle/bugwas/master/build/bugwas_1.0.tar.gz", repos=NULL, type="source")
 	```
-4. Add the C++ libraries :
-	```shell
-	sudo apt install libgatbcore-dev libhdf5-dev libboost-dev libpstreams-dev
-	```
-
 
 # Usage
 
 ```
 	* General
+NOTE: path should be absolute.
 --files <path> path to the directory containing the read files.
 --output <path> path to the output folder. Default set to ./ .
 --threads <int> number of threads to use. !! Default set to 4 !!
@@ -80,7 +80,7 @@ Reindeer uses kmer, threads, and output parameters. No others need to be specifi
 # Exemple
 
 ```bash
-bash metadbgwas.sh --files ./test/ --output ./output --K 17 6000000
+bash metadbgwas.sh --files /home/user/test/ --output /home/user/output --K 17 6000000
 ```
 
 # Output
