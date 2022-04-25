@@ -189,6 +189,11 @@ void input_files_gen::execute ()
     write_bugwas_gemma(outputFolder, vector_of_unique_patterns, rawname, filenames, map_unique_to_all);
     std::cout << "[Generating gemma/bugwas input files ...] - Done!" << std::endl;
 
+    // finishing measuring time
+    auto t2 = std::chrono::high_resolution_clock::now();
+    auto ms_int = std::chrono::duration_cast<std::chrono::minutes>(t2 - t1);
+    std::cerr << "Generation took " << ms_int.count() << " min\n";
+
     //free memory
     vector_of_unique_patterns.clear();
     vector_of_unique_patterns.shrink_to_fit();
@@ -202,6 +207,7 @@ void input_files_gen::execute ()
     // (e.g. how many times an unitig appeared in strains with phenotype 0, >0 and NA)
     //TODO: instead of representing the phenotype of each appearance, just use a pair <count, phenotype>
     //TODO: this could save disk
+    t1 = std::chrono::high_resolution_clock::now();
     cerr << "[Generating unitigs2PhenoCounter ...]" << endl;
 
     //serialize unitigs2PhenoCounter
@@ -216,9 +222,8 @@ void input_files_gen::execute ()
     Strain::createPhenotypeCounter(outputFolder+string("/phenoCounter"), strains);
     std::cerr << "[Generating unitigs2PhenoCounter ...] - Done!" << endl;
 
-    // finishing measuring time
-    auto t2 = std::chrono::high_resolution_clock::now();
-    auto ms_int = std::chrono::duration_cast<std::chrono::minutes>(t2 - t1);
+    t2 = std::chrono::high_resolution_clock::now();
+    ms_int = std::chrono::duration_cast<std::chrono::minutes>(t2 - t1);
     std::cerr << "Generation took " << ms_int.count() << " min\n";
 
     //clean-up - saving some disk space
