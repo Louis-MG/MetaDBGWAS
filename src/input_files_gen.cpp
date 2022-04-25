@@ -274,7 +274,7 @@ SKmer minor_allele_description(SKmer& data2) {
     /*
      * this function changes the pattern of presence/absence of a SKmer into the minor allele description if needed, and changed the 'corrected' accordingly (true: did not change; false: changed).
      */
-    float sum ;
+    float sum = 0;
     std::vector<int> corr_vector;
     for (auto& n : data2.pattern) {
         sum += n;
