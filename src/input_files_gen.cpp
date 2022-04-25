@@ -12,7 +12,6 @@
 ## Public License for more details.
 ## You should have received a copy of the GNU Affero General Public License
 ## along with this program.  If not, see <http://www.gnu.org/licenses/>.
-## 3. Communication to the public by any means, in particular in the form of
 ## a scientific paper, a poster, a slideshow, an internet page, or a patent,
 ## of a result obtained directly or indirectly by running this program must
 ## cite the following paper :
@@ -110,7 +109,7 @@ void input_files_gen::execute ()
     // variables
     std::vector<std::vector<int>> vector_of_unique_patterns ;
     std::vector<std::string> filenames ;
-    std::map<std::vector<int>, std::vector<int>> map_unique_to_all ; //each time a unique is accountered, insert the pattern as a key and the n in the vector of values
+    std::map<std::vector<int>, std::vector<int>> map_unique_to_all ; //each time a unique is met, insert the pattern as a key and the n in the vector of values
     SKmer raw_data;
     SKmer binarised_data;
     SKmer data;
@@ -120,8 +119,12 @@ void input_files_gen::execute ()
     // prepare the header
     outstream << "ps ";
     // read the data line by line
-    // sorts the strains to get them in the same order sa the files, thus in the order of the reindeer output matrix //TODO: check that this is valid
+    // sorts the strains to get them in the same order as the files, thus in the order of the reindeer output matrix //TODO: check that this is valid
     std::sort((*strains).begin(), (*strains).end(), [](const Strain& a, const Strain& b) {return a.path < b.path;});
+    for (int i = 0; filenames.size(); i++) {
+        cout << filenames.at(i) << endl;
+        cout << strains->at(i).id << endl;
+    }
     int n = 0; // line counter
     while(std::getline(stream, line_buffer).good()) {
         if (line_buffer.starts_with("query")) {
@@ -151,7 +154,7 @@ void input_files_gen::execute ()
             // 3: change, if needed, the allele description of the SKmer
             data = minor_allele_description(binarised_data);
             // 4: keep track of the change in allele description
-            corrected = (data.corrected) ? 1 : -1;
+            corrected = (data.corrected) ? -1 : 1;
             weight_corr_track << corrected << "\n";
             // next
             outstream << n << " " ;
@@ -282,10 +285,10 @@ SKmer minor_allele_description(SKmer& data) {
                     break;
             }
         }
-        data.corrected = false ;
+        data.corrected = true ;
         data.pattern = corr_vector;
     } else {
-        data.corrected = true ;
+        data.corrected = false ;
     }
     return data;
 }

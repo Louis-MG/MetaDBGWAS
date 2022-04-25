@@ -130,6 +130,8 @@ do
 	shift 2;;
 	--strains) strains="$2"
 	shift 2;;
+  --newick) newick="$2"
+  shift 2;;
 	--nc-db) ncDB="-nc-db $2"
 	shift 2;;
 	--pt-db) ptDB="-pt-db $2"
@@ -211,7 +213,7 @@ fi
 #
 #############################################
 
-find $output/*.cor.fq* -type f > $output/fof.txt
+find $output/*.cor.f* -type f > $output/fof.txt
 if [ $verbose -ge 1 ] #loop to silence the command if --verbose is at 0
 then
 	echo "${GREEN}Starting bcalm2 ...${NC}"
@@ -221,7 +223,7 @@ else
 fi
 mkdir $output/unitigs
 #we create the de Bruijn Graph of the files we want to index
-for i in $output/*.cor.fq*
+for i in $output/*.cor.f*
 do
 	echo $i
         $metadbgwas_path/bcalm/build/bcalm -in $i -kmer-size $kmer -nb-cores $threads  $verbosity_level -abundance-min 1 # TODO: add the -out option to give prefix and avoid moving files around

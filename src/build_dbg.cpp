@@ -84,8 +84,6 @@ void build_dbg::execute ()
 
     //Builds the DBG with unitigs using GATB
     graph = new Graph ; //TODO: changer en GaphUnitig (GraphUnitigs.hpp) when the code will be usable (god knows when)
-    //test line to load the .h5 from bcalm :
-    // *graph = gatb::core::debruijn::impl::Graph::load(outputFolder + "/unitigs/fof.h5");
     // line that works :
     *graph = gatb::core::debruijn::impl::Graph::create("-in %s -kmer-size %d -abundance-min 0 -out %s/graph -nb-cores %d", //TODO: same
                                                        linear_seqs_name.c_str(), kmerSize, outputFolder.c_str(), nbCores);
