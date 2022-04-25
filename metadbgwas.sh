@@ -130,7 +130,7 @@ do
 	shift 2;;
 	--strains) strains="$2"
 	shift 2;;
-  --newick) newick="$2"
+  --newick) newick="-newick $2"
   shift 2;;
 	--nc-db) ncDB="-nc-db $2"
 	shift 2;;
@@ -268,5 +268,5 @@ mv $output/graph.edges.dbg $output/graph.nodes $output/step1
 #starting DBGWAS at step 2:
 
 echo "${GREEN}Starting DBGWAS ...${NC}"
-$metadbgwas_path/DBGWAS/bin/DBGWAS -k $kmer -strains $strains -keepNA -nb-cores $threads -output $output -skip1 $keepNA $ncDB $ptDB $threshold
+$metadbgwas_path/DBGWAS/bin/DBGWAS -k $kmer -strains $strains -keepNA -nb-cores $threads -output $output -skip1 $keepNA $ncDB $ptDB $threshold $newick
 
