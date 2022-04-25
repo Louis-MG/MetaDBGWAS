@@ -25,23 +25,23 @@ This tool expands the work of [DBGWAS](https://gitlab.com/leoisl/dbgwas) [(Jaill
 # Installation
 
 1. Use the following command to download the repository :
-	```shell
-	git clone --recursive https://github.com/Louis-MG/MetaDBGWAS.git
-	```
-2. Add the C++ libraries :
-        ```shell
-        sudo apt install libgatbcore-dev libhdf5-dev libboost-dev libpstreams-dev
-        ```
+    ```shell
+    git clone --recursive https://github.com/Louis-MG/MetaDBGWAS.git
+    ```
+   1. Add the C++ libraries :
+   ```shell
+    sudo apt install libgatbcore-dev libhdf5-dev libboost-dev libpstreams-dev
+    ```
 2. Complete the installation :
-	```shell
-	cd MetaDBGWAS
-	sh install.sh
-	```
+    ```shell
+    cd MetaDBGWAS
+    sh install.sh
+    ```
 3. Add the R libraries :
-	```R
-	install.packages(c('ape', 'phangorn'))
-	install.packages("https://raw.githubusercontent.com/sgearle/bugwas/master/build/bugwas_1.0.tar.gz", repos=NULL, type="source")
-	```
+    ```R
+    install.packages(c('ape', 'phangorn'))
+    install.packages("https://raw.githubusercontent.com/sgearle/bugwas/master/build/bugwas_1.0.tar.gz", repos=NULL, type="source")
+    ```
 
 # Usage
 
