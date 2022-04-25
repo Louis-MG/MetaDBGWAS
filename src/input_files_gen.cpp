@@ -254,34 +254,34 @@ SKmer process_line(const std::string& line_buffer) {
     return {output_pattern};
 }
 
-SKmer binarise_counts(SKmer& data) {
+SKmer binarise_counts(SKmer& data1) {
     /*
      * this function binaries the abundance of a SKmer
      */
-    for (int i = 0; i < data.pattern.size(); i++) {
-        switch (data.pattern.at(i)) {
+    for (int i = 0; i < data1.pattern.size(); i++) {
+        switch (data1.pattern.at(i)) {
             case 0:
                 break;
             default:
-                data.pattern.at(i) = 1;
+                data1.pattern.at(i) = 1;
                 break;
         }
     }
-    return data;
+    return data1;
 }
 
-SKmer minor_allele_description(SKmer& data) {
+SKmer minor_allele_description(SKmer& data2) {
     /*
      * this function changes the pattern of presence/absence of a SKmer into the minor allele description if needed, and changed the 'corrected' accordingly (true: did not change; false: changed).
      */
     float sum ;
     std::vector<int> corr_vector;
-    for (auto& n : data.pattern) {
+    for (auto& n : data2.pattern) {
         sum += n;
     }
-    if (sum/(float)data.pattern.size() > 0.5) {
-        for (int i = 0; i < data.pattern.size(); i++) {
-            switch (data.pattern.at(i)) {
+    if (sum/(float)data2.pattern.size() > 0.5) {
+        for (int i = 0; i < data2.pattern.size(); i++) {
+            switch (data2.pattern.at(i)) {
                 case 0:
                     corr_vector.push_back(1);
                     break;
@@ -290,12 +290,12 @@ SKmer minor_allele_description(SKmer& data) {
                     break;
             }
         }
-        data.corrected = true ;
-        data.pattern = corr_vector;
+        data2.corrected = true ;
+        data2.pattern = corr_vector;
     } else {
-        data.corrected = false ;
+        data2.corrected = false ;
     }
-    return data;
+    return data2;
 }
 
 
