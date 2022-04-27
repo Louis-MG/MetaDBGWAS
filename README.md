@@ -14,7 +14,7 @@ This tool expands the work of [DBGWAS](https://gitlab.com/leoisl/dbgwas) [(Jaill
 
 # Requirements
 
-* [GCC](https://gcc.gnu.org/) >= 4.8
+* [GCC](https://gcc.gnu.org/) >= 9.4
 * [CMAKE](https://cmake.org/) > 3.10.0
 * [zlib](https://en.wikipedia.org/wiki/Zlib)
 * [pthreads](https://en.wikipedia.org/wiki/Pthreads)
