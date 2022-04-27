@@ -55,7 +55,7 @@ void populateParser (Tool *tool) {
   tool->getParser()->push_front (new OptionNoParam (STR_KEEP_NA, "Keep strains with phenotype NA.",  false));
   tool->getParser()->push_front (new OptionOneParam (STR_OUTPUT, "Path to the folder where the final and temporary files will be stored.",  false, "output"));
   tool->getParser()->push_front (new OptionOneParam (STR_KSKMER_SIZE, "K-mer size.",  false, "31"));
-  tool->getParser()->push_front (new OptionOneParam (STR_PATH_TO_FASTA_FILES, "Path to the folder where the input fasta files are stored", true, "./"));
+  tool->getParser()->push_front (new OptionOneParam (STR_PATH_TO_FASTA_FILES, "Path to the folder where the input unitigs.fa files are stored", true, "./"));
   tool->getParser()->push_front (new OptionOneParam (STR_STRAINS_FILE, "A text file describing the strains containing 3 columns: 1) ID of the strain; 2) Phenotype (a real number or NA); 3) Path to a multi-fasta file containing the sequences of the strain. This file needs a header. Check the sample_example folder or https://gitlab.com/leoisl/dbgwas/raw/master/sample_example/strains for an example.",  true));
   tool->getParser()->push_front (new OptionOneParam (STR_PHENOTYPE_THRESHOLD, "Phenotype threshold. Values <= than this are considered Phenotype 0, and > than this are considered Phenotype 1. Used only on the visualisation.",  false, "0.0"));
 }

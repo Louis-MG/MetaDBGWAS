@@ -70,7 +70,7 @@ public:
 ** RETURN  : .edges and .nodes files
 ** REMARKS :
 *********************************************************************/
-void build_dbg::execute ()
+void build_dbg::execute () //TODO: replace theis whole part, altogether wiht GraphOutput, with the python script to convert the unitigs.fa to GFA. This script should be very easy ton convert to a cpp exectuable.
 {
     cerr << "Creating .edges and .nodes files ..." << endl;
     //get the parameters
@@ -80,12 +80,12 @@ void build_dbg::execute ()
     //creates variable where the unitigs file is
     string linear_seqs_name = getInput()->getStr(STR_PATH_TO_FASTA_FILES);
     //create the step1 folder in the outputfolder
-    string outputFolder = stripLastSlashIfExists(getInput()->getStr(STR_OUTPUT)); //TODO: should I keep the files in the common output folder or in a separate one ?
+    string outputFolder = stripLastSlashIfExists(getInput()->getStr(STR_OUTPUT));
 
     //Builds the DBG with unitigs using GATB
-    graph = new Graph ; //TODO: changer en GaphUnitig (GraphUnitigs.hpp) when the code will be usable (god knows when)
+    graph = new Graph ;
     // line that works :
-    *graph = gatb::core::debruijn::impl::Graph::create("-in %s -kmer-size %d -abundance-min 0 -out %s/graph -nb-cores %d", //TODO: same
+    *graph = gatb::core::debruijn::impl::Graph::create("-in %s -kmer-size %d -abundance-min 0 -out %s/graph -nb-cores %d",
                                                        linear_seqs_name.c_str(), kmerSize, outputFolder.c_str(), nbCores);
 
     //builds and outputs .nodes and .edges.dbg files, see GraphOutput.h for the inner code
