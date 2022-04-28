@@ -126,7 +126,7 @@ do
 	shift 3;;
 	--k) kmer_l="$2" genome_size="$3" alpha="$4"
 	shift 4;;
-	-k | --kmer) kmer="#2"
+	-k | --kmer) kmer="$2"
 	shift 2;;
 	--strains) strains="$2"
 	shift 2;;
