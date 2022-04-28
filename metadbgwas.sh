@@ -145,7 +145,7 @@ do
 	-v | --verbose) verbose="$2"
 	shift 2;;
 	-h | --help) Help; exit;;
-	-* | --*) echo "Unknown option"; exit;;
+	-* | --*) echo "Unknown option"; Help; exit;;
 	*) break;
 	esac
 done
@@ -249,7 +249,7 @@ mkdir $output/step1
 # first we index:
 $metadbgwas_path/REINDEER/Reindeer --index -f $output/unitigs/fof_unitigs_index.txt -o $output/matrix -k $kmer -t 1
 #then we query the unitigs on the index of kmers we built precendently:
-$metadbgwas_path/REINDEER/Reindeer --query -l $output/matrix -q $output/unitigs/unitigs.fa -o $output/matrix -t 1
+$metadbgwas_path/REINDEER/Reindeer --query -l $output/matrix -q $output/unitigs/unitigs.fa -o $output/matrix -t 1 -P 0
 
 # MetaDBGWAS executable to get .edges and .nodes, gemman and bugwas input files, as well as the pheno files.
 $metadbgwas_path/src/MetaDBGWAS --files $output/unitigs/unitigs.fa --output $output --threads $threads --kmer $kmer --strains $strains
