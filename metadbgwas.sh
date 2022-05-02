@@ -237,6 +237,12 @@ $metadbgwas_path/bcalm/build/bcalm -in $output/fof.txt -kmer-size $kmer -nb-core
 rm $output/fof.txt
 mv ./fof.unitigs.fa ./unitigs.fa
 mv ./unitigs.fa $output/unitigs
+if [ $verbose -ge 2 ] #loop to silence the command if --verbose is at 0
+then
+	echo "CLeaning temporary files ..."
+fi
+rm $output/graph.h5
+rm $output/unitigs/fof.h5
 
 
 #############################################
@@ -251,9 +257,12 @@ $metadbgwas_path/REINDEER/Reindeer --index -f $output/unitigs/fof_unitigs_index.
 #then we query the unitigs on the index of kmers we built precendently:
 $metadbgwas_path/REINDEER/Reindeer --query -l $output/matrix -q $output/unitigs/unitigs.fa -o $output/matrix -t 1 -P 0
 
-# MetaDBGWAS executable to get .edges and .nodes, gemman and bugwas input files, as well as the pheno files.
+# MetaDBGWAS executable to get .edges and .nodes, gemma and bugwas input files, as well as the pheno files.
 $metadbgwas_path/src/MetaDBGWAS --files $output/unitigs/unitigs.fa --output $output --threads $threads --kmer $kmer --strains $strains
 
+#future replacement for part of the step above :
+#python3 $metadbgwas_path/bcalm/script/convertToGFA.py $output/step1/graph.gfa $kmer
+#see if I can change that to cpp
 
 #############################################
 #
@@ -262,11 +271,10 @@ $metadbgwas_path/src/MetaDBGWAS --files $output/unitigs/unitigs.fa --output $out
 #############################################
 
 
-#creating the step 2 folder :
+#moving graoh files to step1 folder
 mv $output/graph.edges.dbg $output/graph.nodes $output/step1
 
 #starting DBGWAS at step 2:
-
 echo "${GREEN}Starting DBGWAS ...${NC}"
 $metadbgwas_path/DBGWAS/bin/DBGWAS -k $kmer -strains $strains -keepNA -nb-cores $threads -output $output -skip1 $keepNA $ncDB $ptDB $threshold $newick
 
