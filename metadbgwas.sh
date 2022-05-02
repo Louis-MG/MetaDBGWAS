@@ -242,8 +242,6 @@ then
 	echo "CLeaning temporary files ..."
 fi
 rm $output/graph.h5
-rm $output/unitigs/fof.h5
-
 
 #############################################
 #
