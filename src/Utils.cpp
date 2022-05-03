@@ -182,37 +182,6 @@ void openFileForWriting(const string &filePath, ofstream &stream) {
 }
 
 
-void createFolder(const string &path) {
-    boost::filesystem::path folder(path.c_str());
-
-    if (boost::filesystem::exists(folder))
-        return;
-
-    if (!boost::filesystem::create_directories(folder)) {
-        stringstream ss;
-        ss << "Could not create dir " << path << " - unknown reasons...";
-        fatalError(ss.str());
-    }
-}
-
-
-//Read all strings in the readsFile file and return them as a vector of strings
-vector<string> getVectorStringFromFile(const string &readsFile) {
-    vector<string> allReadFilesNames;
-    string tempStr;
-
-    ifstream readsFileStream;
-    openFileForReading(readsFile, readsFileStream);
-    while (getline(readsFileStream, tempStr)) {
-        if (tempStr.size() > 0)
-            allReadFilesNames.push_back(tempStr);
-    }
-    readsFileStream.close();
-
-    return allReadFilesNames;
-}
-
-
 void Strain::createPhenotypeCounter(const string &filePath, vector< Strain >* strains) {
     PhenoCounter phenoCounter;
     for (const auto &strain : (*strains))

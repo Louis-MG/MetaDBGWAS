@@ -60,11 +60,7 @@ void checkStrainsFile(const string &strainsFile);
 void checkParametersMapping(Tool *tool);
 
 //Read all strings in the readsFile file and return them as a vector of strings
-vector<string> getVectorStringFromFile(const string &readsFile);
 tuple<bool, float> is_number(const std::string& s);
-
-
-string readFileAsString(const char* fileName);
 
 //strips all last "/" if exists in the parameter
 string stripLastSlashIfExists (string path);
@@ -124,17 +120,6 @@ struct Strain {
         //transform to canonical path
         boost::filesystem::path boostPath(boost::filesystem::canonical(path));
         this->path = boostPath.string();
-    }
-
-
-    static void createReadsFile(const string &readsFile, vector< Strain >* strains) {
-        ofstream fout;
-        openFileForWriting(readsFile, fout);
-
-        for (const auto &strain : (*strains))
-            fout << strain.path << endl;
-
-        fout.close();
     }
 
     static void createIdPhenoFile(const string &filePath, vector< Strain >* strains) {
