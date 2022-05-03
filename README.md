@@ -91,7 +91,7 @@ User can find in the output folder :
 - matrix folder with the matrix of absence/presence of kmers in the unitigs. Ouptut from Reindeer.
 - fof.txt : file of files for input of bcalm
 - fof_unitigs.txt : file of file for input of Reindeer.
-- step1 folder with the graph files (.nodes and .edges.dbg) as well as input files for gemma and bugwas.
+- step1 folder which contains input files for gemma and bugwas.
 
 # License
 
