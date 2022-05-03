@@ -239,9 +239,11 @@ mv ./fof.unitigs.fa ./unitigs.fa
 mv ./unitigs.fa $output/unitigs
 if [ $verbose -ge 2 ] #loop to silence the command if --verbose is at 0
 then
-	echo "CLeaning temporary files ..."
+	echo "Cleaning temporary files ..."
 fi
 rm $output/graph.h5
+rm $output/unitigs/fof.h5
+
 
 #############################################
 #

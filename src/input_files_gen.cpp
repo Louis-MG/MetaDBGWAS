@@ -82,7 +82,7 @@ void input_files_gen::execute ()
     // create the ID and Phenotype file
     Strain::createIdPhenoFile(outputFolder+string("/bugwas_input.id_phenotype"), strains);
     // create the vector for the Pheno files:
-    int nbUnitigs = getNbLinesInFile(referenceOutputFolder + string("/graph.nodes"));
+    int nbUnitigs = getNbLinesInFile(referenceOutputFolder + string("/unitigs/unitigs.fa"));
     std::vector< PhenoCounter > unitigs2PhenoCounter(nbUnitigs);
     std::string matrix = referenceOutputFolder + "/matrix/query_results/out_query_Reindeer_P40_unitigs_0.out";
     std::string output = "/bugwas_input.all_rows.binary" ;
