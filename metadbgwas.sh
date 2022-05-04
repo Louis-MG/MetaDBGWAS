@@ -241,7 +241,6 @@ if [ $verbose -ge 2 ] #loop to silence the command if --verbose is at 0
 then
 	echo "Cleaning temporary files ..."
 fi
-rm $output/graph.h5
 rm $output/unitigs/fof.h5
 
 
@@ -261,7 +260,7 @@ $metadbgwas_path/REINDEER/Reindeer --query -l $output/matrix -q $output/unitigs/
 $metadbgwas_path/src/MetaDBGWAS --files $output/unitigs/unitigs.fa --output $output --threads $threads --kmer $kmer --strains $strains
 
 #conversion of the information of unitigs.fa to a GFA (Graphical fragment assembly http://gfa-spec.github.io/GFA-spec/GFA1.html)
-python3 $metadbgwas_path/bcalm/script/convertToGFA.py $output/step1/graph.gfa $kmer
+python3 $metadbgwas_path/bcalm/scripts/convertToGFA.py $output/step1/graph.gfa $kmer
 #see if I can change that to cpp
 
 #############################################
