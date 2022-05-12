@@ -80,7 +80,6 @@ void checkParametersMapping(Tool *tool) {
     keepNA = tool->getInput()->get(STR_KEEP_NA) != 0;
     string strainsFile = tool->getInput()->getStr(STR_STRAINS_FILE);
     checkStrainsFile(strainsFile);
-
 }
 
 

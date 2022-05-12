@@ -56,7 +56,9 @@
 using namespace std;
 namespace fs = boost::filesystem;
 
-char complement(char b);
+void checkStrainsFile(const string &strainsFile);
+void checkParametersMapping(Tool *tool);
+
 //Read all strings in the readsFile file and return them as a vector of strings
 vector<string> getVectorStringFromFile(const string &readsFile);
 
