@@ -24,18 +24,10 @@ make
 
 cd ..
 
-echo "${GREEN}Starting DBGWAS installation${NC}"
-mkdir DBGWAS
-cd DBGWAS
-curl  https://www.dropbox.com/s/s9oojqfl1kgi4l5/DBGWAS-0.5.4-Linux-precompiled.tar.gz?dl=1 -L --output ./dbgwas.Linux.precompiled.tar.gz
-tar -zxvf dbgwas.Linux.precompiled.tar.gz
-rm dbgwas.Linux.precompiled.tar.gz
-cd ..
-
-echo "${GREEN}Compiling MetaDBGWAS in src/${NC}"
+echo "${GREEN}Compiling MetaDBGWAS in tool/src/${NC}"
 cmake .
 make -j 4
 
 cd ..
 
-echo "${GREEN}Installation complete !${NC} ${GREEN_BACKGROUND}Do not forget to install the R and C++ libraries.${NC}"
+echo "${GREEN}Installation complete !${NC} ${GREEN_BACKGROUND}Do not forget to install the R libraries !${NC}"
