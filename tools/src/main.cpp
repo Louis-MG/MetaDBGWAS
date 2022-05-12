@@ -30,6 +30,7 @@
 */
 
 // We include the header file for the tool
+#include "input_files_gen.hpp"
 #include "statistical_test.h"
 #include "generate_output.h"
 #include "global.h"

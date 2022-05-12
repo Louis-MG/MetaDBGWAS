@@ -73,7 +73,6 @@ Graph* graph;
 vector< Strain >* strains = NULL;
 vector< UnitigIdStrandPos >* nodeIdToUnitigId;
 bool keepNA = false;
-double phenotypeThreshold = 0.0;
 
 
 void populateParser (Tool *tool) {
