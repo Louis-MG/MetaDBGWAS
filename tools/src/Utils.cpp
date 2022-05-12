@@ -32,6 +32,7 @@
 #include "Utils.h"
 #include "global.h"
 #include "Blast.h"
+#include "PhenoCounter.h"
 
 using namespace std;
 
