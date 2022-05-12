@@ -256,21 +256,16 @@ $metadbgwas_path/REINDEER/Reindeer --index -f $output/unitigs/fof_unitigs_index.
 #then we query the unitigs on the index of kmers we built precendently:
 $metadbgwas_path/REINDEER/Reindeer --query -l $output/matrix -q $output/unitigs/unitigs.fa -o $output/matrix -t 1 -P 0
 
-# MetaDBGWAS executable to get .edges and .nodes, gemma and bugwas input files, as well as the pheno files.
-$metadbgwas_path/src/MetaDBGWAS --files $output/unitigs/unitigs.fa --output $output --threads $threads --kmer $kmer --strains $strains
+
+#############################################
+#
+#	MetaDBGWAS
+#
+#############################################
 
 #conversion of the information of unitigs.fa to a GFA (Graphical fragment assembly http://gfa-spec.github.io/GFA-spec/GFA1.html)
 python3 $metadbgwas_path/bcalm/scripts/convertToGFA.py $output/step1/graph.gfa $kmer
-#see if I can change that to cpp
+#see if I can change that script to cpp
 
-#############################################
-#
-#       DBGWAS
-#
-#############################################
-
-
-#starting DBGWAS at step 2:
-echo "${GREEN}Starting DBGWAS ...${NC}"
-$metadbgwas_path/DBGWAS/bin/DBGWAS -k $kmer -strains $strains -keepNA -nb-cores $threads -output $output -skip1 $keepNA $ncDB $ptDB $threshold $newick
-
+# MetaDBGWAS executable that generates input ifles for bugwas and gemma, runs statistical tests, then finally generates output
+$metadbgwas_path/tool/src/MetaDBGWAS --files $output/unitigs/unitigs.fa --output $output --threads $threads --kmer $kmer --strains $strains $keepNA --threads $threads --output $output $ncDB $ptDB $newick $threshold
