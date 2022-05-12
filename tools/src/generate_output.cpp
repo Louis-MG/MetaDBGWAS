@@ -251,9 +251,6 @@ void generate_output::createIndexFile(int numberOfComponents, const string &visu
     boost::replace_all(indexOutput, "<all_tags_in_all_components>", ss.str());
   }
 
-  //put the version on the index page
-  boost::replace_all(indexOutput, "<version>", VERSION);
-
   //put the statistical figures in the output if the -newick parameter was given
   if (hasNewickFile) {
     boost::replace_all(indexOutput, "<stats_images_html>",
