@@ -264,7 +264,7 @@ $metadbgwas_path/REINDEER/Reindeer --query -l $output/matrix -q $output/unitigs/
 #############################################
 
 #conversion of the information of unitigs.fa to a GFA (Graphical fragment assembly http://gfa-spec.github.io/GFA-spec/GFA1.html)
-python3 $metadbgwas_path/bcalm/scripts/convertToGFA.py $output/step1/graph.gfa $kmer
+python3 $metadbgwas_path/bcalm/scripts/convertToGFA.py $output/unitigs/unitigs.fa $output/step1/graph.gfa $kmer
 #see if I can change that script to cpp
 
 # MetaDBGWAS executable that generates input ifles for bugwas and gemma, runs statistical tests, then finally generates output
