@@ -268,4 +268,4 @@ python3 $metadbgwas_path/bcalm/scripts/convertToGFA.py $output/step1/graph.gfa $
 #see if I can change that script to cpp
 
 # MetaDBGWAS executable that generates input ifles for bugwas and gemma, runs statistical tests, then finally generates output
-$metadbgwas_path/tool/src/MetaDBGWAS --files $output/unitigs/unitigs.fa --output $output --threads $threads --kmer $kmer --strains $strains $keepNA --threads $threads --output $output $ncDB $ptDB $newick $threshold
+$metadbgwas_path/tools/src/MetaDBGWAS --files $output/unitigs/unitigs.fa --output $output --threads $threads --kmer $kmer --strains $strains $keepNA --threads $threads --output $output $ncDB $ptDB $newick $threshold
