@@ -35,6 +35,7 @@ This tool expands the work of [DBGWAS](https://gitlab.com/leoisl/dbgwas) [(Jaill
 2. Complete the installation :
     ```shell
     cd MetaDBGWAS
+    sed -i "51i#include <limits>" ./REINDEER/blight/include/robin_hood.h #temporary fix for REINDEER compilation
     sh install.sh
     ```
 3. Add the R libraries :
