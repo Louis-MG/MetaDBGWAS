@@ -81,7 +81,14 @@ Reindeer uses kmer, threads, and output parameters. No others need to be specifi
 # Exemple
 
 ```bash
-bash metadbgwas.sh --files /home/user/test/ --output /home/user/output --K 17 6000000
+bash metadbgwas.sh --files /input --output /output --K 17 6000000
+```
+
+# Docker
+
+```bash
+docker build -t metadbgwas .
+docker run -it -v 'path/to/input/folder:/input' metadbgwas
 ```
 
 # Output
