@@ -107,6 +107,7 @@ Reindeer uses kmer, threads, and output parameters. No others need to be specifi
         * Exemple
 bash metadbgwas.sh --files /test/ --output ./output --threads 4 --verbose 1 --K 17 6000000
 	"
+exit
 }
 
 #Parameters parsing
