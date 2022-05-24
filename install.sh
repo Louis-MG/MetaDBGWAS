@@ -30,4 +30,5 @@ make -j 4
 
 cd ..
 
+chmod +x metadbgwas.sh
 echo "${GREEN}Installation complete !${NC} ${GREEN_BACKGROUND}Do not forget to install the R libraries !${NC}"
