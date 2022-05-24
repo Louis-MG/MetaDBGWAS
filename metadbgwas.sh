@@ -147,7 +147,7 @@ do
 	shift 2;;
 	-h | --help) Help; exit;;
 	-* | --*) echo "Unknown option"; Help; exit;;
-	*) Help; break;
+	*) break;
 	esac
 done
 
