@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Louis-Mael Gueguen lm.gueguen@orange.fr
 
