@@ -27,6 +27,7 @@ kmer_l=17
 
 #bcalm2
 kmer=31
+abundance_min=5
 
 #Reindeer
 #kmer as bcalm
@@ -88,6 +89,7 @@ Help()
 
         * bcalm
 --kmer <kmer length (int)> kmer length used for unitigs build. Default to 31.
+--abundance-min default to 5 int
 
         * Reindeer
 Reindeer uses kmer, threads, and output parameters. No others need to be specified. 
@@ -129,18 +131,20 @@ do
 	shift 4;;
 	-k | --kmer) kmer="$2"
 	shift 2;;
+	--abundance-min) abundance_min="$2"
+	shift 2;;
 	--strains) strains="$2"
 	shift 2;;
-  --newick) newick="-newick $2"
-  shift 2;;
+	--newick) newick="-newick $2"
+	shift 2;;
 	--nc-db) ncDB="-nc-db $2"
 	shift 2;;
 	--pt-db) ptDB="-pt-db $2"
 	shift 2;;
 	--keepNA) keepNA="-keepNA"
 	shift;;
-  --threshold) threshold="-threshold $2"
-  shift;;
+	--threshold) threshold="-threshold $2"
+	shift;;
 	--version) Version; exit;;
 	--license) License; exit;;
 	-v | --verbose) verbose="$2"
@@ -236,7 +240,7 @@ find $output/unitigs/*.unitigs.fa -type f > $output/unitigs/fof_unitigs_index.tx
 #the option abundance min is used to keep all kmers: we already corrected them, and not keeping them all to build the unitigs would have 2 unfortunate consequences :
 	# 1 some variation would be lost, and we want to analyse it !
 	# 2 when mapping the kmers to the unitig graph, that causes a segfault (index > ULONG_MAX)
-$metadbgwas_path/bcalm/build/bcalm -in $output/fof.txt -kmer-size $kmer -nb-cores $threads -out-dir $output/unitigs $verbosity_level -abundance-min 1
+$metadbgwas_path/bcalm/build/bcalm -in $output/fof.txt -kmer-size $kmer -nb-cores $threads -out-dir $output/unitigs $verbosity_level -abundance-min $abundance_min
 rm $output/fof.txt
 mv ./fof.unitigs.fa ./unitigs.fa
 mv ./unitigs.fa $output/unitigs
