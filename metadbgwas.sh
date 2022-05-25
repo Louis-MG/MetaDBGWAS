@@ -178,10 +178,7 @@ fi
 if [ $verbose -eq 0 ]
 then
 	exec 1>&1 &>/dev/null
-else
-	$verbose=''
 fi
-
 
 #############################################
 #
