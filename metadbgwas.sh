@@ -176,7 +176,7 @@ metadbgwas_path=$(cd $metadbgwas_path && pwd)
 #if folder exists and no step must be skipped:
 if [ -d $output ]
 then
-	if [ ! $skip1 ]
+	if [ $skip1 = false ]
 	then
 		if [ "$(ls -A $output)" ]
 		then
@@ -204,31 +204,25 @@ fi
 #############################################
 
 #else tells user that file is not found
-if [ $verbose -ge 1 ] && [ $skip1 ]
+if [ $verbose -ge 1 ] && [ $skip1 = false ]
 then
         echo "${GREEN}Starting kmer corrections with Lighter ...${NC}"
 fi
 
-if [ ! $skip1 ]
+if [ $skip1 = false ]
 then
 	#checks folder existence
-	if [ -d $files ]
-	then
-	        if [ $alpha -gt 0 ]
-	        then
-	                for i in $files/*.f*
-	                do
-	                        $metadbgwas_path/Lighter/lighter -r ${i} -od $output -t $threads -discard -k $kmer_l $genome_size $alpha
-	                done
-	        else
-	                for i in $files/*.f*
-	                do
-	                        $metadbgwas_path/Lighter/lighter -r ${i} -od $output -t $threads -discard -K $kmer_l $genome_size
-	                done
-		fi
+        if [ $alpha -gt 0 ]
+        then
+		for i in $files/*.f*
+		do
+			$metadbgwas_path/Lighter/lighter -r ${i} -od $output -t $threads -discard -k $kmer_l $genome_size $alpha
+		done
 	else
-	        echo "Folder not found or is not a folder, verify the path."
-		exit 0
+		for i in $files/*.f*
+		do
+			$metadbgwas_path/Lighter/lighter -r ${i} -od $output -t $threads -discard -K $kmer_l $genome_size
+		done
 	fi
 else
 	echo "${GREEN}Skipping Lighter step ...${NC}"
@@ -241,7 +235,7 @@ fi
 #
 #############################################
 
-if [ ! $skip2 ]
+if [ $skip2 = false ]
 then
 	find $output/*.cor.f* -type f > $output/fof.txt
 	if [ $verbose -ge 1 ] #loop to silence the command if --verbose is at 0
@@ -282,7 +276,7 @@ fi
 #
 #############################################
 
-if [ ! $skip3 ]
+if [ $skip3 = false ]
 then
 	mkdir $output/step1
 	# first we index:
