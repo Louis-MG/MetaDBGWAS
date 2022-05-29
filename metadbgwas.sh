@@ -209,7 +209,8 @@ then
         echo "${GREEN}Starting kmer corrections with Lighter ...${NC}"
 fi
 
-if [ $skip1 != true ]
+if [ ! $skip1 ]
+then
 	#checks folder existence
 	if [ -d $files ]
 	then
@@ -240,7 +241,7 @@ fi
 #
 #############################################
 
-if [ $skip2 ]
+if [ ! $skip2 ]
 	find $output/*.cor.f* -type f > $output/fof.txt
 	if [ $verbose -ge 1 ] #loop to silence the command if --verbose is at 0
 	then
@@ -280,7 +281,7 @@ fi
 #
 #############################################
 
-if [ $skip3 ]
+if [ ! $skip3 ]
 	mkdir $output/step1
 	# first we index:
 	$metadbgwas_path/REINDEER/Reindeer --index -f $output/unitigs/fof_unitigs_index.txt -o $output/matrix -k $kmer -t 1
