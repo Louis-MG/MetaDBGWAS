@@ -28,17 +28,17 @@ This tool expands the work of [DBGWAS](https://gitlab.com/leoisl/dbgwas) [(Jaill
     ```shell
     git clone --recursive https://github.com/Louis-MG/MetaDBGWAS.git
     ```
-   1. Add the C++ libraries :
+2. Add the C++ libraries :
    ```shell
     sudo apt install libgatbcore-dev libhdf5-dev libboost-dev libpstreams-dev
     ```
-2. Complete the installation :
+3. Complete the installation :
     ```shell
     cd MetaDBGWAS
     sed -i "51i#include <limits>" ./REINDEER/blight/robin_hood.h #temporary fix for REINDEER compilation
     sh install.sh
     ```
-3. Add the R libraries :
+4. Add the R libraries :
     ```R
     install.packages(c('ape', 'phangorn'))
     install.packages("https://raw.githubusercontent.com/sgearle/bugwas/master/build/bugwas_1.0.tar.gz", repos=NULL, type="source")
@@ -60,8 +60,9 @@ NOTE: path should be absolute.
         or
 --k <int> <int> <float> kmer length and genome size (in base), alpha (probability of sampling a kmer). Recommended is 17 X X.
 
-	* bcalm
---kmer <kmer length (int)> kmer length used for unitigs build. Default to 31.
+	* Bcalm2
+--kmer <kmer length> <int> kmer length used for unitigs build. Default to 31.
+--abundance-min <int> minimum number of occurence of a kmer to keep it in the union DBG. Default to 5.
 
 	* Reindeer
 Reindeer uses kmer, threads, and output parameters. No others need to be specified.
@@ -86,9 +87,20 @@ bash metadbgwas.sh --files /input --output /output --K 17 6000000
 
 # Docker
 
+An image is hosted on Docker hub. You can also build it localy using the dockerfile located in /docker. 
+
 ```bash
-docker build -t metadbgwas .
-docker run -it -v 'path/to/input/folder:/input' metadbgwas
+docker pull 007ptar007/metadbgwas:latest
+docker run -v 'path/to/input/folder:/input' metadbgwas
+```
+
+# Singularity
+
+You can also run the docker image with singularity:
+
+```bash
+docker pull 007ptar007/metadbgwas
+singularity run -H /path/to/input metadbgwas_latest.sif --files ./input --strains /input/strains --threads 40 --output ./output --K 17 X
 ```
 
 # Output
@@ -100,6 +112,18 @@ User can find in the output folder :
 - fof.txt : file of files for input of bcalm
 - fof_unitigs.txt : file of file for input of Reindeer.
 - step1 folder which contains input files for gemma and bugwas.
+
+# How to reference :
+
+Please cite this tool as :
+
+Metadbgwas, L-M. Gueguen, 2022.
+
+
+# Issues :
+
+You can post issues in the issue section of the github repository. You can also email me at lm<dot>gueguen<at>orange<dot>fr . I will do my best to resolve them.
+
 
 # License
 
