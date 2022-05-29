@@ -135,7 +135,7 @@ do
 	shift;;
 	--skip2) skip2=true skip1=true
 	shift;;
-	--skip3) skip3=true skip2=true skip3=true
+	--skip3) skip3=true skip2=true skip1=true
 	shift;;
 	--K) kmer_l="$2" genome_size="$3"
 	shift 3;;
@@ -280,7 +280,7 @@ if [ $skip3 = false ]
 then
 	mkdir $output/step1
 	# first we index:
-	$metadbgwas_path/REINDEER/Reindeer --index -f $output/unitigs/fof_unitigs_index.txt -o $output/matrix -k $kmer -t 1
+	$metadbgwas_path/REINDEER/Reindeer --index -f $output/unitigs/fof_unitigs_index.txt -o $output/matrix -k $kmer -t $threads
 	#then we query the unitigs on the index of kmers we built precendently:
 	$metadbgwas_path/REINDEER/Reindeer --query -l $output/matrix -q $output/unitigs/unitigs.fa -o $output/matrix -t 1 -P 0
 else
