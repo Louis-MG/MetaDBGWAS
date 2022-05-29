@@ -174,17 +174,18 @@ metadbgwas_path=$(cd $metadbgwas_path && pwd)
 #creates output dir if it doesnt exist yet
 
 #if folder exists and no step must be skipped:
-if [ -d $output ] && [ $skip1 ]
+if [ -d $output ]
 then
-	if [ "$(ls -A $output)" ]
+	if [ ! $skip1 ]
 	then
-    		echo "$output is not Empty." #folder should be emptied or removed for a new run
-		exit 0
+		if [ "$(ls -A $output)" ]
+		then
+	    		echo "$output is not Empty." #folder should be emptied or removed for a new run
+			exit 0
+		fi
+	else
+		break
 	fi
-#if folder exists and steps must be skipped:
-elif [ -d $output ] && [ $skip1 ]
-then
-	continue #it is normal, we carry on
 #else the folder does not exists and it is created
 else
 	mkdir $output
