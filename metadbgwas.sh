@@ -19,6 +19,9 @@ output="./"
 threads=4
 verbose=1
 clean=false
+skip1=false
+skip2=false
+skip3=false
 
 #Lighter
 genome_size=
@@ -81,6 +84,9 @@ Help()
 --threads <int> number of threads to use. Default set to 4.
 --verbose <int> level of verbosity. Default to 1, 0-1. 0 is equivalent to --quiet.
 --clean removes files from output directory if not empty.
+--skip1 skips the Lighter correction step. Corrected files are supposed to be in the output folder.
+--skip2 skips the Lighter and Bcalm2 steps. Corrected files and unitigs folder are supposed to be in the output folder.
+--skip3 skips the Lighter, Bcalm2 and REINDEER steps. Corrected files, unitigs and matrix folder are supposed to be in the output folder.
 
         * Lighter
 --K <int> <int> kmer length and genome size (in base). Recommended is 17 X.
@@ -125,6 +131,12 @@ do
 	shift;;
 	-t | --threads) threads="$2"
 	shift 2;;
+	--skip1) skip1=true
+	shift;;
+	--skip2) skip2=true skip1=true
+	shift;;
+	--skip3) skip3=true skip2=true skip3=true
+	shift;;
 	--K) kmer_l="$2" genome_size="$3"
 	shift 3;;
 	--k) kmer_l="$2" genome_size="$3" alpha="$4"
@@ -163,12 +175,10 @@ metadbgwas_path=$(cd $metadbgwas_path && pwd)
 
 if [ -d $output ]
 then
-	if [ "$(ls -A $output)" ] && [ $clean != true ]
+	if [ "$(ls -A $output)" ]
 	then
     		echo "$output is not Empty."
 		exit 0
-	else
-		rm -r $output
 	fi
 else
 	mkdir $output
@@ -187,29 +197,35 @@ fi
 #############################################
 
 #else tells user that file is not found
-if [ $verbose -ge 1 ]
+if [ $verbose -ge 1 ] && [ $skip1 != true ]
 then
         echo "${GREEN}Starting kmer corrections with Lighter ...${NC}"
 fi
-#checks folder existence
-if [ -d $files ]
-then
-        if [ $alpha -gt 0 ]
-        then
-                for i in $files/*.f*
-                do
-                        $metadbgwas_path/Lighter/lighter -r ${i} -od $output -t $threads -discard -k $kmer_l $genome_size $alpha
-                done
-        else
-                for i in $files/*.f*
-                do
-                        $metadbgwas_path/Lighter/lighter -r ${i} -od $output -t $threads -discard -K $kmer_l $genome_size
-                done
+
+if [ $skip1 != true ]
+	#checks folder existence
+	if [ -d $files ]
+	then
+	        if [ $alpha -gt 0 ]
+	        then
+	                for i in $files/*.f*
+	                do
+	                        $metadbgwas_path/Lighter/lighter -r ${i} -od $output -t $threads -discard -k $kmer_l $genome_size $alpha
+	                done
+	        else
+	                for i in $files/*.f*
+	                do
+	                        $metadbgwas_path/Lighter/lighter -r ${i} -od $output -t $threads -discard -K $kmer_l $genome_size
+	                done
+		fi
+	else
+	        echo "Folder not found or is not a folder, verify the path."
+		exit 0
 	fi
 else
-        echo "Folder not found or is not a folder, verify the path."
-	exit 0
+	echo "${GREEN}Skipping Lighter step ...${NC}"
 fi
+
 
 #############################################
 #
@@ -217,36 +233,39 @@ fi
 #
 #############################################
 
-find $output/*.cor.f* -type f > $output/fof.txt
-if [ $verbose -ge 1 ] #loop to silence the command if --verbose is at 0
-then
-	echo "${GREEN}Starting bcalm2 ...${NC}"
-	verbosity_level='-verbose $verbose'
+if [ $skip2 != true ]
+	find $output/*.cor.f* -type f > $output/fof.txt
+	if [ $verbose -ge 1 ] #loop to silence the command if --verbose is at 0
+	then
+		echo "${GREEN}Starting Bcalm2 ...${NC}"
+		verbosity_level='-verbose $verbose'
+	else
+		verbosity_level=''
+	fi
+	mkdir $output/unitigs
+	#we create the de Bruijn Graph of the files we want to index
+	for i in $output/*.cor.f*
+	do
+		echo $i
+	        $metadbgwas_path/bcalm/build/bcalm -in $i -kmer-size $kmer -nb-cores $threads  $verbosity_level -abundance-min 1 # TODO: add the -out option to give prefix and avoid moving files around
+		mv *.unitigs.fa $output/unitigs
+	done
+	find $output/unitigs/*.unitigs.fa -type f > $output/unitigs/fof_unitigs_index.txt
+	#the option abundance min is used to keep all kmers: we already corrected them, and not keeping them all to build the unitigs would have 2 unfortunate consequences :
+		# 1 some variation would be lost, and we want to analyse it !
+		# 2 when mapping the kmers to the unitig graph, that causes a segfault (index > ULONG_MAX)
+	$metadbgwas_path/bcalm/build/bcalm -in $output/fof.txt -kmer-size $kmer -nb-cores $threads -out-dir $output/unitigs $verbosity_level -abundance-min $abundance_min
+	rm $output/fof.txt
+	mv ./fof.unitigs.fa ./unitigs.fa
+	mv ./unitigs.fa $output/unitigs
+	if [ $verbose -ge 2 ] #loop to silence the command if --verbose is at 0
+	then
+		echo "Cleaning temporary files ..."
+	fi
+	rm $output/unitigs/fof.h5
 else
-	verbosity_level=''
+	echo "${GREEN}Skipping Bcalm2 step ...${NC}"
 fi
-mkdir $output/unitigs
-#we create the de Bruijn Graph of the files we want to index
-for i in $output/*.cor.f*
-do
-	echo $i
-        $metadbgwas_path/bcalm/build/bcalm -in $i -kmer-size $kmer -nb-cores $threads  $verbosity_level -abundance-min 1 # TODO: add the -out option to give prefix and avoid moving files around
-	mv *.unitigs.fa $output/unitigs
-done
-find $output/unitigs/*.unitigs.fa -type f > $output/unitigs/fof_unitigs_index.txt
-#the option abundance min is used to keep all kmers: we already corrected them, and not keeping them all to build the unitigs would have 2 unfortunate consequences :
-	# 1 some variation would be lost, and we want to analyse it !
-	# 2 when mapping the kmers to the unitig graph, that causes a segfault (index > ULONG_MAX)
-$metadbgwas_path/bcalm/build/bcalm -in $output/fof.txt -kmer-size $kmer -nb-cores $threads -out-dir $output/unitigs $verbosity_level -abundance-min $abundance_min
-rm $output/fof.txt
-mv ./fof.unitigs.fa ./unitigs.fa
-mv ./unitigs.fa $output/unitigs
-if [ $verbose -ge 2 ] #loop to silence the command if --verbose is at 0
-then
-	echo "Cleaning temporary files ..."
-fi
-rm $output/unitigs/fof.h5
-
 
 #############################################
 #
@@ -254,12 +273,15 @@ rm $output/unitigs/fof.h5
 #
 #############################################
 
-mkdir $output/step1
-# first we index:
-$metadbgwas_path/REINDEER/Reindeer --index -f $output/unitigs/fof_unitigs_index.txt -o $output/matrix -k $kmer -t 1
-#then we query the unitigs on the index of kmers we built precendently:
-$metadbgwas_path/REINDEER/Reindeer --query -l $output/matrix -q $output/unitigs/unitigs.fa -o $output/matrix -t 1 -P 0
-
+if [ $skip3 != true ]
+	mkdir $output/step1
+	# first we index:
+	$metadbgwas_path/REINDEER/Reindeer --index -f $output/unitigs/fof_unitigs_index.txt -o $output/matrix -k $kmer -t 1
+	#then we query the unitigs on the index of kmers we built precendently:
+	$metadbgwas_path/REINDEER/Reindeer --query -l $output/matrix -q $output/unitigs/unitigs.fa -o $output/matrix -t 1 -P 0
+else
+	echo "${GREEN}Skipping REINDEER step ...${NC}"
+fi
 
 #############################################
 #
