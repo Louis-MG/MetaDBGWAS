@@ -109,9 +109,9 @@ int getNbLinesInFile(const string &filename) {
 
 void checkExecutables(Tool *tool) {
   //configure the global vars of the executable paths
-  gemmaPath = DBGWAS_exec_location + "/gemma/gemma.0.93b";
+  gemmaPath = DBGWAS_exec_location + "/tools/gemma/gemma.0.93b";
   blastPath = DBGWAS_exec_location + "/blast";
-  phantomjsPath = DBGWAS_exec_location + "/phantomjs/phantomjs";
+  phantomjsPath = DBGWAS_exec_location + "/tools/phantomjs/phantomjs";
   RscriptPath = DBGWAS_exec_location + "/R_lib";
 
   //check if the executables work

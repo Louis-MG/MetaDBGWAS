@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 GREEN='\e[0;32m' # green color
 NC='\e[0m' # No Color
@@ -31,4 +31,6 @@ make -j 4
 cd ..
 
 chmod +x MetaDBGWAS/metadbgwas.sh
+chmod +x MetaDBGWAS/tools/gemma/gemma.0.93b
+chmod +x MetaDBGWAS/tools/phantomjs/phantomjs
 echo "${GREEN}Installation complete !${NC} ${GREEN_BACKGROUND}Do not forget to install the R libraries !${NC}"
