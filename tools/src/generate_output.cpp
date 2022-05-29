@@ -617,7 +617,7 @@ VertexInfo parse_node(string line) {
     for (std::string word; std::getline(input, word, '\t'); ) {
         tmp.push_back(word);
     }
-    return {tmp.at(1), std::stoi(tmp.at(2)), 'F'};
+    return {tmp.at(2), std::stoi(tmp.at(1)), 'F'};
 }
 
 EdgeParse parse_edge(string line) {
