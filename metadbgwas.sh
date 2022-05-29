@@ -174,7 +174,7 @@ metadbgwas_path=$(cd $metadbgwas_path && pwd)
 #creates output dir if it doesnt exist yet
 
 #if folder exists and no step must be skipped:
-if [ -d $output ] && [ $skip1 == false ]
+if [ -d $output ] && [ $skip1 ]
 then
 	if [ "$(ls -A $output)" ]
 	then
@@ -182,7 +182,7 @@ then
 		exit 0
 	fi
 #if folder exists and steps must be skipped:
-elif [ -d $output ] && [ $skip1 == false ]
+elif [ -d $output ] && [ $skip1 ]
 then
 	continue #it is normal, we carry on
 #else the folder does not exists and it is created
@@ -203,7 +203,7 @@ fi
 #############################################
 
 #else tells user that file is not found
-if [ $verbose -ge 1 ] && [ $skip1 != true ]
+if [ $verbose -ge 1 ] && [ $skip1 ]
 then
         echo "${GREEN}Starting kmer corrections with Lighter ...${NC}"
 fi
@@ -239,7 +239,7 @@ fi
 #
 #############################################
 
-if [ $skip2 != true ]
+if [ $skip2 ]
 	find $output/*.cor.f* -type f > $output/fof.txt
 	if [ $verbose -ge 1 ] #loop to silence the command if --verbose is at 0
 	then
@@ -279,7 +279,7 @@ fi
 #
 #############################################
 
-if [ $skip3 != true ]
+if [ $skip3 ]
 	mkdir $output/step1
 	# first we index:
 	$metadbgwas_path/REINDEER/Reindeer --index -f $output/unitigs/fof_unitigs_index.txt -o $output/matrix -k $kmer -t 1
