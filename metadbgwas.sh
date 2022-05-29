@@ -173,12 +173,13 @@ metadbgwas_path=$(cd $metadbgwas_path && pwd)
 
 #creates output dir if it doesnt exist yet
 
-if [ -d $output ]
+if [ -d $output ] && [ $skip1 == false ] && [ $skip2 == false ] && [ $skip3 == false ]
 then
 	if [ "$(ls -A $output)" ]
 	then
     		echo "$output is not Empty."
 		exit 0
+	else continue
 	fi
 else
 	mkdir $output
