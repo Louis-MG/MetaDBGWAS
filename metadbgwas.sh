@@ -88,8 +88,8 @@ Help()
 --k <int> <int> <float> kmer length and genome size (in base), alpha (probability of sampling a kmer). Recommended is 17 X X.
 
         * bcalm
---kmer <kmer length (int)> kmer length used for unitigs build. Default to 31.
---abundance-min default to 5 int
+--kmer <int> kmer length used for unitigs build. Default to 31.
+--abundance-min <int> Minimum number of occurence of a kmer to keep it in the Union DBG. Default to 5, higly recommended to change it.
 
         * Reindeer
 Reindeer uses kmer, threads, and output parameters. No others need to be specified. 
