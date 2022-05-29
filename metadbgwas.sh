@@ -242,6 +242,7 @@ fi
 #############################################
 
 if [ ! $skip2 ]
+then
 	find $output/*.cor.f* -type f > $output/fof.txt
 	if [ $verbose -ge 1 ] #loop to silence the command if --verbose is at 0
 	then
@@ -282,6 +283,7 @@ fi
 #############################################
 
 if [ ! $skip3 ]
+then
 	mkdir $output/step1
 	# first we index:
 	$metadbgwas_path/REINDEER/Reindeer --index -f $output/unitigs/fof_unitigs_index.txt -o $output/matrix -k $kmer -t 1
