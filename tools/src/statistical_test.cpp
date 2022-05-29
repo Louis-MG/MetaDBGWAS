@@ -66,7 +66,7 @@ void statistical_test::execute () {
   //create the command line
   stringstream ssCommand;
   ssCommand << "Rscript --vanilla "
-            << DBGWAS_exec_location << "/R_lib/DBGWAS.R "
+            << DBGWAS_exec_location << "/tools//R_lib/DBGWAS.R "
             << RscriptPath << " "
             << step1OutputFolder.string() << " "
             << step1OutputFolder.string() << "/bugwas_input.id_phenotype "
