@@ -76,7 +76,7 @@ Reindeer uses kmer, threads, and output parameters. No others need to be specifi
 
         * Miscellaneous
 --license prints the license text in standard output.
---help displays help."
+--help displays help.
 ```
 
 # Exemple
@@ -112,6 +112,8 @@ User can find in the output folder :
 - fof.txt : file of files for input of bcalm
 - fof_unitigs.txt : file of file for input of Reindeer.
 - step1 folder which contains input files for gemma and bugwas.
+- step2 folder folder which contains 
+- step3 contains visulatisation files.
 
 # How to reference :
 
