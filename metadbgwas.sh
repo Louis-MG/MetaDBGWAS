@@ -48,7 +48,7 @@ threshold=
 
 Version()
 {
-	echo "\nMetadDBGWAS 0.1\n"
+	echo "\nMetadDBGWAS 1.0\n"
 }
 
 License()
@@ -172,7 +172,6 @@ metadbgwas_path=$(dirname $0)
 metadbgwas_path=$(cd $metadbgwas_path && pwd)
 
 #creates output dir if it doesnt exist yet
-
 #if folder exists and no step must be skipped:
 if [ -d $output ]
 then
@@ -190,6 +189,10 @@ then
 else
 	mkdir $output
 fi
+
+#saves command line:
+echo "--files $files\n--strains $strains\n--output $output\n--kmer $kmer\n--abundance-min $abundance_min\n--k/K $kmer_l $genome_size $alpha\n--newick $newick\n--nc-DB $ncDB\n--pt-db $ptDB\n--keppNA $keppNA\n--threshold $threshold" > $output/command_line.txt
+
 
 # if verbose is set to 0 : silenceing of the commands (equivaluent to --quiet)
 if [ $verbose -eq 0 ]
