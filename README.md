@@ -53,7 +53,10 @@ NOTE: path should be absolute.
 --output <path> path to the output folder. Default set to ./ .
 --threads <int> number of threads to use. !! Default set to 4 !!
 --verbose <int> level of verbosity. Default to 1, 0-1. 0 is equivalent to --quiet.
---clean removes files from output directory if not empty.
+--clean removes intermediary files to save space if you are worried about your storage.
+--skip1 skips the Lighter correction step. Corrected files are supposed to be in the output folder.
+--skip2 skips the Lighter and Bcalm2 steps. Corrected files and unitigs folder are supposed to be in the output folder.
+--skip3 skips the Lighter, Bcalm2 and REINDEER steps. Corrected files, unitigs and matrix folder are supposed to be in the output folder.
 
         * Lighter
 --K <int> <int> kmer length and genome size (in base). Recommended is 17 X.
