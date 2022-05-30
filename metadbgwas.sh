@@ -191,7 +191,7 @@ else
 fi
 
 #saves command line:
-echo "--files $files\n--strains $strains\n--output $output\n--kmer $kmer\n--abundance-min $abundance_min\n--k/K $kmer_l $genome_size $alpha\n--newick $newick\n--nc-DB $ncDB\n--pt-db $ptDB\n--keppNA $keppNA\n--threshold $threshold" > $output/command_line.txt
+echo "--files $files\n--strains $strains\n--output $output\n--kmer $kmer\n--abundance-min $abundance_min\n--k/K $kmer_l $genome_size $alpha\n--newick $newick\n--nc-DB $ncDB\n--pt-db $ptDB\n--keppNA $keepNA\n--threshold $threshold" > $output/command_line.txt
 
 
 # if verbose is set to 0 : silenceing of the commands (equivaluent to --quiet)
