@@ -102,7 +102,7 @@ docker run -v 'path/to/input/folder:/input' metadbgwas
 You can also run the docker image with singularity:
 
 ```bash
-docker pull 007ptar007/metadbgwas
+singularity pull docker://007ptar007/metadbgwas
 singularity run -H /path/to/input metadbgwas_latest.sif --files ./input --strains /input/strains --threads 40 --output ./output --K 17 X
 ```
 
