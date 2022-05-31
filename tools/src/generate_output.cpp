@@ -112,11 +112,11 @@ void generate_output::createIndexFile(int numberOfComponents, const string &visu
       string PNGFile = HTMLFile+".png";
 
       if (noPreview){
-        boost::filesystem::copy_file(DBGWAS_exec_location+"/lib/resources/nopreview.png", PNGFile, boost::filesystem::copy_option::overwrite_if_exists);
+        boost::filesystem::copy_file(DBGWAS_exec_location+"../../csjs/lib/resources/nopreview.png", PNGFile, boost::filesystem::copy_option::overwrite_if_exists);
       }
       else {
         stringstream commandSS;
-        commandSS << phantomjsPath << " " << DBGWAS_exec_location << "/render_graph.js " << HTMLFile << " " << PNGFile;
+        commandSS << phantomjsPath << " " << "./render_graph.js " << HTMLFile << " " << PNGFile;
         executeCommand(commandSS.str(), false);
       }
 
@@ -132,7 +132,7 @@ void generate_output::createIndexFile(int numberOfComponents, const string &visu
   //get the template preview
   string templatePreview="";
   {
-    auto indexTableTemplateAsStringVector = getVectorStringFromFile(DBGWAS_exec_location + "/index_table_template.html");
+    auto indexTableTemplateAsStringVector = getVectorStringFromFile(DBGWAS_exec_location + "../../html_templates/index_table_template.html");
     for (const auto &line : indexTableTemplateAsStringVector)
       templatePreview += line;
   }
@@ -193,7 +193,7 @@ void generate_output::createIndexFile(int numberOfComponents, const string &visu
 
   //create the index file
   //read template file
-  string templatePath = DBGWAS_exec_location + "/index_template.html";
+  string templatePath = DBGWAS_exec_location + "../../html_templates/index_template.html";
   string indexOutput = readFileAsString(templatePath.c_str());
 
 
@@ -500,7 +500,7 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
   string elements = elementsSS.str();
 
   //read template file
-  string templatePath = DBGWAS_exec_location + "/cytoscape_template.html";
+  string templatePath = DBGWAS_exec_location + "../../csjs/cytoscape_template.html";
   string cytoscapeOutput = readFileAsString(templatePath.c_str());
 
   //put the graph in the template file
@@ -570,7 +570,7 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
   outFile.close();
 
   //copy the lib folder, if it is not already copied
-  string fromLibPath = DBGWAS_exec_location + "/lib";
+  string fromLibPath = DBGWAS_exec_location + "../../csjs/lib";
   string toLibPath = visualisationsFolder + "/components/lib";
   if (!boost::filesystem::exists(toLibPath))
     copyDirectoryRecursively(fromLibPath, toLibPath);
