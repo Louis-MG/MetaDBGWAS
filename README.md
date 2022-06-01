@@ -1,4 +1,4 @@
-MetaDBGWAS
+Metadbgwas
 ==========
 
 * [Motivation](#motivation)
@@ -26,7 +26,7 @@ This tool expands the work of [DBGWAS](https://gitlab.com/leoisl/dbgwas) [(Jaill
 
 1. Use the following command to download the repository :
     ```shell
-    git clone --recursive https://github.com/Louis-MG/MetaDBGWAS.git
+    git clone --recursive https://github.com/Louis-MG/Metadbgwas.git
     ```
 2. Add the C++ libraries :
    ```shell
@@ -34,7 +34,7 @@ This tool expands the work of [DBGWAS](https://gitlab.com/leoisl/dbgwas) [(Jaill
     ```
 3. Complete the installation :
     ```shell
-    cd MetaDBGWAS
+    cd Metadbgwas
     sed -i "51i#include <limits>" ./REINDEER/blight/robin_hood.h #temporary fix for REINDEER compilation
     sh install.sh
     ```
