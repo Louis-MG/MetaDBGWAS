@@ -127,7 +127,7 @@ Metadbgwas, L-M. Gueguen, 2022.
 
 # Issues :
 
-You can post issues in the issue section of the github repository. You can also email me at lm<dot>gueguen<at>orange<dot>fr . I will do my best to resolve them.
+You can post issues in the issue section of the github repository. You can also email me at `lm<dot>gueguen<at>orange<dot>fr` . I will do my best to resolve them.
 
 
 # License
