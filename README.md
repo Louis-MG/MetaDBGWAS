@@ -10,7 +10,7 @@ Metadbgwas
 
 # Motivation
 
-This tool expands the work of [DBGWAS](https://gitlab.com/leoisl/dbgwas) [(Jaillard et al, 2018)](https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1007758) and brings it to the metagenomic scale. It finds variants significantly associated with a given phenotype, and outputs its findigs in interactve, web-based graph components.
+This tool expands the work of [DBGWAS](https://gitlab.com/leoisl/dbgwas) [(Jaillard et al, 2018)](https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1007758) and brings it to the metagenomic scale. It finds variants significantly associated with a given phenotype of interest, and output its findings in a web page. Thta web page shows the selected unitigs with their surounding graph component, and a user-provided annotation can be used.
 
 # Requirements
 
@@ -100,19 +100,17 @@ singularity run -H /path/to/input metadbgwas_latest.sif --files ./input --strain
 
 User can find in the output folder :
 - the corrected fasta files.
-- unitigs folder with output from bcalm (intermediate .h5 file of gatb and the unitigs.fa)
+- unitigs folder with bcalm2 output, sample-wise and dataset-wise. 
 - matrix folder with the matrix of absence/presence of kmers in the unitigs. Ouptut from Reindeer.
-- fof.txt : file of files for input of bcalm
-- fof_unitigs.txt : file of file for input of Reindeer.
-- step1 folder which contains input files for gemma and bugwas.
-- step2 folder folder which contains 
-- step3 contains visulatisation files.
+- step1, step2 and step3 that contains internal files of the modified DBGWAS
+- visualisation contains visulatisation files.
+- command_line.txt with the paremeters used for the execution
 
 # How to reference :
 
 Please cite this tool as :
 
-Metadbgwas, L-M. Gueguen, 2022.
+Metadbgwas, Louis-Mael Gueguen, 2022.
 
 
 # Issues :
