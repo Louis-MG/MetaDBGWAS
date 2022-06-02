@@ -10,7 +10,7 @@ Metadbgwas
 
 # Motivation
 
-This tool expands the work of [DBGWAS](https://gitlab.com/leoisl/dbgwas) [(Jaillard et al, 2018)](https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1007758) and brings it to the metagenomic scale.
+This tool expands the work of [DBGWAS](https://gitlab.com/leoisl/dbgwas) [(Jaillard et al, 2018)](https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1007758) and brings it to the metagenomic scale. It finds variants significantly associated with a given phenotype, and outputs its findigs in interactve, web-based graph components.
 
 # Requirements
 
@@ -28,20 +28,10 @@ This tool expands the work of [DBGWAS](https://gitlab.com/leoisl/dbgwas) [(Jaill
     ```shell
     git clone --recursive https://github.com/Louis-MG/Metadbgwas.git
     ```
-2. Add the C++ libraries :
-   ```shell
-    sudo apt install libgatbcore-dev libhdf5-dev libboost-dev libpstreams-dev
-    ```
 3. Complete the installation :
     ```shell
     cd Metadbgwas
-    sed -i "51i#include <limits>" ./REINDEER/blight/robin_hood.h #temporary fix for REINDEER compilation
     sh install.sh
-    ```
-4. Add the R libraries :
-    ```R
-    install.packages(c('ape', 'phangorn'))
-    install.packages("https://raw.githubusercontent.com/sgearle/bugwas/master/build/bugwas_1.0.tar.gz", repos=NULL, type="source")
     ```
 
 # Usage
