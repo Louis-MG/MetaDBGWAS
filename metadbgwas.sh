@@ -89,13 +89,14 @@ Help()
 --skip3 skips the Lighter, Bcalm2 and REINDEER steps. Corrected files, unitigs and matrix folder are supposed to be in the output folder.
 
         * Lighter
---K <int> <int> kmer length and genome size (in base). Recommended is 17 X.
+NOTE: if your datset contains different bacterial genomes with very different size, it is better to choose --k option and provide the pick-rate (noted alpha).
+--K <int> <int> kmer length and genome size (in base). Recommended is 17 G.
         or
---k <int> <int> <float> kmer length and genome size (in base), alpha (probability of sampling a kmer). Recommended is 17 X X.
+--k <int> <int> <float> kmer length and genome size (in base), alpha (probability of sampling a kmer). Recommended is 17 G alpha. alpha is best chosen at 70/coverage.
 
         * bcalm
 --kmer <int> kmer length used for unitigs build. Default to 31.
---abundance-min <int> Minimum number of occurence of a kmer to keep it in the Union DBG. Default to 5, higly recommended to change it.
+--abundance-min <int> Minimum number of occurence of a kmer to keep it in the Union DBG. Default to 5, highly recommended to change to the 2.5% quantile of the Poisson law with lambda = coverage.
 
         * Reindeer
 Reindeer uses kmer, threads, and output parameters. No others need to be specified. 
@@ -304,3 +305,15 @@ python3 $metadbgwas_path/bcalm/scripts/convertToGFA.py $output/unitigs/unitigs.f
 export OPENSSL_CONF=/dev/null
 # MetaDBGWAS executable that generates input ifles for bugwas and gemma, runs statistical tests, then finally generates output
 $metadbgwas_path/tools/src/MetaDBGWAS --files $output/unitigs/unitigs.fa --output $output --threads $threads --kmer $kmer --strains $strains $keepNA --threads $threads --output $output $ncDB $ptDB $newick $threshold
+
+if [ $clean = true ]
+then
+	if [ $verbose -ge 1 ]
+	then
+		echo "Compressing step1 files ..."
+	fi
+	gzip $output/step1/unitigs2PhenoCounter
+	gzip $output/step1/graph.gfa
+	gzip $output/step1/bugwas_input.all_rows.binary
+	gzip $output/step1/bugwas_input.unique_rows.binary
+fi

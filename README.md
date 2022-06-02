@@ -49,13 +49,14 @@ NOTE: path should be absolute.
 --skip3 skips the Lighter, Bcalm2 and REINDEER steps. Corrected files, unitigs and matrix folder are supposed to be in the output folder.
 
         * Lighter
---K <int> <int> kmer length and genome size (in base). Recommended is 17 X.
+NOTE: if your datset contains different bacterial genomes with very different size, it is better to choose --k option and provide the pick-rate (noted alpha).
+--K <int> <int> kmer length and approximate genome size (in base). Recommended is 17 G.
         or
---k <int> <int> <float> kmer length and genome size (in base), alpha (probability of sampling a kmer). Recommended is 17 X X.
+--k <int> <int> <float> kmer length and genome size (in base), alpha (probability of sampling a kmer). Recommended is 17 G alpha. alpha is best chosen at 70/coverage.
 
 	* Bcalm2
 --kmer <int> kmer length used for unitigs build. Default to 31.
---abundance-min <int> minimum number of occurence of a kmer to keep it in the union DBG. Default to 5, highly recommended to change it.
+--abundance-min <int> minimum number of occurence of a kmer to keep it in the union DBG. Default to 5, highly recommended to change to the 2.5% quantile of the Poisson law with lambda = coverage.
 
 	* Reindeer
 Reindeer uses kmer, threads, and output parameters. No others need to be specified.
