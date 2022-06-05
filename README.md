@@ -18,6 +18,8 @@ This tool expands the work of [DBGWAS](https://gitlab.com/leoisl/dbgwas) [(Jaill
 
 # Output
 
+Here is an example of the output of Metadbgwas: significant components are shown in preview with annotation if provided, and a click on them will take you to the page with full information and interactive graph.
+
 ![Output example](/figures/suppl_comp_table.png?raw=true "Output example of Metadbgwas")
 
 # Requirements
