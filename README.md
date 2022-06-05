@@ -12,6 +12,14 @@ Metadbgwas
 
 This tool expands the work of [DBGWAS](https://gitlab.com/leoisl/dbgwas) [(Jaillard et al, 2018)](https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1007758) and brings it to the metagenomic scale. It finds variants significantly associated with a given phenotype of interest, and output its findings in a web page. Thta web page shows the selected unitigs with their surounding graph component, and a user-provided annotation can be used.
 
+# Overview
+
+![Schematic of metadbgwas](/figures/figure_pipeline.png?raw=true "Pipeline Overview")
+
+# Output
+
+![Output example](/figures/supp_comp_table "Output example of Metadbgwas")
+
 # Requirements
 
 * [GCC](https://gcc.gnu.org/) >= 9.4
