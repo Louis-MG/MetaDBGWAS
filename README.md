@@ -18,7 +18,7 @@ This tool expands the work of [DBGWAS](https://gitlab.com/leoisl/dbgwas) [(Jaill
 
 # Output
 
-![Output example](/figures/supp_comp_table "Output example of Metadbgwas")
+![Output example](/figures/supp_comp_table?raw=true "Output example of Metadbgwas")
 
 # Requirements
 
