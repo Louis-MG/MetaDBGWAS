@@ -62,7 +62,7 @@ NOTE: path should be absolute.
 NOTE: if your datset contains different bacterial genomes with very different size, it is better to choose --k option and provide the pick-rate (noted alpha).
 --K <int> <int> kmer length and approximate genome size (in base). Recommended is 17 G.
         or
---k <int> <int> <float> kmer length and genome size (in base), alpha (probability of sampling a kmer). Recommended is 17 G alpha. alpha is best chosen at 70/coverage.
+--k <int> <int> <float> kmer length and genome size (in base), alpha (probability of sampling a kmer). Recommended is 17 G alpha. alpha is best chosen at 7/coverage.
 
 	* Bcalm2
 --kmer <int> kmer length used for unitigs build. Default to 31.
