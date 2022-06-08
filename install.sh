@@ -40,7 +40,7 @@ make -j 4
 
 cd ..
 
-chmod +x metadbgwas.sh
-chmod +x ./tools/gemma/gemma.0.93b
-chmod +x ./tools/phantomjs/phantomjs
+chmod +x Metadbgwas/metadbgwas.sh
+chmod +x Metadbgwas//tools/gemma/gemma.0.93b
+chmod +x Metadbgwas/tools/phantomjs/phantomjs
 echo "${GREEN}Installation complete !${NC} ${GREEN_BACKGROUND}Do not forget to install the R libraries !${NC}"
