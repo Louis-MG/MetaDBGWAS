@@ -284,7 +284,7 @@ if [ $skip3 = false ]
 then
 	mkdir $output/step1
 	# first we index:
-	$metadbgwas_path/REINDEER/Reindeer --index -f $output/unitigs/fof_unitigs_index.txt -o $output/matrix -k $kmer -t $threads
+	$metadbgwas_path/REINDEER/Reindeer --index -f $output/unitigs/fof_unitigs_index.txt -o $output/matrix -k $kmer -t 1
 	#then we query the unitigs on the index of kmers we built precendently:
 	$metadbgwas_path/REINDEER/Reindeer --query -l $output/matrix -q $output/unitigs/unitigs.fa -o $output/matrix -t 1 -P 0
 else
