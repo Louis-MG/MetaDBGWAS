@@ -14,7 +14,7 @@ This tool expands the work of [DBGWAS](https://gitlab.com/leoisl/dbgwas) [(Jaill
 
 # Overview
 
-![Schematic of metadbgwas](/figures/figure_pipeline.png?raw=true "Pipeline Overview")
+![Schematic of metadbgwas](/figures/figure_pipeline_pres.png?raw=true "Pipeline Overview")
 
 # Output
 
