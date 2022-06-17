@@ -14,6 +14,7 @@ This tool expands the work of [DBGWAS](https://gitlab.com/leoisl/dbgwas) [(Jaill
 
 # Overview
 
+You can find the internship report for this project in the report folder.
 ![Schematic of metadbgwas](/figures/figure_pipeline_pres.png?raw=true "Pipeline Overview")
 
 # Output

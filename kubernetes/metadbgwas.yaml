@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: Metadbgwas_pipeline
+  labels:
+    role: pipeline
+spec:
+  container:
+  - name: Metadbgwas
+    image: metadbgwas:1.0
