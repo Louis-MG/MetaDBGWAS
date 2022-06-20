@@ -10,11 +10,11 @@ Metadbgwas
 
 # Motivation
 
-This tool expands the work of [DBGWAS](https://gitlab.com/leoisl/dbgwas) [(Jaillard et al, 2018)](https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1007758) and brings it to the metagenomic scale. It finds variants significantly associated with a given phenotype of interest, and output its findings in a web page. Thta web page shows the selected unitigs with their surounding graph component, and a user-provided annotation can be used.
+This tool expands the work of [DBGWAS](https://gitlab.com/leoisl/dbgwas) [(Jaillard et al, 2018)](https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1007758) and brings it to the metagenomic scale. It finds variants significantly associated with a given phenotype of interest, and output its findings in a web page. That web page shows the selected unitigs with their surounding graph component, and a user-provided annotation can be used.
 
 # Overview
 
-You can find the internship report for this project in the report folder.
+You can find the internship report for this project in the `report/` folder.
 ![Schematic of metadbgwas](/figures/figure_pipeline_pres.png?raw=true "Pipeline Overview")
 
 # Output
@@ -92,7 +92,7 @@ bash metadbgwas.sh --files /input --output /output --K 17 6000000
 
 # Docker
 
-An image is hosted on Docker hub. You can also build it localy using the dockerfile located in /docker. 
+An image is hosted on Docker hub. You can also build it localy using the dockerfile located in `/docker`. 
 
 ```bash
 docker pull 007ptar007/metadbgwas:latest
