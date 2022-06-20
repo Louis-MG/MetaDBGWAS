@@ -1,0 +1,42 @@
+{% set version = "1.0.0" %}
+
+package:
+  name: metadbgwas
+  version: {{ version }}
+
+source:
+  git_url: https://github.com/Louis-MG/Metadbgwas.git
+  git_rev: 1.0
+  git_depth: 1
+
+build:
+  noarch: python # a enlever je pense
+  number: 0
+  script: sh install.sh .
+
+requirements:
+  build:
+    - git
+    - cmake
+    - make
+    - {{ compiler('c') }}
+    - 
+  host:
+    - python
+    - ???????????
+  run:
+    - version of help msg
+
+test:
+  imports:
+    - change for the help command
+
+about:
+  home: https://github.com/shibukawa/imagesize_py
+  license: Zlib
+  summary: 'Finding variants of all sizes significantly linked to a phenotypoe of interest in metagenomics datasets.'
+  description: |
+    TODO
+  dev_url: link
+  doc_url: link
+  doc_source_url: add .rst
