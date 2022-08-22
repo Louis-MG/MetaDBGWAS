@@ -1,0 +1,10 @@
+The next steps of this project are the following :
+
+- write the wiki to explain the different steps in details
+- see if I can add the program to conda with a yaml file
+
+Furthermore :
+
+- change the input file with the info of each file to add a column with the approximate genome size, thus allowing for a run of Lighter with different parameters when needed instead f the unique one we have right now
+- change the way lighter is used to accomodate for the above modification
+- parallelize the load for Lighter and others if more than a threshold of threads given ?
