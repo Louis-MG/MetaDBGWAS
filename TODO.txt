@@ -5,6 +5,5 @@ The next steps of this project are the following :
 
 Furthermore :
 
-- change the input file with the info of each file to add a column with the approximate genome size, thus allowing for a run of Lighter with different parameters when needed instead f the unique one we have right now
-- change the way lighter is used to accomodate for the above modification
+- remove Lighter from the pipeline and change it eventually for Rcorrector or make a new tool
 - parallelize the load for Lighter and others if more than a threshold of threads given ?

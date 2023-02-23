@@ -121,7 +121,7 @@ exit
 
 #Parameters parsing
 
-while [ $# > 1 ]
+while [[ $# -gt 1 ]]
 do
 	case $1 in
 	-f | --files) files="$2"
@@ -178,7 +178,7 @@ if [ -d $output ]
 then
 	if [ $skip1 = false ]
 	then
-		if [ "$(ls -A $output)" ]
+		if [ "$(ls $output)" ]
 		then
 	    		echo "$output is not Empty." #folder should be emptied or removed for a new run
 			exit 0
