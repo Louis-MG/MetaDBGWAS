@@ -43,4 +43,4 @@ cd ..
 chmod +x ./metadbgwas.sh
 chmod +x ./tools/gemma/gemma.0.93b
 chmod +x ./tools/phantomjs/phantomjs
-echo -e "${GREEN}Installation complete !${NC} ${GREEN_BACKGROUND}Do not forget to install the R libraries !${NC}"
+echo -e "${GREEN}Installation complete !${NC}"

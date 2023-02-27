@@ -87,7 +87,7 @@ Reindeer uses kmer, threads, and output parameters. No others need to be specifi
 # Exemple
 
 ```bash
-bash metadbgwas.sh --files /input --output /output --K 17 6000000
+bash metadbgwas.sh --files ./input --output ./output --K 17 6000000 --strains ./strains 
 ```
 
 # Docker
@@ -96,7 +96,7 @@ An image is hosted on Docker hub. You can also build it localy using the dockerf
 
 ```bash
 docker pull 007ptar007/metadbgwas:latest
-docker run -v 'path/to/input/folder:/input' metadbgwas --files ./input --strains /input/strains --threads 40 --output ./output --K 17 G
+docker run -v 'path/to/input/folder:/input' metadbgwas --files ./input --strains ./input/strains --threads 40 --output ./output --K 17 G
 ```
 
 # Singularity
@@ -105,7 +105,7 @@ You can also run the docker image with singularity:
 
 ```bash
 singularity pull docker://007ptar007/metadbgwas
-singularity run -H /path/to/input metadbgwas_latest.sif --files ./input --strains /input/strains --threads 40 --output ./output --K 17 G
+singularity run -H /path/to/input metadbgwas_latest.sif --files ./input --strains ./input/strains --threads 40 --output ./output --K 17 G
 ```
 
 # Output
