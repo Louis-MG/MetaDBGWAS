@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Louis-Mael Gueguen lm.gueguen@orange.fr
 
@@ -116,12 +116,11 @@ Reindeer uses kmer, threads, and output parameters. No others need to be specifi
         * Exemple
 bash metadbgwas.sh --files /test/ --output ./output --threads 4 --verbose 1 --K 17 6000000
 	"
-exit
 }
 
 #Parameters parsing
 
-while [[ $# -gt 1 ]]
+while [[ $# -gt 0 ]]
 do
 	case $1 in
 	-f | --files) files="$2"
@@ -164,7 +163,7 @@ do
 	shift 2;;
 	-h | --help) Help; exit;;
 	-* | --*) echo "Unknown option"; Help; exit;;
-	*) break;
+	*) ;;
 	esac
 done
 
@@ -210,7 +209,7 @@ fi
 #else tells user that file is not found
 if [ $verbose -ge 1 ] && [ $skip1 = false ]
 then
-        echo "${GREEN}Starting kmer corrections with Lighter ...${NC}"
+        echo -e "${GREEN}Starting kmer corrections with Lighter ...${NC}"
 fi
 
 if [ $skip1 = false ]
@@ -229,7 +228,7 @@ then
 		done
 	fi
 else
-	echo "${GREEN}Skipping Lighter step ...${NC}"
+	echo -e "${GREEN}Skipping Lighter step ...${NC}"
 fi
 
 
@@ -244,7 +243,7 @@ then
 	find $output/*.cor.f* -type f > $output/fof.txt
 	if [ $verbose -ge 1 ] #loop to silence the command if --verbose is at 0
 	then
-		echo "${GREEN}Starting Bcalm2 ...${NC}"
+		echo -e "${GREEN}Starting Bcalm2 ...${NC}"
 		verbosity_level='-verbose $verbose'
 	else
 		verbosity_level=''
@@ -271,7 +270,7 @@ then
 	fi
 	rm $output/unitigs/fof.h5
 else
-	echo "${GREEN}Skipping Bcalm2 step ...${NC}"
+	echo -e "${GREEN}Skipping Bcalm2 step ...${NC}"
 fi
 
 #############################################
@@ -288,7 +287,7 @@ then
 	#then we query the unitigs on the index of kmers we built precendently:
 	$metadbgwas_path/REINDEER/Reindeer --query -l $output/matrix -q $output/unitigs/unitigs.fa -o $output/matrix -t 1 -P 0
 else
-	echo "${GREEN}Skipping REINDEER step ...${NC}"
+	echo -e "${GREEN}Skipping REINDEER step ...${NC}"
 fi
 
 #############################################
