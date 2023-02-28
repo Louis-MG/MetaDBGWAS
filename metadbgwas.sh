@@ -120,6 +120,12 @@ bash metadbgwas.sh --files /test/ --output ./output --threads 4 --verbose 1 --K 
 
 #Parameters parsing
 
+if [[ $# -eq 0 ]]
+then
+	Help
+	exit
+fi
+
 while [[ $# -gt 0 ]]
 do
 	case $1 in
@@ -281,7 +287,10 @@ fi
 
 if [ $skip3 = false ]
 then
-	mkdir $output/step1
+	if [ -d $output/step1 ]
+	then
+		mkdir $output/step1
+	fi
 	# first we index:
 	$metadbgwas_path/REINDEER/Reindeer --index -f $output/unitigs/fof_unitigs_index.txt -o $output/matrix -k $kmer -t 1
 	#then we query the unitigs on the index of kmers we built precendently:
