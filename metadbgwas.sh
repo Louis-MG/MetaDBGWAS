@@ -3,8 +3,8 @@
 # Louis-Mael Gueguen lm.gueguen@orange.fr
 
 
-GREEN='\e[0;32m' # green color
-NC='\e[0m' # No Color
+GREEN=$(tput setaf 2) # green color
+NC=$(tput sgr0) # No Color
 
 #############################################
 #
@@ -114,7 +114,7 @@ Reindeer uses kmer, threads, and output parameters. No others need to be specifi
 --help displays help.
 
         * Exemple
-bash metadbgwas.sh --files /test/ --output ./output --threads 4 --verbose 1 --K 17 6000000
+bash metadbgwas.sh --files ./test/ --output ./output --strains ./strains --threads 4 --verbose 1 --K 17 6000000
 	"
 }
 
@@ -212,7 +212,6 @@ fi
 #
 #############################################
 
-#else tells user that file is not found
 if [ $verbose -ge 1 ] && [ $skip1 = false ]
 then
         echo -e "${GREEN}Starting kmer corrections with Lighter ...${NC}"
@@ -220,17 +219,26 @@ fi
 
 if [ $skip1 = false ]
 then
-	#checks folder existence
+	counter_total=$(ls -1 $files/*.f* | wc -l)
+	counter=1
         if [ $alpha -gt 0 ]
         then
 		for i in $files/*.f*
 		do
+			echo -ne "${counter}/${counter_total} Processing files ...\n"
 			$metadbgwas_path/Lighter/lighter -r ${i} -od $output -t $threads -discard -k $kmer_l $genome_size $alpha
+			tput cuu 14
+			tput ed
+			counter=$(($counter+1))
 		done
 	else
 		for i in $files/*.f*
 		do
+			echo -ne "${counter}/${counter_total} Processing files ...\n"
 			$metadbgwas_path/Lighter/lighter -r ${i} -od $output -t $threads -discard -K $kmer_l $genome_size
+			tput cuu 14
+			tput ed
+			counter=$(($counter+1))
 		done
 	fi
 else
@@ -255,12 +263,16 @@ then
 		verbosity_level=''
 	fi
 	mkdir $output/unitigs
+	counter_total=$(ls -1 $output/*.cor.f* | wc -l)
+	counter=1
 	#we create the de Bruijn Graph of the files we want to index
 	for i in $output/*.cor.f*
 	do
-		echo $i
+		echo "${counter}/${counter_total} Processing files ..."
 	        $metadbgwas_path/bcalm/build/bcalm -in $i -kmer-size $kmer -nb-cores $threads  $verbosity_level -abundance-min 1 # TODO: add the -out option to give prefix and avoid moving files around
 		mv *.unitigs.fa $output/unitigs
+		tput cuu 5
+		tput ed
 	done
 	find $output/unitigs/*.unitigs.fa -type f > $output/unitigs/fof_unitigs_index.txt
 	#the option abundance min is used to keep all kmers: we already corrected them, and not keeping them all to build the unitigs would have 2 unfortunate consequences :
@@ -291,6 +303,7 @@ then
 	then
 		mkdir $output/step1
 	fi
+	echo -e "${GREEN}Starting REINDEER${NC}"
 	# first we index:
 	$metadbgwas_path/REINDEER/Reindeer --index -f $output/unitigs/fof_unitigs_index.txt -o $output/matrix -k $kmer -t 1
 	#then we query the unitigs on the index of kmers we built precendently:
