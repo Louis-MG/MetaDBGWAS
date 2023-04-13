@@ -111,7 +111,7 @@ void input_files_gen::execute ()
     std::vector<std::string> filenames ;
     std::map<std::vector<int>, std::vector<int>> map_unique_to_all ; //each time a unique is met, insert the pattern as a key and the n in the vector of values
     SKmer raw_data;
-    SKmer binarised_data;
+    //SKmer binarised_data; // TODO:supp
     SKmer data;
     std::string line_buffer;
     int corrected;
@@ -126,13 +126,10 @@ void input_files_gen::execute ()
         cout << strains->at(i).id << endl;
     }
     int n = 0; // line counter
-    while(std::getline(stream, line_buffer).good()) {
-        if (line_buffer.starts_with("query")) {
+    while(std::getline(stream, line_buffer, 't').good()) {
+        if (line_buffer.starts_with("query")) {             //TODO: voir si j'ai besoin de la condition pour traiter la premiere ligne
             // we obtain the file names and store them:
-            std::istringstream input(line_buffer);
-            for (std::string word; std::getline(input, word, ' '); ) {
-                filenames.push_back(word);
-            }
+            filenames.push_back(line_buffer);
             // removes "query"
             filenames.erase(filenames.begin());
             // write the header of all_rows :
@@ -143,6 +140,7 @@ void input_files_gen::execute ()
         } else {
             // we write the body:
             // 1: parse the line and build the SKmer
+
             raw_data = process_line(line_buffer);
             // 2: adds the counts to the PhenoCounter vector
             //TODO: verifier code
@@ -150,9 +148,9 @@ void input_files_gen::execute ()
                 unitigs2PhenoCounter[n].add((*strains)[i].phenotype, raw_data.pattern.at(i));
             }
             // 2: changes abundance counts to presence/absence (0 stays 0 and more than 1 becomes 1)
-            binarised_data = binarise_counts(raw_data);
+            //binarised_data = binarise_counts(raw_data); //TODO: enlever
             // 3: change, if needed, the allele description of the SKmer
-            data = minor_allele_description(binarised_data);
+            data = minor_allele_description(raw_data);
             // 4: keep track of the change in allele description
             corrected = (data.corrected) ? -1 : 1;
             weight_corr_track << corrected << "\n";
@@ -231,29 +229,24 @@ void input_files_gen::execute ()
     remove((referenceOutputFolder+string("/graph.h5")).c_str());
 }
 
+//TODO: je n'ai normalement plus vraiment besoin de cette ligne, juste d'enlever le nom du kmer
 SKmer process_line(const std::string& line_buffer) {
     /*
-     * this function processes lines by putting them in a structure than contains  the Kmer name, a vector of its abundance pattern. Ignores the corrected attribute.
+     * this function processes lines by putting them in a structure than contains a vector of its abundance pattern. Ignores the corrected attribute.
      */
+    std::vector<string> line;
     std::vector<int> output_pattern;
     std::istringstream input(line_buffer);
-    //loop over tab-separated words in the line :
-    for (std::string word; std::getline(input, word, '\t'); ) {
-        if (word.starts_with(">")) { // if id resets line
-            continue;
-        } else if (word.ends_with("*")) { // if abundance is 0
-            output_pattern.push_back(0);
-        } else { // if abundance is more than 0
-            size_t lastindex = word.find_last_of(":");
-            std::string appearance_nb = word.substr(lastindex+1,word.size()-lastindex); // finds 17 in 0-20:17
-            output_pattern.push_back(std::stoi(appearance_nb));
-        }
+    //deletes the first element (kmer id) to keep only the pattern
+    line.push_back(line_buffer) ;
+    line.erase(line.begin());
+    for (const auto & i : line) {
+        output_pattern.push_back(std::stoi(i));
     }
-    // Kmer output_struct{kmer_name, output_pattern};
-    // output_pattern.clear();
     return {output_pattern};
 }
 
+//TODO: supprimer cette fonciton
 SKmer binarise_counts(SKmer& data1) {
     /*
      * this function binaries the abundance of a SKmer
