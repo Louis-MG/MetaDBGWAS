@@ -219,28 +219,54 @@ fi
 
 if [ $skip1 = false ]
 then
-	counter_total=$(ls -1 $files/*.f* | wc -l)
-	counter=1
-        if [ $alpha -gt 0 ]
-        then
-		for i in $files/*.f*
-		do
-			echo -ne "${counter}/${counter_total} Processing files ...\n"
-			$metadbgwas_path/Lighter/lighter -r ${i} -od $output -t $threads -discard -k $kmer_l $genome_size $alpha
-			tput cuu 14
-			tput ed
-			counter=$(($counter+1))
-		done
-	else
-		for i in $files/*.f*
-		do
-			echo -ne "${counter}/${counter_total} Processing files ...\n"
-			$metadbgwas_path/Lighter/lighter -r ${i} -od $output -t $threads -discard -K $kmer_l $genome_size
-			tput cuu 14
-			tput ed
-			counter=$(($counter+1))
-		done
-	fi
+	if [ -d $files ] #if the argument is a path to the files
+	then
+		counter_total=$(ls -1 $files/*.f* | wc -l)
+		counter=1
+	        if [ $alpha -gt 0 ]
+	        then
+			for i in $files/*.f*
+			do
+				echo -ne "${counter}/${counter_total} Processing files ...\n"
+				$metadbgwas_path/Lighter/lighter -r ${i} -od $output -t $threads -discard -k $kmer_l $genome_size $alpha
+				tput cuu 14
+				tput ed
+				counter=$(($counter+1))
+			done
+		else
+			for i in $files/*.f*
+			do
+				echo -ne "${counter}/${counter_total} Processing files ...\n"
+				$metadbgwas_path/Lighter/lighter -r ${i} -od $output -t $threads -discard -K $kmer_l $genome_size
+				tput cuu 14
+				tput ed
+				counter=$(($counter+1))
+			done
+		fi
+	else #if the argument if a fof
+		counter_total=$(cat $files | wc -l)
+                counter=1
+                if [ $alpha -gt 0 ]
+                then
+                        while read line :
+                        do
+                                echo -ne "${counter}/${counter_total} Processing files ...\n"
+                                $metadbgwas_path/Lighter/lighter -r ${line} -od $output -t $threads -discard -k $kmer_l $genome_size $alpha
+                                tput cuu 14
+                                tput ed
+                                counter=$(($counter+1))
+                        done < $files
+                else
+                        while read line:
+                        do
+                                echo -ne "${counter}/${counter_total} Processing files ...\n"
+                                $metadbgwas_path/Lighter/lighter -r ${line} -od $output -t $threads -discard -K $kmer_l $genome_size
+                                tput cuu 14
+                                tput ed
+                                counter=$(($counter+1))
+                        done < $files
+                fi
+
 else
 	echo -e "${GREEN}Skipping Lighter step ...${NC}"
 fi
@@ -305,11 +331,11 @@ then
 	then
 		mkdir $output/step1
 	fi
-	echo -e "${GREEN}Starting Bifrost{NC}"
+	echo -e "${GREEN}Starting Bifrost${NC}"
 	# first we build the colored dbg:
-	$metadbgwas_path/Bifrost/build/src/Bifrost build -t $threads --colors --input-ref-file $output/unitigs/fof_unitigs_index.txt -o $output/step1/bifrost_colored_dbg
+	$metadbgwas_path/bifrost/build/src/Bifrost build -t $threads --colors --input-ref-file $output/unitigs/fof_unitigs_index.txt -o $output/step1/bifrost_colored_dbg
 	#then we query the unitigs on the bdg of kmers we built precendently:
-	$metadbgwas_path/Bifrost/build/src/Bifrost query -t $threads -e 1 --input-graph-file $output/step1/bifrost_colored_dbg.gfa.gz --input-query-file $kmdiff --input-color-file $output/step1/bifrost_colored_dbg.color.bfg -o $output/step1/result_genomes_bifrost_query
+	$metadbgwas_path/bifrost/build/src/Bifrost query -t $threads -e 1 --input-graph-file $output/step1/bifrost_colored_dbg.gfa.gz --input-query-file $kmdiff --input-color-file $output/step1/bifrost_colored_dbg.color.bfg -o $output/step1/result_genomes_bifrost_query
 else
 	echo -e "${GREEN}Skipping Bifrost step ...${NC}"
 fi
