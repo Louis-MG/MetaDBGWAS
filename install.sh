@@ -27,12 +27,13 @@ mkdir build;  cd build;  cmake ..;  make -j 4
 
 cd ../..
 
-echo -e "${GREEN}Starting REINDEER installation${NC}"
-cd REINDEER
-sed -i "51i#include <limits>" ./blight/robin_hood.h #temporary fix for REINDEER compilation
+echo -e "${GREEN}Starting Bifrost installation${NC}"
+cd Bifrost
+cd bifrost && mkdir build && cd build
+cmake ..
 make
 
-cd ..
+cd ../..
 
 echo -e "${GREEN}Compiling MetaDBGWAS in tool/src/${NC}"
 cmake .
