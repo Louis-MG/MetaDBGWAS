@@ -11,7 +11,7 @@ Rscript -e "install.packages('https://raw.githubusercontent.com/sgearle/bugwas/m
 
 #C++ lib
 echo -e "${GREEN}Starting C++ libraries installation${NC}"
-sudo apt install -y libgatbcore-dev libhdf5-dev libboost-all-dev libpstreams-dev zlib1g-dev g++ cmake git r-base-core
+sudo apt install -y libgatbcore-dev libhdf5-dev libboost-all-dev libpstreams-dev zlib1g-dev g++ cmake git r-base-core build-essentials
 
 #lighter compilation
 echo -e "${GREEN}Starting Lighter installation${NC}"

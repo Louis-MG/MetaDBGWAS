@@ -28,6 +28,7 @@ Here is an example of the output of Metadbgwas: significant components are shown
 * [GCC](https://gcc.gnu.org/) >= 9.4
 * [CMAKE](https://cmake.org/) > 3.10.0
 * [zlib](https://en.wikipedia.org/wiki/Zlib)
+* [build-essentials](https://pkgs.org/download/build-essential)
 * [pthreads](https://en.wikipedia.org/wiki/Pthreads)
 * [blast](https://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs&DOC_TYPE=Download) The blast suite in your path
 * [R](https://www.r-project.org/) >= 3.2.0 
@@ -69,7 +70,7 @@ NOTE: if your datset contains different bacterial genomes with very different si
 --kmer <int> kmer length used for unitigs build. Default to 31.
 --abundance-min <int> minimum number of occurence of a kmer to keep it in the union DBG. Default to 5, highly recommended to change to the 2.5% quantile of the Poisson law with lambda = coverage.
 
-	* Reindeer
+	* Bifrost
 Reindeer uses kmer, threads, and output parameters. No others need to be specified.
 
         * DBGWAS
@@ -113,7 +114,6 @@ singularity run -H /path/to/input metadbgwas_latest.sif --files ./input --strain
 User can find in the output folder :
 - the corrected fasta files.
 - unitigs folder with bcalm2 output, sample-wise and dataset-wise. 
-- matrix folder with the matrix of absence/presence of kmers in the unitigs. Ouptut from Reindeer.
 - step1, step2 and step3 that contains internal files of the modified DBGWAS
 - visualisation contains visulatisation files.
 - command_line.txt with the paremeters used for the execution
