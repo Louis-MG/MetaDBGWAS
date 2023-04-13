@@ -7,3 +7,5 @@ Furthermore :
 
 - remove Lighter from the pipeline and change it eventually for Rcorrector or make a new tool
 - parallelize the load for Lighter and others if more than a threshold of threads given ?
+- remove REINDEER
+- add bifrost
