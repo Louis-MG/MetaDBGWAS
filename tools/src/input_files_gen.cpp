@@ -84,7 +84,7 @@ void input_files_gen::execute ()
     // create the vector for the Pheno files:
     int nbUnitigs = getNbLinesInFile(referenceOutputFolder + string("/unitigs/unitigs.fa"));
     std::vector< PhenoCounter > unitigs2PhenoCounter(nbUnitigs);
-    std::string matrix = referenceOutputFolder + "/matrix/query_results/out_query_Reindeer_P0_unitigs_0.out";
+    std::string matrix = referenceOutputFolder + "/step1/result_genomes_bifrost_query.tsv";
     std::string output = "/bugwas_input.all_rows.binary" ;
     // streams
     std::ifstream stream (matrix, std::ifstream::binary);
