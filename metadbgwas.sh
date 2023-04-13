@@ -293,23 +293,25 @@ fi
 
 #############################################
 #
-#	Reindeer
+#	Bifrost
 #
 #############################################
 
+
+#TODO: make the fof, use the correct folder structure
 if [ $skip3 = false ]
 then
 	if [ -d $output/step1 ]
 	then
 		mkdir $output/step1
 	fi
-	echo -e "${GREEN}Starting REINDEER${NC}"
-	# first we index:
-	$metadbgwas_path/REINDEER/Reindeer --index -f $output/unitigs/fof_unitigs_index.txt -o $output/matrix -k $kmer -t 1
-	#then we query the unitigs on the index of kmers we built precendently:
-	$metadbgwas_path/REINDEER/Reindeer --query -l $output/matrix -q $output/unitigs/unitigs.fa -o $output/matrix -t 1 -P 0
+	echo -e "${GREEN}Starting Bifrost{NC}"
+	# first we build the colored dbg:
+	$metadbgwas_path/Bifrost/build/src/Bifrost build -t $threads --colors --input-ref-file $output/unitigs/fof_unitigs_index.txt -o $output/step1/bifrost_colored_dbg
+	#then we query the unitigs on the bdg of kmers we built precendently:
+	$metadbgwas_path/Bifrost/build/src/Bifrost query -t $threads -e 1 --input-graph-file $output/step1/bifrost_colored_dbg.gfa.gz --input-query-file $kmdiff --input-color-file $output/step1/bifrost_colored_dbg.color.bfg -o $output/step1/result_genomes_bifrost_query
 else
-	echo -e "${GREEN}Skipping REINDEER step ...${NC}"
+	echo -e "${GREEN}Skipping Bifrost step ...${NC}"
 fi
 
 #############################################
