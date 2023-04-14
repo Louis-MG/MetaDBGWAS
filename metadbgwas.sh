@@ -266,7 +266,7 @@ then
                                 counter=$(($counter+1))
                         done < $files
                 fi
-
+	fi
 else
 	echo -e "${GREEN}Skipping Lighter step ...${NC}"
 fi
