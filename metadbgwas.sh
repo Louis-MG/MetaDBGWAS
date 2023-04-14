@@ -335,7 +335,7 @@ then
 	# first we build the colored dbg:
 	$metadbgwas_path/bifrost/build/src/Bifrost build -t $threads --colors --input-ref-file $output/unitigs/fof_unitigs_index.txt -o $output/step1/bifrost_colored_dbg
 	#then we query the unitigs on the bdg of kmers we built precendently:
-	$metadbgwas_path/bifrost/build/src/Bifrost query -t $threads -e 1 --input-graph-file $output/step1/bifrost_colored_dbg.gfa.gz --input-query-file $kmdiff --input-color-file $output/step1/bifrost_colored_dbg.color.bfg -o $output/step1/result_genomes_bifrost_query
+	$metadbgwas_path/bifrost/build/src/Bifrost query -t $threads -e 1 --input-graph-file $output/step1/bifrost_colored_dbg.gfa.gz --input-query-file $output/unitigs/unitigs.fa --input-color-file $output/step1/bifrost_colored_dbg.color.bfg -o $output/step1/result_genomes_bifrost_query
 else
 	echo -e "${GREEN}Skipping Bifrost step ...${NC}"
 fi
