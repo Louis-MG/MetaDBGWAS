@@ -327,7 +327,7 @@ fi
 #TODO: make the fof, use the correct folder structure
 if [ $skip3 = false ]
 then
-	if [ -d $output/step1 ]
+	if [ ! -d $output/step1 ]
 	then
 		mkdir $output/step1
 	fi
