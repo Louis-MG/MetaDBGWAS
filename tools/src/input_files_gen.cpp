@@ -126,7 +126,7 @@ void input_files_gen::execute ()
         cout << strains->at(i).id << endl;
     }
     int n = 0; // line counter
-    while(std::getline(stream, line_buffer, 't').good()) {
+    while(std::getline(stream, line_buffer, '\t').good()) {
         if (line_buffer.starts_with("query")) {             //TODO: voir si j'ai besoin de la condition pour traiter la premiere ligne
             // we obtain the file names and store them:
             filenames.push_back(line_buffer);
