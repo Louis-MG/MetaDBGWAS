@@ -90,7 +90,7 @@ void copyDirectoryRecursively(const fs::path& sourceDir, const fs::path& destina
     const auto& path = dirEnt.path();
     auto relativePathStr = path.string();
     boost::replace_first(relativePathStr, sourceDir.string(), "");
-    fs::copy(path, destinationDir / relativePathStr);
+    fs::copy(path, destinationDir / relativePathStr, fs::copy_options::update_existing);
   }
 }
 
