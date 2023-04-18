@@ -185,11 +185,8 @@ then
 	then
 		if [ "$(ls $output)" ]
 		then
-	    		echo "$output is not Empty." #folder should be emptied or removed for a new run
-			exit 0
+	    		echo "Warning: $output is not Empty." #folder should be emptied or removed for a new run
 		fi
-	else
-		break
 	fi
 #else the folder does not exists and it is created
 else
@@ -297,7 +294,7 @@ then
 		echo "${counter}/${counter_total} Processing files ..."
 	        $metadbgwas_path/bcalm/build/bcalm -in $i -kmer-size $kmer -nb-cores $threads  $verbosity_level -abundance-min 1 # TODO: add the -out option to give prefix and avoid moving files around
 		mv *.unitigs.fa $output/unitigs
-		tput cuu 5
+		tput cuu 6
 		tput ed
 	done
 	find $output/unitigs/*.unitigs.fa -type f > $output/unitigs/fof_unitigs_index.txt

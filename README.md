@@ -71,7 +71,7 @@ NOTE: if your datset contains different bacterial genomes with very different si
 --abundance-min <int> minimum number of occurence of a kmer to keep it in the union DBG. Default to 5, highly recommended to change to the 2.5% quantile of the Poisson law with lambda = coverage.
 
 	* Bifrost
-Reindeer uses kmer, threads, and output parameters. No others need to be specified.
+Bifrost uses kmer, threads, and output parameters. No others need to be specified.
 
         * DBGWAS
 --strains A text file describing the strains containing 3 columns: 1) ID of the strain; 2) Phenotype (a real number or NA); 3) Path to a multi-fasta file containing the sequences of the strain. This fil>
