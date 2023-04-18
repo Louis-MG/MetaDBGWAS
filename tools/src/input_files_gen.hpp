@@ -45,7 +45,6 @@ struct SKmer {
 
 // declarations
 SKmer process_line(const std::string& line_buffer);
-//SKmer binarise_counts(SKmer& data); // TODO: supp
 SKmer minor_allele_description(SKmer& data);
 void write_bugwas_gemma(const std::string& outputFolder, const std::vector<std::vector<int>>& vector_of_unique_patterns, std::string& rawname, std::vector<std::string>& filenames, std::map<std::vector<int>, std::vector<int>>& map_unique_to_all);
 

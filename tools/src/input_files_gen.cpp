@@ -111,7 +111,6 @@ void input_files_gen::execute ()
     std::vector<std::string> filenames ;
     std::map<std::vector<int>, std::vector<int>> map_unique_to_all ; //each time a unique is met, insert the pattern as a key and the n in the vector of values
     SKmer raw_data;
-    //SKmer binarised_data; // TODO:supp
     SKmer data;
     std::string line_buffer;
     int corrected;
@@ -119,17 +118,28 @@ void input_files_gen::execute ()
     // prepare the header
     outstream << "ps ";
     // read the data line by line
-    // sorts the strains to get them in the same order as the files, thus in the order of the reindeer output matrix //TODO: check that this is valid
+    // sorts the strains to get them in the same order as the files, thus in the order of the reindeer output matrix
     std::sort((*strains).begin(), (*strains).end(), [](const Strain& a, const Strain& b) {return a.path < b.path;});
-    for (int i = 0; filenames.size(); i++) {
-        cout << filenames.at(i) << endl;
-        cout << strains->at(i).id << endl;
-    }
+    //TODO: sert plus a rien, filename est vide
+    //for (int i = 0; filenames.size(); i++) {
+    //    cout << filenames.at(i) << endl;
+    //    cout << strains->at(i).id << endl;
+    //}
     int n = 0; // line counter
-    while(std::getline(stream, line_buffer, '\t').good()) {
-        if (line_buffer.starts_with("query")) {             //TODO: voir si j'ai besoin de la condition pour traiter la premiere ligne
+    while(std::getline(stream, line_buffer).good()) {
+        if (line_buffer.starts_with("query")) {
             // we obtain the file names and store them:
-            filenames.push_back(line_buffer);
+            std::istringstream input(line_buffer);
+            for (std::string word; std::getline(input, word, '\t'); ) {
+                //std:istringstream word_input(word);
+                //std::string name ;
+                //std::vector<std::string> file_name_vector;
+                //while(getline(word_input, name, '.')) {
+                //    file_name_vector.push_back(name);
+                //   filenames.push_back(file_name_vector.at(0));
+                //}
+                filenames.push_back(word);
+            }
             // removes "query"
             filenames.erase(filenames.begin());
             // write the header of all_rows :
@@ -140,15 +150,12 @@ void input_files_gen::execute ()
         } else {
             // we write the body:
             // 1: parse the line and build the SKmer
-
             raw_data = process_line(line_buffer);
             // 2: adds the counts to the PhenoCounter vector
             //TODO: verifier code
             for (int i =0; i < raw_data.pattern.size(); i++) {
                 unitigs2PhenoCounter[n].add((*strains)[i].phenotype, raw_data.pattern.at(i));
             }
-            // 2: changes abundance counts to presence/absence (0 stays 0 and more than 1 becomes 1)
-            //binarised_data = binarise_counts(raw_data); //TODO: enlever
             // 3: change, if needed, the allele description of the SKmer
             data = minor_allele_description(raw_data);
             // 4: keep track of the change in allele description
@@ -229,38 +236,18 @@ void input_files_gen::execute ()
     remove((referenceOutputFolder+string("/graph.h5")).c_str());
 }
 
-//TODO: je n'ai normalement plus vraiment besoin de cette ligne, juste d'enlever le nom du kmer
 SKmer process_line(const std::string& line_buffer) {
     /*
      * this function processes lines by putting them in a structure than contains a vector of its abundance pattern. Ignores the corrected attribute.
      */
-    std::vector<string> line;
     std::vector<int> output_pattern;
     std::istringstream input(line_buffer);
     //deletes the first element (kmer id) to keep only the pattern
-    line.push_back(line_buffer) ;
-    line.erase(line.begin());
-    for (const auto & i : line) {
-        output_pattern.push_back(std::stoi(i));
+    for (std::string word; std::getline(input, word, '\t');) {
+        output_pattern.push_back(std::stoi(word)) ;
     }
+    output_pattern.erase(output_pattern.begin());
     return {output_pattern};
-}
-
-//TODO: supprimer cette fonciton
-SKmer binarise_counts(SKmer& data1) {
-    /*
-     * this function binaries the abundance of a SKmer
-     */
-    for (int i = 0; i < data1.pattern.size(); i++) {
-        switch (data1.pattern.at(i)) {
-            case 0:
-                break;
-            default:
-                data1.pattern.at(i) = 1;
-                break;
-        }
-    }
-    return data1;
 }
 
 SKmer minor_allele_description(SKmer& data2) {
