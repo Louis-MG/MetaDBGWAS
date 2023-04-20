@@ -54,7 +54,7 @@ int main (int argc, char* argv[])
     srand (time(NULL));
 
     //get the path to the dir were the executable is
-    DBGWAS_exec_location = getDirWhereDBGWASIsInstalled();
+    DBGWAS_exec_location = getDirWhereDBGWASIsInstalled()+"/";
 
     try
     {
