@@ -7,5 +7,4 @@ cd Metadbgwas
 chmod +x metadbgwas.sh
 chmod +x ./tools/phantomjs/phantomjs
 chmod +x ./tools/gemma/gemma.0.93b
-sed -i "51i#include <limits>" ./REINDEER/blight/robin_hood.h #temporary fix for REINDEER compilation
 sh install.sh
