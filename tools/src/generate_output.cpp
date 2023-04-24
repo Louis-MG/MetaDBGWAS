@@ -116,7 +116,7 @@ void generate_output::createIndexFile(int numberOfComponents, const string &visu
       }
       else {
         stringstream commandSS;
-        commandSS << phantomjsPath << " " << "./render_graph.js " << HTMLFile << " " << PNGFile;
+        commandSS << phantomjsPath << " " << DBGWAS_exec_location + "../phantomjs/render_graph.js " << HTMLFile << " " << PNGFile;
         executeCommand(commandSS.str(), false);
       }
 
@@ -611,6 +611,7 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
   cerr << "Rendering " << typeOfGraph << "_" << i << "... - Done!" << endl;
 }
 
+//TODO: TROUVER LE PUTAIN DE PROBLEME
 VertexInfo parse_node(string line) {
     std::vector<string> tmp;
     std::istringstream input(line);
@@ -774,7 +775,7 @@ void generate_output::execute () {
     ifstream graph_stream;
     openFileForReading(nodesFile, graph_stream);
     string line_buffer;
-    EdgeParse edge;
+    EdgeParse edge{};
     VertexInfo node;
     int id;
     int index = 0;
@@ -854,6 +855,7 @@ void generate_output::execute () {
     //get the components of the merged subgraph
     vector<int> componentOfThisNode = vector<int>(num_vertices(newGraph)); //maps node -> component
     int num = connected_components(newGraph, &componentOfThisNode[0]); //gets the components of the graph
+    cout << "nombre de composantes :" << num << endl;
 
     //maps component -> nodes
     nodesInComponent = vector<vector<MyVertex> >(num);
@@ -861,11 +863,12 @@ void generate_output::execute () {
       nodesInComponent[componentOfThisNode[i]].push_back(vertex(i, newGraph));
 
     //generate the subgraph page for each component
-    for (int i = 0; i < nodesInComponent.size(); i++) {
-      generateCytoscapeOutput(newGraph, nodesInComponent[i], "comp", i, tmpFolder, visualisationsFolder, textualOutputFolder, selectedUnitigs, phenoCounterForAllStrains,
-                              idComponent2Annotations, nbCores);
-    }
-    numberOfComponents = nodesInComponent.size();
+    for (int i = 0; i < nodesInComponent.size(); i++)
+          generateCytoscapeOutput(newGraph, nodesInComponent[i], "comp", i, tmpFolder, visualisationsFolder,
+                                  textualOutputFolder, selectedUnitigs, phenoCounterForAllStrains,
+                                  idComponent2Annotations, nbCores);
+
+      numberOfComponents = nodesInComponent.size();
   }
 
   cerr << "[Generating the visualisation files...] - Done!" << endl;
