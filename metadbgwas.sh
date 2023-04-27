@@ -194,7 +194,7 @@ else
 fi
 
 #saves command line:
-echo "--files $files\n--strains $strains\n--output $output\n--kmer $kmer\n--abundance-min $abundance_min\n--k/K $kmer_l $genome_size $alpha\n--newick $newick\n--nc-DB $ncDB\n--pt-db $ptDB\n--keepNA $keepNA\n--threshold $threshold" > $output/command_line.txt
+echo -e "--files $files\n--strains $strains\n--output $output\n--kmer $kmer\n--abundance-min $abundance_min\n--k/K $kmer_l $genome_size $alpha\n--newick $newick\n--nc-DB $ncDB\n--pt-db $ptDB\n--keepNA $keepNA\n--threshold $threshold" > $output/command_line.txt
 
 
 # if verbose is set to 0 : silenceing of the commands (equivaluent to --quiet)
@@ -294,7 +294,7 @@ then
 		echo "${counter}/${counter_total} Processing files ..."
 	        $metadbgwas_path/bcalm/build/bcalm -in $i -kmer-size $kmer -nb-cores $threads  $verbosity_level -abundance-min 1 # TODO: add the -out option to give prefix and avoid moving files around
 		mv *.unitigs.fa $output/unitigs
-		tput cuu 6
+		tput cuu 7
 		tput ed
 	done
 	find $output/unitigs/*.unitigs.fa -type f > $output/unitigs/fof_unitigs_index.txt
@@ -353,7 +353,7 @@ python3 $metadbgwas_path/bcalm/scripts/convertToGFA.py $output/unitigs/unitigs.f
 #fix for pahntomjs
 export OPENSSL_CONF=/dev/null
 # MetaDBGWAS executable that generates input ifles for bugwas and gemma, runs statistical tests, then finally generates output
-$metadbgwas_path/tools/src/MetaDBGWAS --files $output/unitigs/unitigs.fa --output $output --threads $threads --kmer $kmer --strains $strains $keepNA --threads $threads --output $output $ncDB $ptDB $newick $threshold
+$metadbgwas_path/tools/src/MetaDBGWAS --files $output/unitigs/unitigs.fa --output $output --threads $threads --kmer $kmer --strains $strains $keepNA --threads $threads --output $output $ncDB $ptDB $newick $threshold --no-preview
 
 if [ $clean = true ]
 then
