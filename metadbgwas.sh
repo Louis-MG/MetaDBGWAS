@@ -168,7 +168,7 @@ do
 	-v | --verbose) verbose="$2"
 	shift 2;;
 	-h | --help) Help; exit;;
-	-* | --*) echo "Unknown option"; Help; exit;;
+	-* | --*) unknown="$1" ;echo "Unknown option: ${unknown}"; Help; exit;;
 	*) ;;
 	esac
 done
