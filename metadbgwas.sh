@@ -287,16 +287,16 @@ then
 	fi
 	mkdir $output/unitigs
 	counter_total=$(ls -1 $output/*.cor.f* | wc -l)
-	counter=1
+	declare -i counter; counter=1
 	#we create the de Bruijn Graph of the files we want to index
 	for i in $output/*.cor.f*
 	do
 		echo "${counter}/${counter_total} Processing files ..."
 	        $metadbgwas_path/bcalm/build/bcalm -in $i -kmer-size $kmer -nb-cores $threads  $verbosity_level -abundance-min 1 # TODO: add the -out option to give prefix and avoid moving files around
 		mv *.unitigs.fa $output/unitigs
-		tput cuu 6
+		counter+=1 
+		tput cuu 4
 		tput ed
-		((counter++))
 	done
 	find $output/unitigs/*.unitigs.fa -type f > $output/unitigs/fof_unitigs_index.txt
 	#the option abundance min is used to keep all kmers: we already corrected them, and not keeping them all to build the unitigs would have 2 unfortunate consequences :
