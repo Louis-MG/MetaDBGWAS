@@ -93,7 +93,7 @@ bash metadbgwas.sh --files ./input --output ./output --K 17 6000000 --strains ./
 
 # Docker
 
-An image is hosted on Docker hub. You can also build it localy using the dockerfile located in `/docker`. 
+An image is hosted on Docker hub. You can also build it localy using the dockerfile located in `/docker`. You might have to add `sudo` if you didnt run the post-installation steps of docker.
 
 ```bash
 docker pull 007ptar007/metadbgwas:latest
