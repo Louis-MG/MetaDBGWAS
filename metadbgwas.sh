@@ -16,27 +16,27 @@ NC=$(tput sgr0) # No Color
 #General
 files=
 output="./"
-threads=4
-verbose=1
+declare -i threads=4
+declare -i verbose=1
 clean=false
 skip1=false
 skip2=false
 skip3=false
 
 #Lighter
-genome_size=
+declare -i genome_size=
 alpha=0
-kmer_l=17
+declare -i kmer_l=17
 
 #bcalm2
-kmer=31
-abundance_min=5
+declare -i kmer=31
+decalre -i abundance_min=5
 
-#Reindeer
+#Bifrost
 #kmer as bcalm
 
 #dbgwas
-strains='' #strais file
+strains='' #strains file
 newick='' #phylo tree file
 ncDB='' #nucleotide database file
 ptDB='' #protein database file
