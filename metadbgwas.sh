@@ -354,7 +354,7 @@ python3 $metadbgwas_path/bcalm/scripts/convertToGFA.py $output/unitigs/unitigs.f
 #fix for pahntomjs
 export OPENSSL_CONF=/dev/null
 # MetaDBGWAS executable that generates input ifles for bugwas and gemma, runs statistical tests, then finally generates output
-$metadbgwas_path/tools/src/MetaDBGWAS --files $output/unitigs/unitigs.fa --output $output --threads $threads --kmer $kmer --strains $strains $keepNA --threads $threads --output $output $ncDB $ptDB $newick $threshold --no-preview
+$metadbgwas_path/tools/src/MetaDBGWAS --files $output/unitigs/unitigs.fa --output $output --kmer $kmer --strains $strains $keepNA --threads $threads $ncDB $ptDB $newick $threshold --no-preview
 
 if [ $clean = true ]
 then
